@@ -1,0 +1,31 @@
+# Web Scraping
+scrapy==2.11.0
+scrapy-playwright==0.0.29
+playwright==1.40.0
+
+# NLP and AI
+langchain==0.1.0
+ollama==0.1.7
+langchain-community==0.0.13
+sentence-transformers==2.2.2
+spacy==3.7.2
+transformers==4.36.0
+
+# Vector Database
+chromadb==0.4.22
+
+# Task Queue
+celery==5.3.4
+redis==5.0.1
+
+# Web Framework
+fastapi==0.108.0
+uvicorn==0.25.0
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.31.0
+beautifulsoup4==4.12.2
+python-multipart==0.0.6
+pydantic==2.5.0
+huggingface_hub==0.19.3  

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northeastern University Assistant</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Northeastern University Assistant</h1>
+                    <span class="version-badge">v2.0</span>
+                </div>
+                <div class="header-actions">
+                    <button id="clearChat" class="btn-secondary">
+                        <i class="fas fa-trash"></i> Clear Chat
+                    </button>
+                    <button id="viewStats" class="btn-secondary">
+                        <i class="fas fa-chart-bar"></i> View Stats
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Chat Interface -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome message -->
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                                                <div class="message-text">
+                        Hello! I'm your <strong>Northeastern University Assistant</strong> with advanced AI capabilities! 🚀<br><br>
+                        <strong>How I can help:</strong><br>
+                        • 🎓 Academic programs and admissions<br>
+                        • 💼 Co-op and career opportunities<br>
+                        • 🏠 Campus life and housing<br>
+                        • 💰 Financial aid and scholarships<br>
+                        • 🌍 International student services<br><br>
+                        Ask me anything about Northeastern University!
+                    </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <input type="text" id="chatInput" placeholder="Ask about Northeastern programs, admissions, co-op..." autocomplete="off">
+                        <button id="sendMessage" class="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-actions">
+                        <button class="suggestion-btn" data-query="What programs does Northeastern University offer?">
+                            Programs
+                        </button>
+                        <button class="suggestion-btn" data-query="Tell me about Northeastern admissions">
+                            Admissions
+                        </button>
+                        <button class="suggestion-btn" data-query="How does the co-op program work?">
+                            Co-op
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-search"></i> Quick Search</h3>
+                    <div class="search-box">
+                        <input type="text" id="quickSearch" placeholder="Search Northeastern documents...">
+                        <button id="searchBtn" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-database"></i> System Status</h3>
+                    <div class="status-item">
+                        <span class="status-label">API Status:</span>
+                        <span id="apiStatus" class="status-value">Checking...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Documents:</span>
+                        <span id="documentCount" class="status-value">Loading...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Universities:</span>
+                        <span id="universityCount" class="status-value">Loading...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Enhanced Features:</span>
+                        <span id="enhancedFeatures" class="status-value">Checking...</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-lightbulb"></i> Popular Questions</h3>
+                    <div class="suggestions">
+                        <div class="suggestion-item" data-query="What are the admission requirements for Northeastern?">
+                            <i class="fas fa-question-circle"></i>
+                            Admission requirements
+                        </div>
+                        <div class="suggestion-item" data-query="How does the Northeastern co-op program work?">
+                            <i class="fas fa-briefcase"></i>
+                            Co-op program
+                        </div>
+                        <div class="suggestion-item" data-query="What is the tuition for Northeastern University?">
+                            <i class="fas fa-dollar-sign"></i>
+                            Tuition & fees
+                        </div>
+                        <div class="suggestion-item" data-query="Tell me about Northeastern campus housing">
+                            <i class="fas fa-home"></i>
+                            Campus housing
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Processing your request...</p>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="statsModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>System Statistics</h2>
+                <button class="close-btn" id="closeStatsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="totalDocuments">-</div>
+                            <div class="stat-label">Total Documents</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="totalUniversities">-</div>
+                            <div class="stat-label">Universities</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="totalMessages">0</div>
+                            <div class="stat-label">Messages Today</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number" id="avgResponseTime">-</div>
+                            <div class="stat-label">Avg Response (ms)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

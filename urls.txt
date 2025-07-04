@@ -1,0 +1,246 @@
+# Northeastern University URLs Reference Document
+
+This document contains a comprehensive list of all Northeastern University URLs referenced in our conversations about building the virtual campus assistant dataset.
+
+## Primary University Websites
+
+### Main University Website
+- [**northeastern.edu**](https://northeastern.edu) - Primary source for general information
+- [**www.northeastern.edu**](https://www.northeastern.edu) - Home page with university overview and news
+
+### Student Portal and Services
+- [**me.northeastern.edu**](https://me.northeastern.edu) - Student Hub portal for student services
+- [**about.me.northeastern.edu/student-hub/**](https://about.me.northeastern.edu/student-hub/) - Information about the Student Hub
+- [**about.me.northeastern.edu/home/**](https://about.me.northeastern.edu/home/) - Student Hub home page
+
+### Academic Resources
+- [**catalog.northeastern.edu**](https://catalog.northeastern.edu) - Academic catalog with course and program information
+- [**registrar.northeastern.edu**](https://registrar.northeastern.edu) - Office of the University Registrar
+- [**library.northeastern.edu**](https://library.northeastern.edu) - University library system and resources
+
+### Student Life and Services
+- [**studentlife.northeastern.edu**](https://studentlife.northeastern.edu) - Housing, dining, activities, and student services
+
+## Admissions and Application
+
+### Undergraduate Admissions
+- [**admissions.northeastern.edu**](https://admissions.northeastern.edu) - Main undergraduate admissions portal
+- [**admissions.northeastern.edu/application-information/**](https://admissions.northeastern.edu/application-information/) - Application information
+- [**admissions.northeastern.edu/application-information/how-to-apply/**](https://admissions.northeastern.edu/application-information/how-to-apply/) - How to apply guide
+- [**admissions.northeastern.edu/application-information/admissions-deadlines-decisions/**](https://admissions.northeastern.edu/application-information/admissions-deadlines-decisions/) - Deadlines and decisions
+- [**admissions.northeastern.edu/application-information/international-applicants/**](https://admissions.northeastern.edu/application-information/international-applicants/) - International applicant information
+- [**admissions.northeastern.edu/application-information/application-status-check/**](https://admissions.northeastern.edu/application-information/application-status-check/) - Application status check
+- [**admissions.northeastern.edu/visit/counselor-resources/**](https://admissions.northeastern.edu/visit/counselor-resources/) - Counselor resources
+- [**admissions.northeastern.edu/student-life/housing-residential-life/**](https://admissions.northeastern.edu/student-life/housing-residential-life/) - Housing information for prospective students
+- [**admissions.northeastern.edu/student-life/student-clubs-and-organizations/**](https://admissions.northeastern.edu/student-life/student-clubs-and-organizations/) - Student organizations information
+- [**admissions.northeastern.edu/student-life/dining-on-campus/**](https://admissions.northeastern.edu/student-life/dining-on-campus/) - Dining information
+- [**admissions.northeastern.edu/student-life/athletics-and-fitness/**](https://admissions.northeastern.edu/student-life/athletics-and-fitness/) - Athletics and fitness information
+
+### Graduate Admissions
+- [**graduate.northeastern.edu**](https://graduate.northeastern.edu) - Graduate programs portal
+- [**graduate.northeastern.edu/admissions-information/how-to-apply/the-process/**](https://graduate.northeastern.edu/admissions-information/how-to-apply/the-process/) - Graduate application process
+- [**graduate.northeastern.edu/admissions-aid/tuition-financial-aid/**](https://graduate.northeastern.edu/admissions-aid/tuition-financial-aid/) - Graduate tuition and financial aid
+
+### Financial Aid and Cost Information
+- [**admissions.northeastern.edu/cost-financial-aid/financial-aid-for-admitted-students/**](https://admissions.northeastern.edu/cost-financial-aid/financial-aid-for-admitted-students/) - Financial aid for admitted students
+
+## Academic Policies and Procedures
+
+### University Registrar
+- [**registrar.northeastern.edu/group/registration-classes/**](https://registrar.northeastern.edu/group/registration-classes/) - Registration and classes information
+- [**registrar.northeastern.edu/group/registration/**](https://registrar.northeastern.edu/group/registration/) - Registration information
+- [**registrar.northeastern.edu/types/form/**](https://registrar.northeastern.edu/types/form/) - Forms and documents
+
+### Academic Catalog Resources
+- [**catalog.northeastern.edu/undergraduate/academic-policies-procedures/registration-taking-courses/**](https://catalog.northeastern.edu/undergraduate/academic-policies-procedures/registration-taking-courses/) - Registration and course policies
+- [**catalog.northeastern.edu/undergraduate/academic-policies-procedures/graduation-requirements/**](https://catalog.northeastern.edu/undergraduate/academic-policies-procedures/graduation-requirements/) - Graduation requirements
+- [**catalog.northeastern.edu/undergraduate/university-academics/university-wide-requirements/**](https://catalog.northeastern.edu/undergraduate/university-academics/university-wide-requirements/) - University-wide requirements
+- [**catalog.northeastern.edu/undergraduate/academic-policies-procedures/cooperative-education/**](https://catalog.northeastern.edu/undergraduate/academic-policies-procedures/cooperative-education/) - Co-op program policies
+- [**catalog.northeastern.edu/graduate/engineering/academic-policies-procedures/course-registration-withdrawal/**](https://catalog.northeastern.edu/graduate/engineering/academic-policies-procedures/course-registration-withdrawal/) - Graduate engineering policies
+- [**catalog.northeastern.edu/graduate/professional-studies/academic-policies-procedures/completing-degree-requirements/**](https://catalog.northeastern.edu/graduate/professional-studies/academic-policies-procedures/completing-degree-requirements/) - CPS degree requirements
+- [**catalog.northeastern.edu/undergraduate/information-entering-students/residential-life/**](https://catalog.northeastern.edu/undergraduate/information-entering-students/residential-life/) - Residential life information
+
+## Housing and Residential Life
+
+### Housing Administration
+- [**housing.northeastern.edu**](https://housing.northeastern.edu) - Main housing and residential life website
+- [**housing.northeastern.edu/university-housing/**](https://housing.northeastern.edu/university-housing/) - University housing information
+- [**housing.northeastern.edu/applyselect/**](https://housing.northeastern.edu/applyselect/) - Housing application and selection
+- [**housing.northeastern.edu/rates/**](https://housing.northeastern.edu/rates/) - Room rates
+- [**housing.northeastern.edu/fall-selection/**](https://housing.northeastern.edu/fall-selection/) - Fall housing selection process
+- [**housing.northeastern.edu/contact-us/**](https://housing.northeastern.edu/contact-us/) - Housing contact information
+
+### Off-Campus Housing
+- [**aptsearch.northeastern.edu**](https://aptsearch.northeastern.edu) - Off-campus housing search portal
+
+## Student Financial Services
+
+### Billing and Financial Information
+- [**studentfinance.northeastern.edu**](https://studentfinance.northeastern.edu) - Student Financial Services main page
+- [**studentfinance.northeastern.edu/billing-payments/tuition-and-fees/**](https://studentfinance.northeastern.edu/billing-payments/tuition-and-fees/) - Tuition and fees information
+- [**studentfinance.northeastern.edu/applying-for-aid/undergraduate/how-to-apply/**](https://studentfinance.northeastern.edu/applying-for-aid/undergraduate/how-to-apply/) - How to apply for undergraduate aid
+- [**studentfinance.northeastern.edu/applying-for-aid/undergraduate/types-of-aid/scholarships/**](https://studentfinance.northeastern.edu/applying-for-aid/undergraduate/types-of-aid/scholarships/) - Undergraduate scholarships
+- [**studentfinance.northeastern.edu/applying-for-aid/international-students/**](https://studentfinance.northeastern.edu/applying-for-aid/international-students/) - International student financial aid
+
+### Meal Plans and Husky Card
+- [**huskycard.northeastern.edu/meal-plan-2024/**](https://huskycard.northeastern.edu/meal-plan-2024/) - Meal plan information
+
+## Health and Wellness
+
+### University Health and Counseling Services
+- [**www.northeastern.edu/uhcs/**](https://www.northeastern.edu/uhcs/) - University Health and Counseling Services
+- [**uhcs.northeastern.edu/counseling-services/**](https://uhcs.northeastern.edu/counseling-services/) - Mental health services
+- [**www.northeastern.edu/uhcs/counseling-services/what-to-expect-behavioral-health/**](https://www.northeastern.edu/uhcs/counseling-services/what-to-expect-behavioral-health/) - Mental health expectations
+
+## Technology Services
+
+### Information Technology
+- [**its.northeastern.edu**](https://its.northeastern.edu) - Information Technology Services
+- [**its.northeastern.edu/nuwave-guest-confirmation/**](https://its.northeastern.edu/nuwave-guest-confirmation/) - Wi-Fi guest access
+- [**connect-to-tech.northeastern.edu/students/**](https://connect-to-tech.northeastern.edu/students/) - Technology resources for students
+- [**connect-to-tech.northeastern.edu/staff/**](https://connect-to-tech.northeastern.edu/staff/) - Technology resources for staff
+
+## Library and Research
+
+### Library System
+- [**library.northeastern.edu/ideas/about-snell-library/**](https://library.northeastern.edu/ideas/about-snell-library/) - Snell Library information
+- [**library.northeastern.edu/ideas/about-snell-library/hours/**](https://library.northeastern.edu/ideas/about-snell-library/hours/) - Snell Library hours
+- [**library.northeastern.edu/ask-a-librarian/**](https://library.northeastern.edu/ask-a-librarian/) - Ask a librarian services
+- [**library.northeastern.edu/contact-us/**](https://library.northeastern.edu/contact-us/) - Library contact information
+- [**library.northeastern.edu/library-locations/library-hours/**](https://library.northeastern.edu/library-locations/library-hours/) - All library hours
+- [**library.northeastern.edu/about/visitors/hours**](https://library.northeastern.edu/about/visitors/hours) - Visitor hours information
+- [**library.northeastern.edu/alumni/**](https://library.northeastern.edu/alumni/) - Alumni library access
+- [**northeastern.libanswers.com/**](https://northeastern.libanswers.com/) - Library FAQ system
+- [**northeastern.libanswers.com/faq/331809**](https://northeastern.libanswers.com/faq/331809) - Library hours FAQ
+- [**northeastern.libanswers.com/faq/141750**](https://northeastern.libanswers.com/faq/141750) - Alumni library access FAQ
+
+## Co-op and Experiential Learning
+
+### Co-op Program Information
+- [**www.northeastern.edu/experiential-learning/co-op/**](https://www.northeastern.edu/experiential-learning/co-op/) - Co-op program overview
+- [**www.northeastern.edu/the-co-op-process-from-start-to-finish/**](https://www.northeastern.edu/the-co-op-process-from-start-to-finish/) - Co-op process guide
+- [**www.northeastern.edu/3-typical-co-op-schedules/**](https://www.northeastern.edu/3-typical-co-op-schedules/) - Co-op schedule examples
+- [**careers.northeastern.edu/students/student-co-op/global-co-op/**](https://careers.northeastern.edu/students/student-co-op/global-co-op/) - Global co-op opportunities
+
+### College-Specific Co-op Information
+- [**cos.northeastern.edu/experiential-learning/cooperative-education/**](https://cos.northeastern.edu/experiential-learning/cooperative-education/) - College of Science co-op
+- [**cssh.northeastern.edu/academics/co-op/**](https://cssh.northeastern.edu/academics/co-op/) - CSSH co-op program
+- [**coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-student-services/course-registration/**](https://coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-student-services/course-registration/) - Engineering graduate registration
+
+## Student Organizations and Activities
+
+### Student Involvement
+- [**neu.campuslabs.com/engage/organizations**](https://neu.campuslabs.com/engage/organizations) - Student organization portal
+
+### College-Specific Organizations
+- [**coe.northeastern.edu/academics-experiential-learning/co-op-experiential-learning/clubs-organizations/**](https://coe.northeastern.edu/academics-experiential-learning/co-op-experiential-learning/clubs-organizations/) - Engineering clubs and organizations
+- [**cos.northeastern.edu/college-of-science-life/student-organizations/**](https://cos.northeastern.edu/college-of-science-life/student-organizations/) - Science student organizations
+- [**damore-mckim.northeastern.edu/current-students/experience/clubs-organizations/**](https://damore-mckim.northeastern.edu/current-students/experience/clubs-organizations/) - Business clubs and organizations
+
+## Academic Advising and Support
+
+### College Advising Offices
+- [**cssh.northeastern.edu/resources/make-an-appointment-for-academic-advising/**](https://cssh.northeastern.edu/resources/make-an-appointment-for-academic-advising/) - CSSH academic advising
+- [**cssh.northeastern.edu/resources/undergraduate-advising/**](https://cssh.northeastern.edu/resources/undergraduate-advising/) - CSSH undergraduate advising
+- [**cos.northeastern.edu/college-of-science-life/advising-student-resources/**](https://cos.northeastern.edu/college-of-science-life/advising-student-resources/) - Science advising
+- [**damore-mckim.northeastern.edu/current-students/advising/**](https://damore-mckim.northeastern.edu/current-students/advising/) - Business advising
+- [**bouve.northeastern.edu/academics/student-services/**](https://bouve.northeastern.edu/academics/student-services/) - Health Sciences student services
+- [**coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-student-services/**](https://coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-student-services/) - Engineering graduate services
+- [**undergraduate.northeastern.edu/mentoring-advising/**](https://undergraduate.northeastern.edu/mentoring-advising/) - Undergraduate education advising
+
+### Professional Studies
+- [**cps.northeastern.edu/current-students/**](https://cps.northeastern.edu/current-students/) - CPS current student resources
+- [**cps.northeastern.edu/current-students/registering-for-classes/**](https://cps.northeastern.edu/current-students/registering-for-classes/) - CPS registration
+- [**cps.northeastern.edu/current-students/academic-and-career-advising-staff/**](https://cps.northeastern.edu/current-students/academic-and-career-advising-staff/) - CPS advising staff
+
+## International Services
+
+### Office of Global Services
+- [**international.northeastern.edu/student-support/**](https://international.northeastern.edu/student-support/) - International student support
+- [**international.northeastern.edu/ogs/contact/**](https://international.northeastern.edu/ogs/contact/) - OGS contact information
+- [**international.northeastern.edu/ogs/student-support/**](https://international.northeastern.edu/ogs/student-support/) - OGS student support
+- [**international.northeastern.edu/ogs/current-students/traveling/**](https://international.northeastern.edu/ogs/current-students/traveling/) - Travel information for international students
+- [**international.northeastern.edu/ogs/forms-and-guides/travel-signature-request/**](https://international.northeastern.edu/ogs/forms-and-guides/travel-signature-request/) - Travel signature requests
+- [**international.northeastern.edu/ogs/new-students/i-20-ds-2019-application/prearrivali20/**](https://international.northeastern.edu/ogs/new-students/i-20-ds-2019-application/prearrivali20/) - I-20 application process
+- [**international.northeastern.edu/ogs/employment/off-campus-employment/f-1-pre-completion-opt/**](https://international.northeastern.edu/ogs/employment/off-campus-employment/f-1-pre-completion-opt/) - Pre-completion OPT
+- [**international.northeastern.edu/ogs/employment/off-campus-employment/applying-for-post-completion-opt-f-1/**](https://international.northeastern.edu/ogs/employment/off-campus-employment/applying-for-post-completion-opt-f-1/) - Post-completion OPT
+- [**international.northeastern.edu/ogs/ogs-forms-and-guides/**](https://international.northeastern.edu/ogs/ogs-forms-and-guides/) - OGS forms and guides
+- [**international.northeastern.edu/ogs/student-support/resources/transportation-safety/**](https://international.northeastern.edu/ogs/student-support/resources/transportation-safety/) - Transportation and safety
+
+## Alumni Services
+
+### Alumni Relations
+- [**alumni.northeastern.edu/resources/benefits/**](https://alumni.northeastern.edu/resources/benefits/) - Alumni benefits
+- [**alumni.northeastern.edu/networks/nusource/**](https://alumni.northeastern.edu/networks/nusource/) - Alumni networking
+- [**alumni.northeastern.edu/co-op-mentor-program/**](https://alumni.northeastern.edu/co-op-mentor-program/) - Co-op mentor program
+- [**alumni.northeastern.edu/opportunities/career-help/**](https://alumni.northeastern.edu/opportunities/career-help/) - Alumni career help
+- [**alumni.northeastern.edu/opportunities/access-northeastern-account/**](https://alumni.northeastern.edu/opportunities/access-northeastern-account/) - Alumni account access
+
+### Alumni Recreation
+- [**recreation.northeastern.edu/alumni/**](https://recreation.northeastern.edu/alumni/) - Alumni recreation membership
+
+## Diversity and Inclusion
+
+### Cultural and Spiritual Life
+- [**cultural-life.northeastern.edu/**](https://cultural-life.northeastern.edu/) - Cultural and Spiritual Life
+- [**www.northeastern.edu/cultural-life/services/**](https://www.northeastern.edu/cultural-life/services/) - Cultural life services
+- [**diversity.northeastern.edu/initatives/centers/**](https://diversity.northeastern.edu/initatives/centers/) - Diversity centers
+
+### Cultural Centers
+- [**jdoaai.sites.northeastern.edu/**](https://jdoaai.sites.northeastern.edu/) - John D. O'Bryant African American Institute
+- [**www.northeastern.edu/aai/**](https://www.northeastern.edu/aai/) - African American Institute
+- [**northeastern.edu/diversity/initiatives/john-d-obryant-african-american-institute/**](https://northeastern.edu/diversity/initiatives/john-d-obryant-african-american-institute/) - AAI diversity page
+- [**nuplace.northeastern.edu/partner/aai/**](https://nuplace.northeastern.edu/partner/aai/) - AAI NU Place page
+
+## Safety and Security
+
+### Campus Police
+- [**nupd.northeastern.edu/contact-us/how-to-reach-nupd/**](https://nupd.northeastern.edu/contact-us/how-to-reach-nupd/) - NUPD contact information
+- [**nupd.northeastern.edu/safety/emergency-planning/**](https://nupd.northeastern.edu/safety/emergency-planning/) - Emergency planning
+- [**nupd.northeastern.edu/safety-notifications/**](https://nupd.northeastern.edu/safety-notifications/) - Safety notifications
+- [**nupd.northeastern.edu/safety-support-network/**](https://nupd.northeastern.edu/safety-support-network/) - Safety support network
+
+## Recreation and Athletics
+
+### Campus Recreation
+- [**recreation.northeastern.edu/intramural-sports/**](https://recreation.northeastern.edu/intramural-sports/) - Intramural sports
+
+## Facilities and Campus Information
+
+### Campus Resources
+- [**facilities.northeastern.edu/campus-map/**](https://facilities.northeastern.edu/campus-map/) - Interactive campus map
+- [**pref.northeastern.edu/new-blue-bikes-station/**](https://pref.northeastern.edu/new-blue-bikes-station/) - Blue Bikes station information
+
+### Arts and Culture Venues
+- [**calendar.northeastern.edu/gallery_360**](https://calendar.northeastern.edu/gallery_360) - Gallery 360
+- [**camd.northeastern.edu/cfa/center-for-the-arts-exhibitions/**](https://camd.northeastern.edu/cfa/center-for-the-arts-exhibitions/) - Gallery 360 exhibitions
+
+## Special Programs
+
+### N.U.in Program
+- [**nuin.northeastern.edu/coursereg/**](https://nuin.northeastern.edu/coursereg/) - N.U.in course registration
+
+## External Resources Referenced
+
+### Third-Party Information Sources
+- [**www.usnews.com/best-colleges/northeastern-university-2199/applying**](https://www.usnews.com/best-colleges/northeastern-university-2199/applying) - US News college information
+- [**research.com/best-colleges/northeastern-university/tuition-fees**](https://research.com/best-colleges/northeastern-university/tuition-fees) - Research.com tuition information
+- [**www.unigo.com/colleges/northeastern-university/what-are-the-most-popular-student-activities-groups**](https://www.unigo.com/colleges/northeastern-university/what-are-the-most-popular-student-activities-groups) - Student activities information
+- [**www.quora.com/What-are-the-best-student-organizations-to-join-at-Northeastern-University-Why-should-students-join-them**](https://www.quora.com/What-are-the-best-student-organizations-to-join-at-Northeastern-University-Why-should-students-join-them) - Student organization recommendations
+
+### News and Information
+- [**news.northeastern.edu**](https://news.northeastern.edu) - Northeastern University news
+- [**huntnewsnu.com**](https://huntnewsnu.com) - The Huntington News (student newspaper)
+
+---
+
+## Notes
+
+- This document contains URLs from conversations about building a comprehensive virtual campus assistant dataset
+- All URLs are official Northeastern University domains unless otherwise noted in the "External Resources" section
+- Some URLs may have been accessed for specific information gathering rather than being primary sources for the dataset
+- URLs are organized by functional category to help with dataset organization and maintenance
+
+**Total URLs Referenced: 100+**
+
+This comprehensive list serves as a reference for all Northeastern University web resources utilized in developing the chatbot dataset and can be used for future data collection and verification efforts.
