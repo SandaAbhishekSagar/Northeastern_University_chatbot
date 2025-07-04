@@ -23,3 +23,4 @@ frontend/
 *.md
 test_*
 docker-compose.yml 
+northeastern_urls.txt
