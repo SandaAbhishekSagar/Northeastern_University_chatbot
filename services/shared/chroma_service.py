@@ -123,8 +123,26 @@ class ChromaService:
                        content: str, 
                        university_id: str,
                        embedding: Optional[List[float]] = None,
-                       extra_data: Optional[Dict[str, Any]] = None) -> DocumentVersion:
-        """Create a new document version"""
+                       extra_data: Optional[Dict[str, Any]] = None,
+                       file_name: Optional[str] = None) -> DocumentVersion:
+        """Create a new document version
+        
+        Args:
+            source_url: URL where the document was found
+            title: Document title
+            content: Document content
+            university_id: ID of the university this document belongs to
+            embedding: Optional pre-computed embedding
+            extra_data: Optional additional metadata
+            file_name: Optional file name where the content came from
+        """
+        # Initialize extra_data if None
+        extra_data_dict: Dict[str, Any] = {} if extra_data is None else dict(extra_data)
+        
+        # Add file_name to extra_data if provided
+        if file_name:
+            extra_data_dict['file_name'] = file_name
+
         doc = DocumentVersion(
             version_number=1,  # Will be incremented if document exists
             source_url=source_url,
@@ -132,7 +150,7 @@ class ChromaService:
             content=content,
             university_id=university_id,
             embedding=embedding,
-            extra_data=extra_data or {}
+            extra_data=extra_data_dict
         )
         
         collection = get_collection(COLLECTIONS['documents'])
@@ -141,8 +159,8 @@ class ChromaService:
         metadata = doc.to_dict()
         if 'extra_data' in metadata and isinstance(metadata['extra_data'], dict):
             # Flatten extra_data into top-level metadata
-            extra_data = metadata.pop('extra_data')
-            metadata.update(extra_data)
+            extra_data_flat = metadata.pop('extra_data')
+            metadata.update(extra_data_flat)
         
         # Add document with embedding if provided
         if embedding:

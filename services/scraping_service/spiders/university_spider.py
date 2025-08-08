@@ -1,141 +1,110 @@
 import scrapy
-from scrapy_playwright.page import PageMethod
+from scrapy.spiders import SitemapSpider
 from items import UniversityPageItem
 from datetime import datetime
-import urllib.parse
 
-class UniversitySpider(scrapy.Spider):
-    name = 'university'
-    
-    def __init__(self, university_urls=None, *args, **kwargs):
-        super(UniversitySpider, self).__init__(*args, **kwargs)
-        if university_urls:
-            self.start_urls = university_urls.split(',')
-        else:
-            self.start_urls = [
-                'https://www.northeastern.edu',
-                'https://catalog.northeastern.edu'
-            ]
-    
-    def start_requests(self):
-        for url in self.start_urls:
-            yield scrapy.Request(
-                url=url,
-                callback=self.parse,
-                meta={
-                    "playwright": True,
-                    "playwright_page_methods": [
-                        PageMethod("wait_for_load_state", "networkidle"),
-                        PageMethod("wait_for_timeout", 2000),  # Wait 2 seconds
-                    ],
-                }
-            )
-    
+class NortheasternSitemapSpider(SitemapSpider):
+    name = 'northeastern_sitemap'
+    sitemap_urls = [
+        
+'https://www.northeastern.edu/sitemap.xml'
+,'https://me.northeastern.edu/sitemap.xml'
+,'https://about.me.northeastern.edu/sitemap.xml'
+,'https://catalog.northeastern.edu/sitemap.xml'
+,'https://registrar.northeastern.edu/sitemap.xml'
+,'https://library.northeastern.edu/sitemap.xml'
+,'https://studentlife.northeastern.edu/sitemap.xml'
+,'https://admissions.northeastern.edu/sitemap.xml'
+,'https://graduate.northeastern.edu/sitemap.xml'
+,'https://registrar.northeastern.edu/sitemap.xml'
+,'https://catalog.northeastern.edu/sitemap.xml'
+,'https://housing.northeastern.edu/sitemap.xml'
+,'https://aptsearch.northeastern.edu/sitemap.xml'
+,'https://studentfinance.northeastern.edu/sitemap.xml'
+,'https://huskycard.northeastern.edu/sitemap.xml'
+,'https://uhcs.northeastern.edu/sitemap.xml'
+,'https://its.northeastern.edu/sitemap.xml'
+,'https://connect-to-tech.northeastern.edu/sitemap.xml'
+,'https://library.northeastern.edu/sitemap.xml'
+,'https://northeastern.libanswers.com/sitemap.xml'
+,'https://careers.northeastern.edu/sitemap.xml'
+,'https://cos.northeastern.edu/sitemap.xml'
+,'https://cssh.northeastern.edu/sitemap.xml'
+,'https://coe.northeastern.edu/sitemap.xml'
+,'https://neu.campuslabs.com/sitemap.xml'
+,'https://damore-mckim.northeastern.edu/sitemap.xml'
+,'https://bouve.northeastern.edu/sitemap.xml'
+,'https://undergraduate.northeastern.edu/sitemap.xml'
+,'https://cps.northeastern.edu/sitemap.xml'
+,'https://international.northeastern.edu/sitemap.xml'
+,'https://alumni.northeastern.edu/sitemap.xml'
+,'https://recreation.northeastern.edu/sitemap.xml'
+,'https://cultural-life.northeastern.edu/sitemap.xml'
+,'https://diversity.northeastern.edu/sitemap.xml'
+,'https://jdoaai.sites.northeastern.edu/sitemap.xml'
+,'https://nuplace.northeastern.edu/sitemap.xml'
+,'https://nupd.northeastern.edu/sitemap.xml'
+,'https://facilities.northeastern.edu/sitemap.xml'
+,'https://pref.northeastern.edu/sitemap.xml'
+,'https://calendar.northeastern.edu/sitemap.xml'
+,'https://camd.northeastern.edu/sitemap.xml'
+,'https://nuin.northeastern.edu/sitemap.xml'
+,'https://phd.northeastern.edu/sitemap.xml'
+,'https://online.northeastern.edu/sitemap.xml'
+,'https://sites.northeastern.edu/sitemap.xml'
+,'https://accomplishments.northeastern.edu/sitemap.xml'
+,'https://give.northeastern.edu/sitemap.xml'
+,'https://experiencepoweredby.northeastern.edu/sitemap.xml'
+,'https://sustainability.northeastern.edu/sitemap.xml'
+,'https://experience.arcgis.com/experience/b24181de18b74d20a369865de2a44ef3/sitemap.xml'
+,'https://campusmap.northeastern.edu/sitemap.xml'
+,'https://publicart.northeastern.edu/sitemap.xml'
+,'https://hr.northeastern.edu/sitemap.xml'
+,'https://belonging.northeastern.edu/sitemap.xml'
+,'https://provost.northeastern.edu/sitemap.xml'
+,'https://registrar.northeastern.edu/sitemap.xml'
+,'https://law.northeastern.edu/sitemap.xml'
+,'https://research.northeastern.edu/sitemap.xml'
+,'https://geo.northeastern.edu/sitemap.xml'
+,'https://globalsafety.northeastern.edu/sitemap.xml'
+,'https://experiential-learning.northeastern.edu/sitemap.xml'
+,'https://arlington.northeastern.edu/sitemap.xml'
+,'https://www.burlington.northeastern.edu/sitemap.xml'
+,'https://charlotte.northeastern.edu/sitemap.xml'
+,'https://www.nulondon.ac.uk/sitemap.xml'
+,'https://miami.northeastern.edu/sitemap.xml'
+,'https://csi.northeastern.edu/sitemap.xml'
+,'https://oakland.northeastern.edu/sitemap.xml'
+,'https://roux.northeastern.edu/sitemap.xml'
+,'https://seattle.northeastern.edu/sitemap.xml'
+,'https://siliconvalley.northeastern.edu/sitemap.xml'
+,'https://toronto.northeastern.edu/sitemap.xml'
+,'https://vancouver.northeastern.edu/sitemap.xml'
+,'https://bachelors-completion.northeastern.edu/sitemap.xml'
+,'https://nuhuskies.com/sitemap.xml'
+,'https://academicplan.northeastern.edu/sitemap.xml'
+,'https://president.northeastern.edu/sitemap.xml'
+,'https://facts.northeastern.edu/sitemap.xml'
+,'https://giving.northeastern.edu/sitemap.xml'
+,'https://catalog.northeastern.edu/sitemap.xml'
+,'https://service.northeastern.edu/sitemap.xml'
+,'https://nupdboard.northeastern.edu/sitemap.xml'
+,'https://offcampus.housing.northeastern.edu/sitemap.xml'
+,'https://digital-accessibility.northeastern.edu/sitemap.xml'
+,'https://nu.outsystemsenterprise.com/FSD/sitemap.xml'
+
+    ]
+
     def parse(self, response):
-        # Extract main content
         item = UniversityPageItem()
         item['url'] = response.url
         item['title'] = response.css('title::text').get() or "No Title"
         item['content'] = response.text
         item['scraped_at'] = datetime.now().isoformat()
-        item['university_name'] = self.extract_university_name(response.url)
+        item['university_name'] = 'Northeastern University'
         item['metadata'] = {
             'status_code': response.status,
             'content_length': len(response.text),
-            'page_type': self.classify_page_type(response.url, item['title'])
+            'page_type': 'general'  # You can add more logic if needed
         }
-        
         yield item
-        
-        # Follow links to other pages on the same domain (limit to 5 for testing)
-        links = response.css('a::attr(href)').getall()[:5]  # Limit links for testing
-        for link in links:
-            if self.should_follow_link(link, response.url):
-                absolute_url = urllib.parse.urljoin(response.url, link)
-                yield scrapy.Request(
-                    url=absolute_url,
-                    callback=self.parse,
-                    meta={
-                        "playwright": True,
-                        "playwright_page_methods": [
-                            PageMethod("wait_for_load_state", "networkidle"),
-                        ],
-                    }
-                )
-    
-    def extract_university_name(self, url: str) -> str:
-        """Extract university name from URL"""
-        domain = urllib.parse.urlparse(url).netloc.lower()
-        
-        # University name mapping
-        university_mapping = {
-            'northeastern': 'Northeastern University',
-            'harvard': 'Harvard University',
-            'mit': 'MIT',
-            'stanford': 'Stanford University',
-            'berkeley': 'University of California, Berkeley',
-            'ucla': 'University of California, Los Angeles',
-            'usc': 'University of Southern California',
-            'nyu': 'New York University',
-            'columbia': 'Columbia University',
-            'princeton': 'Princeton University',
-            'yale': 'Yale University',
-            'cornell': 'Cornell University',
-            'upenn': 'University of Pennsylvania',
-            'brown': 'Brown University',
-            'dartmouth': 'Dartmouth College',
-            'duke': 'Duke University',
-            'northwestern': 'Northwestern University',
-            'uchicago': 'University of Chicago',
-            'caltech': 'California Institute of Technology',
-            'cmu': 'Carnegie Mellon University'
-        }
-        
-        # Check for exact matches
-        for key, name in university_mapping.items():
-            if key in domain:
-                return name
-        
-        # Fallback: format domain name
-        return domain.replace('www.', '').replace('.edu', '').title()
-    
-    def classify_page_type(self, url: str, title: str) -> str:
-        """Classify the type of page"""
-        url_lower = url.lower()
-        title_lower = title.lower()
-        
-        if any(word in url_lower for word in ['course', 'catalog', 'curriculum']):
-            return 'academic'
-        elif any(word in url_lower for word in ['admission', 'apply', 'application']):
-            return 'admissions'
-        elif any(word in url_lower for word in ['faculty', 'staff', 'people']):
-            return 'people'
-        elif any(word in url_lower for word in ['news', 'event', 'announcement']):
-            return 'news'
-        else:
-            return 'general'
-    
-    def should_follow_link(self, link: str, current_url: str) -> bool:
-        """Determine if we should follow a link"""
-        if not link:
-            return False
-        
-        # Skip non-HTTP links
-        if link.startswith(('mailto:', 'tel:', '#', 'javascript:')):
-            return False
-        
-        # Get absolute URL
-        absolute_url = urllib.parse.urljoin(current_url, link)
-        parsed_url = urllib.parse.urlparse(absolute_url)
-        current_domain = urllib.parse.urlparse(current_url).netloc
-        
-        # Only follow links on the same domain
-        if parsed_url.netloc != current_domain:
-            return False
-        
-        # Skip certain file types
-        skip_extensions = ['.pdf', '.doc', '.docx', '.ppt', '.pptx', '.zip', '.jpg', '.png', '.gif']
-        if any(absolute_url.lower().endswith(ext) for ext in skip_extensions):
-            return False
-        
-        return True

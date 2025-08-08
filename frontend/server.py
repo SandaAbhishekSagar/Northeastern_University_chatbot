@@ -31,27 +31,27 @@ def main():
     
     PORT = 3000
     
-    print(f"🚀 Starting University Chatbot Frontend Server")
-    print(f"📁 Serving files from: {FRONTEND_DIR}")
-    print(f"🌐 Frontend URL: http://localhost:{PORT}")
-    print(f"🔗 API URL: http://localhost:8001")
-    print(f"📋 Make sure your API server is running on port 8001")
-    print(f"⏹️  Press Ctrl+C to stop the server")
+    print(f"[START] Starting University Chatbot Frontend Server")
+    print(f"[DIR] Serving files from: {FRONTEND_DIR}")
+    print(f"[URL] Frontend URL: http://localhost:{PORT}")
+    print(f"[API] API URL: http://localhost:8001")
+    print(f"[INFO] Make sure your API server is running on port 8001")
+    print(f"[STOP] Press Ctrl+C to stop the server")
     print("-" * 60)
     
     try:
         with socketserver.TCPServer(("", PORT), CORSHTTPRequestHandler) as httpd:
-            print(f"✅ Server started successfully on port {PORT}")
+            print(f"[OK] Server started successfully on port {PORT}")
             httpd.serve_forever()
     except KeyboardInterrupt:
-        print("\n🛑 Server stopped by user")
+        print("\n[STOP] Server stopped by user")
     except OSError as e:
         if e.errno == 48:  # Address already in use
-            print(f"❌ Port {PORT} is already in use. Please stop any other server using this port.")
+            print(f"[ERROR] Port {PORT} is already in use. Please stop any other server using this port.")
         else:
-            print(f"❌ Error starting server: {e}")
+            print(f"[ERROR] Error starting server: {e}")
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        print(f"[ERROR] Unexpected error: {e}")
 
 if __name__ == "__main__":
     main() 

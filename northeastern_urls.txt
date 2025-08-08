@@ -1,188 +1,88 @@
-# Northeastern University URLs for Scraper
-# Extracted from urls.txt - All official Northeastern domains
 
-# Main University Websites
-https://northeastern.edu
-https://www.northeastern.edu
-
-# Student Portal and Services
-https://me.northeastern.edu
-https://about.me.northeastern.edu/student-hub/
-https://about.me.northeastern.edu/home/
-
-# Academic Resources
-https://catalog.northeastern.edu
-https://registrar.northeastern.edu
-https://library.northeastern.edu
-
-# Student Life and Services
-https://studentlife.northeastern.edu
-
-# Admissions and Application
-https://admissions.northeastern.edu
-https://admissions.northeastern.edu/application-information/
-https://admissions.northeastern.edu/application-information/how-to-apply/
-https://admissions.northeastern.edu/application-information/admissions-deadlines-decisions/
-https://admissions.northeastern.edu/application-information/international-applicants/
-https://admissions.northeastern.edu/application-information/application-status-check/
-https://admissions.northeastern.edu/visit/counselor-resources/
-https://admissions.northeastern.edu/student-life/housing-residential-life/
-https://admissions.northeastern.edu/student-life/student-clubs-and-organizations/
-https://admissions.northeastern.edu/student-life/dining-on-campus/
-https://admissions.northeastern.edu/student-life/athletics-and-fitness/
-
-# Graduate Admissions
-https://graduate.northeastern.edu
-https://graduate.northeastern.edu/admissions-information/how-to-apply/the-process/
-https://graduate.northeastern.edu/admissions-aid/tuition-financial-aid/
-
-# Financial Aid and Cost Information
-https://admissions.northeastern.edu/cost-financial-aid/financial-aid-for-admitted-students/
-
-# Academic Policies and Procedures
-https://registrar.northeastern.edu/group/registration-classes/
-https://registrar.northeastern.edu/group/registration/
-https://registrar.northeastern.edu/types/form/
-
-# Academic Catalog Resources
-https://catalog.northeastern.edu/undergraduate/academic-policies-procedures/registration-taking-courses/
-https://catalog.northeastern.edu/undergraduate/academic-policies-procedures/graduation-requirements/
-https://catalog.northeastern.edu/undergraduate/university-academics/university-wide-requirements/
-https://catalog.northeastern.edu/undergraduate/academic-policies-procedures/cooperative-education/
-https://catalog.northeastern.edu/graduate/engineering/academic-policies-procedures/course-registration-withdrawal/
-https://catalog.northeastern.edu/graduate/professional-studies/academic-policies-procedures/completing-degree-requirements/
-https://catalog.northeastern.edu/undergraduate/information-entering-students/residential-life/
-
-# Housing and Residential Life
-https://housing.northeastern.edu
-https://housing.northeastern.edu/university-housing/
-https://housing.northeastern.edu/applyselect/
-https://housing.northeastern.edu/rates/
-https://housing.northeastern.edu/fall-selection/
-https://housing.northeastern.edu/contact-us/
-
-# Off-Campus Housing
-https://aptsearch.northeastern.edu
-
-# Student Financial Services
-https://studentfinance.northeastern.edu
-https://studentfinance.northeastern.edu/billing-payments/tuition-and-fees/
-https://studentfinance.northeastern.edu/applying-for-aid/undergraduate/how-to-apply/
-https://studentfinance.northeastern.edu/applying-for-aid/undergraduate/types-of-aid/scholarships/
-https://studentfinance.northeastern.edu/applying-for-aid/international-students/
-
-# Meal Plans and Husky Card
-https://huskycard.northeastern.edu/meal-plan-2024/
-
-# Health and Wellness
-https://www.northeastern.edu/uhcs/
-https://uhcs.northeastern.edu/counseling-services/
-https://www.northeastern.edu/uhcs/counseling-services/what-to-expect-behavioral-health/
-
-# Technology Services
-https://its.northeastern.edu
-https://its.northeastern.edu/nuwave-guest-confirmation/
-https://connect-to-tech.northeastern.edu/students/
-https://connect-to-tech.northeastern.edu/staff/
-
-# Library and Research
-https://library.northeastern.edu/ideas/about-snell-library/
-https://library.northeastern.edu/ideas/about-snell-library/hours/
-https://library.northeastern.edu/ask-a-librarian/
-https://library.northeastern.edu/contact-us/
-https://library.northeastern.edu/library-locations/library-hours/
-https://library.northeastern.edu/about/visitors/hours
-https://library.northeastern.edu/alumni/
-https://northeastern.libanswers.com/
-https://northeastern.libanswers.com/faq/331809
-https://northeastern.libanswers.com/faq/141750
-
-# Co-op and Experiential Learning
-https://www.northeastern.edu/experiential-learning/co-op/
-https://www.northeastern.edu/the-co-op-process-from-start-to-finish/
-https://www.northeastern.edu/3-typical-co-op-schedules/
-https://careers.northeastern.edu/students/student-co-op/global-co-op/
-
-# College-Specific Co-op Information
-https://cos.northeastern.edu/experiential-learning/cooperative-education/
-https://cssh.northeastern.edu/academics/co-op/
-https://coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-student-services/course-registration/
-
-# Student Organizations and Activities
-https://neu.campuslabs.com/engage/organizations
-
-# College-Specific Organizations
-https://coe.northeastern.edu/academics-experiential-learning/co-op-experiential-learning/clubs-organizations/
-https://cos.northeastern.edu/college-of-science-life/student-organizations/
-https://damore-mckim.northeastern.edu/current-students/experience/clubs-organizations/
-
-# Academic Advising and Support
-https://cssh.northeastern.edu/resources/make-an-appointment-for-academic-advising/
-https://cssh.northeastern.edu/resources/undergraduate-advising/
-https://cos.northeastern.edu/college-of-science-life/advising-student-resources/
-https://damore-mckim.northeastern.edu/current-students/advising/
-https://bouve.northeastern.edu/academics/student-services/
-https://coe.northeastern.edu/academics-experiential-learning/graduate-school-of-engineering/graduate-student-services/
-https://undergraduate.northeastern.edu/mentoring-advising/
-
-# Professional Studies
-https://cps.northeastern.edu/current-students/
-https://cps.northeastern.edu/current-students/registering-for-classes/
-https://cps.northeastern.edu/current-students/academic-and-career-advising-staff/
-
-# International Services
-https://international.northeastern.edu/student-support/
-https://international.northeastern.edu/ogs/contact/
-https://international.northeastern.edu/ogs/student-support/
-https://international.northeastern.edu/ogs/current-students/traveling/
-https://international.northeastern.edu/ogs/forms-and-guides/travel-signature-request/
-https://international.northeastern.edu/ogs/new-students/i-20-ds-2019-application/prearrivali20/
-https://international.northeastern.edu/ogs/employment/off-campus-employment/f-1-pre-completion-opt/
-https://international.northeastern.edu/ogs/employment/off-campus-employment/applying-for-post-completion-opt-f-1/
-https://international.northeastern.edu/ogs/ogs-forms-and-guides/
-https://international.northeastern.edu/ogs/student-support/resources/transportation-safety/
-
-# Alumni Services
-https://alumni.northeastern.edu/resources/benefits/
-https://alumni.northeastern.edu/networks/nusource/
-https://alumni.northeastern.edu/co-op-mentor-program/
-https://alumni.northeastern.edu/opportunities/career-help/
-https://alumni.northeastern.edu/opportunities/access-northeastern-account/
-
-# Alumni Recreation
-https://recreation.northeastern.edu/alumni/
-
-# Diversity and Inclusion
-https://cultural-life.northeastern.edu/
-https://www.northeastern.edu/cultural-life/services/
-https://diversity.northeastern.edu/initatives/centers/
-
-# Cultural Centers
-https://jdoaai.sites.northeastern.edu/
-https://www.northeastern.edu/aai/
-https://northeastern.edu/diversity/initiatives/john-d-obryant-african-american-institute/
-https://nuplace.northeastern.edu/partner/aai/
-
-# Safety and Security
-https://nupd.northeastern.edu/contact-us/how-to-reach-nupd/
-https://nupd.northeastern.edu/safety/emergency-planning/
-https://nupd.northeastern.edu/safety-notifications/
-https://nupd.northeastern.edu/safety-support-network/
-
-# Recreation and Athletics
-https://recreation.northeastern.edu/intramural-sports/
-
-# Facilities and Campus Information
-https://facilities.northeastern.edu/campus-map/
-https://pref.northeastern.edu/new-blue-bikes-station/
-
-# Arts and Culture Venues
-https://calendar.northeastern.edu/gallery_360
-https://camd.northeastern.edu/cfa/center-for-the-arts-exhibitions/
-
-# Special Programs
-https://nuin.northeastern.edu/coursereg/
-
-# News and Information
-https://news.northeastern.edu
-https://huntnewsnu.com 
+'https://www.northeastern.edu/sitemap.xml'
+,'https://me.northeastern.edu/sitemap.xml'
+,'https://about.me.northeastern.edu/sitemap.xml'
+,'https://catalog.northeastern.edu/sitemap.xml'
+,'https://registrar.northeastern.edu/sitemap.xml'
+,'https://library.northeastern.edu/sitemap.xml'
+,'https://studentlife.northeastern.edu/sitemap.xml'
+,'https://admissions.northeastern.edu/sitemap.xml'
+,'https://graduate.northeastern.edu/sitemap.xml'
+,'https://registrar.northeastern.edu/sitemap.xml'
+,'https://catalog.northeastern.edu/sitemap.xml'
+,'https://housing.northeastern.edu/sitemap.xml'
+,'https://aptsearch.northeastern.edu/sitemap.xml'
+,'https://studentfinance.northeastern.edu/sitemap.xml'
+,'https://huskycard.northeastern.edu/sitemap.xml'
+,'https://uhcs.northeastern.edu/sitemap.xml'
+,'https://its.northeastern.edu/sitemap.xml'
+,'https://connect-to-tech.northeastern.edu/sitemap.xml'
+,'https://library.northeastern.edu/sitemap.xml'
+,'https://northeastern.libanswers.com/sitemap.xml'
+,'https://careers.northeastern.edu/sitemap.xml'
+,'https://cos.northeastern.edu/sitemap.xml'
+,'https://cssh.northeastern.edu/sitemap.xml'
+,'https://coe.northeastern.edu/sitemap.xml'
+,'https://neu.campuslabs.com/sitemap.xml'
+,'https://damore-mckim.northeastern.edu/sitemap.xml'
+,'https://bouve.northeastern.edu/sitemap.xml'
+,'https://undergraduate.northeastern.edu/sitemap.xml'
+,'https://cps.northeastern.edu/sitemap.xml'
+,'https://international.northeastern.edu/sitemap.xml'
+,'https://alumni.northeastern.edu/sitemap.xml'
+,'https://recreation.northeastern.edu/sitemap.xml'
+,'https://cultural-life.northeastern.edu/sitemap.xml'
+,'https://diversity.northeastern.edu/sitemap.xml'
+,'https://jdoaai.sites.northeastern.edu/sitemap.xml'
+,'https://nuplace.northeastern.edu/sitemap.xml'
+,'https://nupd.northeastern.edu/sitemap.xml'
+,'https://facilities.northeastern.edu/sitemap.xml'
+,'https://pref.northeastern.edu/sitemap.xml'
+,'https://calendar.northeastern.edu/sitemap.xml'
+,'https://camd.northeastern.edu/sitemap.xml'
+,'https://nuin.northeastern.edu/sitemap.xml'
+,'https://news.northeastern.edu/sitemap.xml'
+,'https://huntnewsnu.com/sitemap.xml' 
+,'https://phd.northeastern.edu/sitemap.xml'
+,'https://online.northeastern.edu/sitemap.xml'
+,'https://sites.northeastern.edu/sitemap.xml'
+,'https://accomplishments.northeastern.edu/sitemap.xml'
+,'https://give.northeastern.edu/sitemap.xml'
+,'https://experiencepoweredby.northeastern.edu/sitemap.xml'
+,'https://sustainability.northeastern.edu/sitemap.xml'
+,'https://experience.arcgis.com/experience/b24181de18b74d20a369865de2a44ef3/sitemap.xml'
+,'https://campusmap.northeastern.edu/sitemap.xml'
+,'https://publicart.northeastern.edu/sitemap.xml'
+,'https://hr.northeastern.edu/sitemap.xml'
+,'https://belonging.northeastern.edu/sitemap.xml'
+,'https://provost.northeastern.edu/sitemap.xml'
+,'https://registrar.northeastern.edu/sitemap.xml'
+,'https://law.northeastern.edu/sitemap.xml'
+,'https://research.northeastern.edu/sitemap.xml'
+,'https://geo.northeastern.edu/sitemap.xml'
+,'https://globalsafety.northeastern.edu/sitemap.xml'
+,'https://experiential-learning.northeastern.edu/sitemap.xml'
+,'https://arlington.northeastern.edu/sitemap.xml'
+,'https://www.burlington.northeastern.edu/sitemap.xml'
+,'https://charlotte.northeastern.edu/sitemap.xml'
+,'https://www.nulondon.ac.uk/sitemap.xml'
+,'https://miami.northeastern.edu/sitemap.xml'
+,'https://csi.northeastern.edu/sitemap.xml'
+,'https://oakland.northeastern.edu/sitemap.xml'
+,'https://roux.northeastern.edu/sitemap.xml'
+,'https://seattle.northeastern.edu/sitemap.xml'
+,'https://siliconvalley.northeastern.edu/sitemap.xml'
+,'https://toronto.northeastern.edu/sitemap.xml'
+,'https://vancouver.northeastern.edu/sitemap.xml'
+,'https://bachelors-completion.northeastern.edu/sitemap.xml'
+,'https://nuhuskies.com/sitemap.xml'
+,'https://academicplan.northeastern.edu/sitemap.xml'
+,'https://president.northeastern.edu/sitemap.xml'
+,'https://facts.northeastern.edu/sitemap.xml'
+,'https://giving.northeastern.edu/sitemap.xml'
+,'https://catalog.northeastern.edu/sitemap.xml'
+,'https://service.northeastern.edu/sitemap.xml'
+,'https://nupdboard.northeastern.edu/sitemap.xml'
+,'https://offcampus.housing.northeastern.edu/sitemap.xml'
+,'https://digital-accessibility.northeastern.edu/sitemap.xml'
+,'https://nu.outsystemsenterprise.com/FSD/sitemap.xml'

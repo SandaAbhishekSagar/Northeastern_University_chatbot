@@ -1,0 +1,12 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "python start_production.py",
+    "healthcheckPath": "/health/enhanced",
+    "healthcheckTimeout": 300,
+    "restartPolicyType": "ON_FAILURE",
+    "numReplicas": 1
+  }
+} 

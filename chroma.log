@@ -1,0 +1,1418 @@
+[33mWARNING[0m:  [04-07-2025 16:32:48] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [04-07-2025 16:32:48] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [04-07-2025 16:32:48] Starting component System
+[36mDEBUG[0m:    [04-07-2025 16:32:48] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [04-07-2025 16:32:48] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [04-07-2025 16:32:48] Starting component SqliteDB
+[36mDEBUG[0m:    [04-07-2025 16:32:48] Starting component Posthog
+[36mDEBUG[0m:    [04-07-2025 16:32:48] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [04-07-2025 16:32:48] Starting component SegmentAPI
+[32mINFO[0m:     [04-07-2025 16:32:48] Started server process [[36m41392[0m]
+[32mINFO[0m:     [04-07-2025 16:32:48] Waiting for application startup.
+[32mINFO[0m:     [04-07-2025 16:32:48] Application startup complete.
+[32mINFO[0m:     [04-07-2025 16:32:48] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [04-07-2025 16:32:49] ::1:61208 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:32:51] ::1:61212 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:32:51] ::1:61212 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:33:41] ::1:61243 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:33:41] ::1:61243 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:34:49] ::1:61265 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:34:49] ::1:61265 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:36:46] ::1:61316 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:36:48] ::1:61322 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:36:48] ::1:61322 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[31mERROR[0m:    [04-07-2025 16:37:09] Collection chat_messages does not exist.
+Traceback (most recent call last):
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 80, in catch_exceptions_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 165, in call_next
+    raise app_exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 151, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 189, in __call__
+    with collapse_excgroups():
+  File "C:\Users\sabhi\miniconda3\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_utils.py", line 88, in collapse_excgroups
+    raise exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 94, in check_http_version_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 165, in call_next
+    raise app_exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 151, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_exception_handler.py", line 55, in wrapped_app
+    raise exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_exception_handler.py", line 44, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\routing.py", line 746, in __call__
+    await route.handle(scope, receive, send)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\routing.py", line 75, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_exception_handler.py", line 55, in wrapped_app
+    raise exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_exception_handler.py", line 44, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\routing.py", line 70, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\fastapi\routing.py", line 193, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\concurrency.py", line 35, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\anyio\_backends\_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\anyio\_backends\_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py", line 127, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\auth\fastapi.py", line 234, in wrapped
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 433, in get_collection
+    return self._api.get_collection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py", line 127, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\api\segment.py", line 260, in get_collection
+    raise ValueError(f"Collection {name} does not exist.")
+ValueError: Collection chat_messages does not exist.
+[32mINFO[0m:     [04-07-2025 16:37:09] ::1:61360 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 500
+[31mERROR[0m:    [04-07-2025 16:37:09] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [04-07-2025 16:37:09] ::1:61360 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:09] ::1:61360 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[31mERROR[0m:    [04-07-2025 16:37:14] Collection documents does not exist.
+Traceback (most recent call last):
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 80, in catch_exceptions_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 165, in call_next
+    raise app_exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 151, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 189, in __call__
+    with collapse_excgroups():
+  File "C:\Users\sabhi\miniconda3\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_utils.py", line 88, in collapse_excgroups
+    raise exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 94, in check_http_version_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 165, in call_next
+    raise app_exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\base.py", line 151, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_exception_handler.py", line 55, in wrapped_app
+    raise exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_exception_handler.py", line 44, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\routing.py", line 746, in __call__
+    await route.handle(scope, receive, send)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\routing.py", line 75, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_exception_handler.py", line 55, in wrapped_app
+    raise exc
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\_exception_handler.py", line 44, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\routing.py", line 70, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\fastapi\routing.py", line 193, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\starlette\concurrency.py", line 35, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\anyio\_backends\_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\anyio\_backends\_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py", line 127, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\auth\fastapi.py", line 234, in wrapped
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 433, in get_collection
+    return self._api.get_collection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py", line 127, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sabhi\miniconda3\Lib\site-packages\chromadb\api\segment.py", line 260, in get_collection
+    raise ValueError(f"Collection {name} does not exist.")
+ValueError: Collection documents does not exist.
+[32mINFO[0m:     [04-07-2025 16:37:14] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 500
+[31mERROR[0m:    [04-07-2025 16:37:14] Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [04-07-2025 16:37:14] ::1:61360 - "POST /api/v1/collections?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:14] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[36mDEBUG[0m:    [04-07-2025 16:37:23] Starting component PersistentLocalHnswSegment
+[31mERROR[0m:    [04-07-2025 16:37:23] Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:23] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:27] ::1:61360 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:27] ::1:61360 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:32] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:39] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:39] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:39] ::1:61360 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:37:39] ::1:61360 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:38:10] ::1:61394 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:38:10] ::1:61394 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:38:10] ::1:61394 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:38:10] ::1:61394 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:38:39] ::1:61394 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:38:39] ::1:61394 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:38:39] ::1:61394 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:38:39] ::1:61394 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:39:10] ::1:61461 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:39:10] ::1:61461 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:39:10] ::1:61461 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:39:10] ::1:61461 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:39:40] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:39:40] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:39:40] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:39:40] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:10] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:10] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:10] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:10] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:39] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:39] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:39] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:39] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:43] ::1:61528 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:44] ::1:61532 - "GET /api/v1/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:40:44] ::1:61532 - "GET /api/v1/databases/default_database?tenant=default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:07] ::1:61491 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:07] ::1:61491 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:12] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:16] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:16] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:16] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:16] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:16] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:16] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:17] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:17] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:19] ::1:61491 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:19] ::1:61491 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:25] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:29] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:29] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:29] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:29] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:36] ::1:61491 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:36] ::1:61491 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:42] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:47] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:47] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:47] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:47] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:47] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:47] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:47] ::1:61491 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:41:47] ::1:61491 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:46:57] ::1:61850 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:20] ::1:61895 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:20] ::1:61895 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:24] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:24] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:25] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:27] ::1:61895 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:27] ::1:61895 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 16:47:33] ::1:61895 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:20] ::1:62670 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:44] ::1:62704 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:44] ::1:62704 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:51] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [04-07-2025 17:10:51] Failed to send telemetry event CollectionGetEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [04-07-2025 17:10:51] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:51] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:51] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:51] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:51] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:52] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:52] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:52] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:52] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:52] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:10:52] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:08] ::1:62704 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:08] ::1:62704 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:08] ::1:62704 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:08] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:08] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:08] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:08] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:14] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:14] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:15] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:15] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:16] ::1:62704 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:16] ::1:62704 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:29] ::1:62704 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:29] ::1:62704 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:29] ::1:62704 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:11:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:02] ::1:62704 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:02] ::1:62704 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:07] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:19] ::1:62704 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:19] ::1:62704 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:19] ::1:62704 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:24] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:24] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:24] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:24] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:12:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:14] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:14] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:14] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:14] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:15] ::1:62704 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:15] ::1:62704 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:20] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:20] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:20] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:20] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:21] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:21] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:30] ::1:62704 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:30] ::1:62704 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:30] ::1:62704 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:36] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:36] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:36] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:36] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:47] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:47] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:47] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:13:47] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:14:15] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:14:15] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:14:15] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:14:15] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:14:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:14:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:14:44] ::1:62704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:14:44] ::1:62704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:15:14] ::1:62896 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:15:14] ::1:62896 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:15:14] ::1:62896 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:15:14] ::1:62896 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:16:14] ::1:62927 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:16:14] ::1:62927 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:16:14] ::1:62927 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:16:14] ::1:62927 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:17:14] ::1:62947 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:17:14] ::1:62947 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:17:14] ::1:62947 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:17:14] ::1:62947 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:18:14] ::1:62983 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:18:14] ::1:62983 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:18:14] ::1:62983 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:18:14] ::1:62983 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:19:15] ::1:63030 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:19:15] ::1:63030 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:19:15] ::1:63030 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:19:15] ::1:63030 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:20:15] ::1:63086 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:20:15] ::1:63086 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:20:15] ::1:63086 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:20:15] ::1:63086 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:21:15] ::1:63114 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:21:15] ::1:63114 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:21:15] ::1:63114 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:21:15] ::1:63114 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:22:14] ::1:63152 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:22:14] ::1:63152 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:22:14] ::1:63152 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:22:14] ::1:63152 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:23:15] ::1:63200 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:23:15] ::1:63200 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:23:15] ::1:63200 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:23:15] ::1:63200 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:24:15] ::1:63228 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:24:15] ::1:63228 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:24:15] ::1:63228 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:24:15] ::1:63228 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:25:14] ::1:63263 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:25:15] ::1:63263 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:25:15] ::1:63263 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:25:15] ::1:63263 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:25:56] ::1:63289 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:20] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:20] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:21] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:21] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:21] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:21] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:21] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:21] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:27] ::1:63325 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:27] ::1:63325 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:32] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:44] ::1:63325 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:44] ::1:63325 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:44] ::1:63325 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:53] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:26:54] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:14] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:14] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:14] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:14] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:19] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:19] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:19] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:19] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:49] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:49] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:49] ::1:63325 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:27:49] ::1:63325 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:20] ::1:63407 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:20] ::1:63407 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:20] ::1:63407 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:20] ::1:63407 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:20] ::1:63407 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:20] ::1:63407 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:20] ::1:63407 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:20] ::1:63407 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:50] ::1:63427 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:50] ::1:63427 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:50] ::1:63427 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:28:50] ::1:63427 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:19] ::1:63427 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:19] ::1:63427 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:19] ::1:63427 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:19] ::1:63427 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:19] ::1:63427 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:19] ::1:63427 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:20] ::1:63427 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:20] ::1:63427 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:50] ::1:63494 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:50] ::1:63494 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:50] ::1:63494 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:29:50] ::1:63494 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:30:14] ::1:63494 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:30:14] ::1:63494 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:30:14] ::1:63494 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:30:14] ::1:63494 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:30:50] ::1:63531 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:30:51] ::1:63531 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:30:51] ::1:63531 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:30:51] ::1:63531 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:31:14] ::1:63531 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:31:14] ::1:63531 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:31:15] ::1:63531 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:31:15] ::1:63531 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:31:51] ::1:63606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:31:51] ::1:63606 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:31:51] ::1:63606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:31:51] ::1:63606 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:32:14] ::1:63606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:32:14] ::1:63606 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:32:14] ::1:63606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:32:14] ::1:63606 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:32:53] ::1:63656 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:32:53] ::1:63656 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:32:53] ::1:63656 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:32:53] ::1:63656 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:33:14] ::1:63656 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:33:14] ::1:63656 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:33:14] ::1:63656 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:33:14] ::1:63656 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:33:53] ::1:63680 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:33:54] ::1:63680 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:33:54] ::1:63680 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:33:54] ::1:63680 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:34:14] ::1:63680 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:34:14] ::1:63680 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:34:14] ::1:63680 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:34:14] ::1:63680 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:34:55] ::1:63704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:34:55] ::1:63704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:34:55] ::1:63704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:34:55] ::1:63704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:35:14] ::1:63704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:35:14] ::1:63704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:35:14] ::1:63704 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:35:14] ::1:63704 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:35:56] ::1:63726 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:35:56] ::1:63726 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:35:56] ::1:63726 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:35:56] ::1:63726 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:36:15] ::1:63726 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:36:15] ::1:63726 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:36:15] ::1:63726 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:36:15] ::1:63726 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:36:56] ::1:63760 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:36:57] ::1:63760 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:36:57] ::1:63760 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:36:57] ::1:63760 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:37:14] ::1:63760 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:37:14] ::1:63760 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:37:14] ::1:63760 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:37:14] ::1:63760 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:37:58] ::1:63788 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:37:58] ::1:63788 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:37:58] ::1:63788 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:37:58] ::1:63788 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:38:15] ::1:63788 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:38:15] ::1:63788 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:38:15] ::1:63788 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:38:15] ::1:63788 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:38:59] ::1:63824 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:38:59] ::1:63824 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:38:59] ::1:63824 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:38:59] ::1:63824 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:39:14] ::1:63824 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:39:14] ::1:63824 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:39:14] ::1:63824 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:39:14] ::1:63824 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:40:00] ::1:63866 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:40:00] ::1:63866 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:40:00] ::1:63866 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:40:00] ::1:63866 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:40:14] ::1:63866 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:40:14] ::1:63866 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:40:14] ::1:63866 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:40:14] ::1:63866 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:41:03] ::1:63898 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:41:03] ::1:63898 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:41:03] ::1:63898 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:41:03] ::1:63898 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:41:16] ::1:63898 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:41:16] ::1:63898 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:41:16] ::1:63898 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:41:16] ::1:63898 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:01] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:02] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:02] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:02] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:15] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:15] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:15] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:15] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:36] ::1:63949 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:36] ::1:63949 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:40] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:40] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:40] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:40] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:41] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:41] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:41] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:41] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:41] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:41] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:41] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:41] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:51] ::1:63949 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:51] ::1:63949 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:42:51] ::1:63949 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:02] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:02] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:02] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:02] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:14] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:15] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:15] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:15] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:20] ::1:63949 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:20] ::1:63949 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:35] ::1:63949 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:35] ::1:63949 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:35] ::1:63949 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:56] ::1:63949 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:43:56] ::1:63949 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:01] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:11] ::1:63949 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:11] ::1:63949 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:11] ::1:63949 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:20] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:20] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:20] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:20] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:20] ::1:63949 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:20] ::1:63949 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:25] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:25] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:26] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:38] ::1:63949 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:38] ::1:63949 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:38] ::1:63949 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:38] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:38] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:38] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:44:38] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:45:04] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:45:04] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:45:05] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:45:05] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:45:14] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:45:14] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:45:14] ::1:63949 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:45:14] ::1:63949 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:46:05] ::1:64154 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:46:06] ::1:64154 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:46:06] ::1:64154 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:46:06] ::1:64154 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:46:14] ::1:64154 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:46:14] ::1:64154 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:46:14] ::1:64154 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:46:14] ::1:64154 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:47:07] ::1:64220 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [04-07-2025 17:47:07] Failed to send telemetry event CollectionGetEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [04-07-2025 17:47:07] ::1:64220 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:47:07] ::1:64220 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:47:07] ::1:64220 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:47:14] ::1:64220 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:47:14] ::1:64220 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:47:14] ::1:64220 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:47:14] ::1:64220 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:48:07] ::1:64257 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:48:07] ::1:64257 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:48:07] ::1:64257 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:48:07] ::1:64257 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:48:15] ::1:64257 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:48:15] ::1:64257 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:48:15] ::1:64257 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:48:15] ::1:64257 - "POST /api/v1/collections/3591c09a-ea6d-44a1-b362-01e0ce178992/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:49:09] ::1:64306 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [04-07-2025 17:49:09] Failed to send telemetry event CollectionGetEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [04-07-2025 17:49:09] ::1:64306 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:49:09] ::1:64306 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[36mDEBUG[0m:    [04-07-2025 17:49:09] Starting component PersistentLocalHnswSegment
+[31mERROR[0m:    [04-07-2025 17:49:09] Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [04-07-2025 17:49:09] ::1:64306 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:49:16] ::1:64306 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:49:16] ::1:64306 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:49:16] ::1:64306 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:49:16] ::1:64306 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:50:15] ::1:64366 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:50:15] ::1:64366 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:50:15] ::1:64366 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:50:15] ::1:64366 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:50:15] ::1:64366 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:50:15] ::1:64366 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:50:15] ::1:64366 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:50:15] ::1:64366 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:51:25] ::1:64431 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:51:25] ::1:64431 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:51:25] ::1:64431 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:51:25] ::1:64431 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:51:25] ::1:64431 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:51:25] ::1:64431 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:51:25] ::1:64431 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:51:25] ::1:64431 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:52:21] ::1:64498 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:52:21] ::1:64498 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:52:21] ::1:64498 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:52:21] ::1:64498 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:52:22] ::1:64498 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:52:22] ::1:64498 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:52:22] ::1:64498 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:52:22] ::1:64498 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:53:22] ::1:64562 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:53:22] ::1:64562 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:53:22] ::1:64562 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:53:22] ::1:64562 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:53:22] ::1:64562 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:53:22] ::1:64562 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:53:22] ::1:64562 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:53:22] ::1:64562 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:54:18] ::1:64594 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:54:18] ::1:64594 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:54:18] ::1:64594 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:54:18] ::1:64594 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:54:18] ::1:64594 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:54:18] ::1:64594 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:54:18] ::1:64594 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:54:18] ::1:64594 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:55:21] ::1:64672 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:55:21] ::1:64672 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:55:21] ::1:64672 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:55:21] ::1:64672 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:55:21] ::1:64672 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:55:21] ::1:64672 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:55:21] ::1:64672 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:55:21] ::1:64672 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:56:21] ::1:64711 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:56:21] ::1:64711 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:56:22] ::1:64711 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:56:22] ::1:64711 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:56:22] ::1:64711 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:56:22] ::1:64711 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:56:22] ::1:64711 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:56:22] ::1:64711 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:57:39] ::1:64781 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:57:39] ::1:64781 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:57:39] ::1:64781 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:57:39] ::1:64781 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:57:39] ::1:64781 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:57:39] ::1:64781 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:57:39] ::1:64781 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:57:39] ::1:64781 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:58:23] ::1:64839 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:58:23] ::1:64839 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:58:23] ::1:64839 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:58:23] ::1:64839 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:58:23] ::1:64839 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:58:23] ::1:64839 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:58:23] ::1:64839 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:58:24] ::1:64839 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:19] ::1:64872 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:19] ::1:64872 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:19] ::1:64872 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:19] ::1:64872 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:19] ::1:64872 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:19] ::1:64872 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:19] ::1:64872 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:19] ::1:64872 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 17:59:50] ::1:64889 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:18] ::1:64929 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:18] ::1:64929 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:23] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:23] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:24] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:35] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:35] ::1:64929 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:35] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:41] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:41] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:41] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:41] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:46] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:46] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:46] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:46] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:51] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:51] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:51] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:51] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:51] ::1:64929 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:51] ::1:64929 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:00:58] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:11] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:11] ::1:64929 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:11] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:15] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:15] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:16] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:16] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:16] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:16] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:16] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:16] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:21] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:21] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:21] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:21] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:25] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:25] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:25] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:25] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:26] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:26] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:26] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:26] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:27] ::1:64929 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:27] ::1:64929 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:33] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:40] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:40] ::1:64929 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:40] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:50] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:50] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:50] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:50] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:51] ::1:64929 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:51] ::1:64929 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:55] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:01:56] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:07] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:07] ::1:64929 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:07] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:07] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:07] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:07] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:07] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:17] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:17] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:17] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:17] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:17] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:17] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:18] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:18] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:45] ::1:64929 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:45] ::1:64929 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:02:50] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:00] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:00] ::1:64929 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:00] ::1:64929 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:00] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:00] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:00] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:00] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:04] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:04] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:04] ::1:64929 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [04-07-2025 18:03:04] ::1:64929 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:48:33] ::1:53567 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:49:01] ::1:53597 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:49:01] ::1:53597 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:49:01] ::1:53597 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:49:01] ::1:53597 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:49:31] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:49:32] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:49:32] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:49:32] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:01] ::1:53606 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:01] ::1:53606 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:06] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:07] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:07] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:15] ::1:53606 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:15] ::1:53606 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:15] ::1:53606 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:15] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:15] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:15] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:15] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:31] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:31] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:32] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:50:32] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:01] ::1:53606 - "GET /api/v1/collections/chat_messages?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:01] ::1:53606 - "POST /api/v1/collections/47ad0364-60de-42a5-8077-8eb8b4a1b6b2/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:05] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:21] ::1:53606 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:21] ::1:53606 - "POST /api/v1/collections/a598d682-a1d5-4de5-b614-40dede686772/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:21] ::1:53606 - "GET /api/v1/collections/chat_sessions?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:21] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:21] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:21] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:21] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:32] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:32] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:32] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:51:32] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:52:01] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:52:01] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:52:01] ::1:53606 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:52:01] ::1:53606 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:52:32] ::1:53692 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:52:32] ::1:53692 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:52:32] ::1:53692 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:52:32] ::1:53692 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:53:01] ::1:53692 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:53:01] ::1:53692 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:53:02] ::1:53692 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:53:02] ::1:53692 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:53:31] ::1:53692 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:53:31] ::1:53692 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:53:31] ::1:53692 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:53:31] ::1:53692 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:54:10] ::1:53717 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:54:10] ::1:53717 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:54:10] ::1:53717 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:54:10] ::1:53717 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:55:11] ::1:53744 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:55:11] ::1:53744 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:55:11] ::1:53744 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:55:11] ::1:53744 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:56:11] ::1:53757 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:56:11] ::1:53757 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:56:11] ::1:53757 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:56:11] ::1:53757 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:57:11] ::1:53773 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:57:11] ::1:53773 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:57:11] ::1:53773 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:57:11] ::1:53773 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:58:10] ::1:53800 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:58:10] ::1:53800 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:58:11] ::1:53800 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:58:11] ::1:53800 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:59:11] ::1:53820 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:59:11] ::1:53820 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:59:11] ::1:53820 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 04:59:11] ::1:53820 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:00:11] ::1:53865 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:00:11] ::1:53865 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:00:11] ::1:53865 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:00:11] ::1:53865 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:01:11] ::1:53903 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:01:12] ::1:53903 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:01:12] ::1:53903 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:01:12] ::1:53903 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:02:10] ::1:53924 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:02:11] ::1:53924 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:02:11] ::1:53924 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:02:11] ::1:53924 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:03:11] ::1:53963 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:03:11] ::1:53963 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:03:11] ::1:53963 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:03:11] ::1:53963 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:04:11] ::1:53979 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:04:11] ::1:53979 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:04:11] ::1:53979 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:04:11] ::1:53979 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:05:11] ::1:54001 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:05:11] ::1:54001 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:05:11] ::1:54001 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:05:11] ::1:54001 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:06:10] ::1:54023 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:06:10] ::1:54023 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:06:10] ::1:54023 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:06:10] ::1:54023 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:07:11] ::1:54039 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:07:11] ::1:54039 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:07:11] ::1:54039 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:07:11] ::1:54039 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:08:11] ::1:54068 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:08:11] ::1:54068 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:08:11] ::1:54068 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:08:11] ::1:54068 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:09:11] ::1:54081 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:09:11] ::1:54081 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:09:11] ::1:54081 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:09:11] ::1:54081 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:10:10] ::1:54104 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:10:10] ::1:54104 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:10:10] ::1:54104 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:10:10] ::1:54104 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:11:11] ::1:54117 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:11:11] ::1:54117 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:11:11] ::1:54117 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:11:11] ::1:54117 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:12:10] ::1:54130 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:12:11] ::1:54130 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:12:11] ::1:54130 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:12:11] ::1:54130 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:13:11] ::1:54156 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:13:11] ::1:54156 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:13:11] ::1:54156 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:13:11] ::1:54156 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:14:11] ::1:54174 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:14:11] ::1:54174 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:14:11] ::1:54174 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:14:11] ::1:54174 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:15:11] ::1:54208 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:15:11] ::1:54208 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:15:11] ::1:54208 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:15:11] ::1:54208 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:16:11] ::1:54222 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:16:11] ::1:54222 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:16:11] ::1:54222 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:16:11] ::1:54222 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:17:12] ::1:54240 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:17:12] ::1:54240 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:17:12] ::1:54240 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:17:12] ::1:54240 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:18:11] ::1:54263 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:18:11] ::1:54263 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:18:11] ::1:54263 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:18:11] ::1:54263 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:19:11] ::1:54277 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:19:11] ::1:54277 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:19:11] ::1:54277 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:19:11] ::1:54277 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:20:10] ::1:54292 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:20:10] ::1:54292 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:20:11] ::1:54292 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:20:11] ::1:54292 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:21:11] ::1:54308 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:21:11] ::1:54308 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:21:11] ::1:54308 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:21:11] ::1:54308 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:22:10] ::1:54323 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:22:10] ::1:54323 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:22:11] ::1:54323 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:22:11] ::1:54323 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:23:12] ::1:54344 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:23:12] ::1:54344 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:23:12] ::1:54344 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:23:12] ::1:54344 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:24:10] ::1:54356 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:24:10] ::1:54356 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:24:11] ::1:54356 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:24:11] ::1:54356 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:25:11] ::1:54380 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:25:11] ::1:54380 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:25:11] ::1:54380 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:25:11] ::1:54380 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:26:10] ::1:54398 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:26:10] ::1:54398 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:26:11] ::1:54398 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:26:11] ::1:54398 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:26:35] ::1:54398 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[31mERROR[0m:    [06-07-2025 05:26:35] Failed to send telemetry event CollectionGetEvent: capture() takes 1 positional argument but 3 were given
+[32mINFO[0m:     [06-07-2025 05:26:35] ::1:54398 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/get HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:26:35] ::1:54398 - "GET /api/v1/collections/documents?tenant=default_tenant&database=default_database HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 05:26:35] ::1:54398 - "POST /api/v1/collections/b26b1c59-a382-41c8-874f-9598f22b1f31/query HTTP/1.1" 200
+[33mWARNING[0m:  [06-07-2025 15:22:26] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [06-07-2025 15:22:26] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [06-07-2025 15:22:26] Starting component System
+[36mDEBUG[0m:    [06-07-2025 15:22:26] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [06-07-2025 15:22:26] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [06-07-2025 15:22:26] Starting component SqliteDB
+[36mDEBUG[0m:    [06-07-2025 15:22:26] Starting component Posthog
+[36mDEBUG[0m:    [06-07-2025 15:22:26] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [06-07-2025 15:22:26] Starting component SegmentAPI
+[32mINFO[0m:     [06-07-2025 15:22:26] Started server process [[36m31672[0m]
+[32mINFO[0m:     [06-07-2025 15:22:26] Waiting for application startup.
+[32mINFO[0m:     [06-07-2025 15:22:26] Application startup complete.
+[32mINFO[0m:     [06-07-2025 15:22:26] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [06-07-2025 15:22:28] ::1:55161 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 15:23:13] ::1:55184 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 15:29:24] ::1:55454 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [06-07-2025 15:38:09] Shutting down
+[32mINFO[0m:     [06-07-2025 15:38:09] Waiting for application shutdown.
+[32mINFO[0m:     [06-07-2025 15:38:09] Application shutdown complete.
+[32mINFO[0m:     [06-07-2025 15:38:09] Finished server process [[36m31672[0m]
+[33mWARNING[0m:  [08-07-2025 18:25:02] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [08-07-2025 18:25:02] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [08-07-2025 18:25:02] Starting component System
+[36mDEBUG[0m:    [08-07-2025 18:25:02] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [08-07-2025 18:25:02] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [08-07-2025 18:25:02] Starting component SqliteDB
+[36mDEBUG[0m:    [08-07-2025 18:25:02] Starting component Posthog
+[36mDEBUG[0m:    [08-07-2025 18:25:02] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [08-07-2025 18:25:02] Starting component SegmentAPI
+[32mINFO[0m:     [08-07-2025 18:25:02] Started server process [[36m12312[0m]
+[32mINFO[0m:     [08-07-2025 18:25:02] Waiting for application startup.
+[32mINFO[0m:     [08-07-2025 18:25:02] Application startup complete.
+[32mINFO[0m:     [08-07-2025 18:25:02] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [08-07-2025 18:25:02] 127.0.0.1:58283 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 18:26:00] ::1:58330 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 19:01:59] ::1:59367 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 19:03:24] ::1:59450 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 19:08:27] ::1:59608 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 19:13:27] ::1:59787 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[33mWARNING[0m:  [08-07-2025 19:15:46] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [08-07-2025 19:15:46] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [08-07-2025 19:15:46] Starting component System
+[36mDEBUG[0m:    [08-07-2025 19:15:46] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [08-07-2025 19:15:46] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [08-07-2025 19:15:46] Starting component SqliteDB
+[36mDEBUG[0m:    [08-07-2025 19:15:46] Starting component Posthog
+[36mDEBUG[0m:    [08-07-2025 19:15:46] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [08-07-2025 19:15:46] Starting component SegmentAPI
+[32mINFO[0m:     [08-07-2025 19:15:46] Started server process [[36m24564[0m]
+[32mINFO[0m:     [08-07-2025 19:15:46] Waiting for application startup.
+[32mINFO[0m:     [08-07-2025 19:15:46] Application startup complete.
+[32mINFO[0m:     [08-07-2025 19:15:46] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [08-07-2025 19:15:48] ::1:59876 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 19:23:52] ::1:60276 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 19:29:46] ::1:60522 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 20:23:51] ::1:62345 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 20:25:28] ::1:62401 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 20:50:12] ::1:63305 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 21:01:20] ::1:63804 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 21:01:50] ::1:63827 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 21:05:14] ::1:63969 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 21:09:14] ::1:64326 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 21:14:48] ::1:64592 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 21:30:08] ::1:65169 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[33mWARNING[0m:  [08-07-2025 23:40:12] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [08-07-2025 23:40:12] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [08-07-2025 23:40:12] Starting component System
+[36mDEBUG[0m:    [08-07-2025 23:40:12] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [08-07-2025 23:40:12] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [08-07-2025 23:40:12] Starting component SqliteDB
+[36mDEBUG[0m:    [08-07-2025 23:40:12] Starting component Posthog
+[36mDEBUG[0m:    [08-07-2025 23:40:12] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [08-07-2025 23:40:12] Starting component SegmentAPI
+[32mINFO[0m:     [08-07-2025 23:40:12] Started server process [[36m11316[0m]
+[32mINFO[0m:     [08-07-2025 23:40:12] Waiting for application startup.
+[32mINFO[0m:     [08-07-2025 23:40:12] Application startup complete.
+[32mINFO[0m:     [08-07-2025 23:40:12] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [08-07-2025 23:40:14] ::1:50962 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [08-07-2025 23:41:09] ::1:50991 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[33mWARNING[0m:  [22-07-2025 19:52:29] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [22-07-2025 19:52:29] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [22-07-2025 19:52:29] Starting component System
+[36mDEBUG[0m:    [22-07-2025 19:52:29] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [22-07-2025 19:52:29] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [22-07-2025 19:52:29] Starting component SqliteDB
+[36mDEBUG[0m:    [22-07-2025 19:52:29] Starting component Posthog
+[36mDEBUG[0m:    [22-07-2025 19:52:29] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [22-07-2025 19:52:29] Starting component SegmentAPI
+[32mINFO[0m:     [22-07-2025 19:52:29] Started server process [[36m54468[0m]
+[32mINFO[0m:     [22-07-2025 19:52:29] Waiting for application startup.
+[32mINFO[0m:     [22-07-2025 19:52:29] Application startup complete.
+[32mINFO[0m:     [22-07-2025 19:52:29] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [22-07-2025 19:52:29] ::1:61838 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-07-2025 19:54:33] ::1:61962 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [30-07-2025 17:05:19] ::1:51492 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [30-07-2025 17:11:48] ::1:51605 - "GET / HTTP/1.1" 404
+[32mINFO[0m:     [30-07-2025 17:11:49] ::1:51605 - "GET /favicon.ico HTTP/1.1" 404
+[32mINFO[0m:     [30-07-2025 23:08:11] ::1:58430 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[33mWARNING[0m:  [31-07-2025 11:54:26] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [31-07-2025 11:54:27] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [31-07-2025 11:54:27] Starting component System
+[36mDEBUG[0m:    [31-07-2025 11:54:27] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [31-07-2025 11:54:27] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [31-07-2025 11:54:27] Starting component SqliteDB
+[36mDEBUG[0m:    [31-07-2025 11:54:27] Starting component Posthog
+[36mDEBUG[0m:    [31-07-2025 11:54:27] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [31-07-2025 11:54:27] Starting component SegmentAPI
+[32mINFO[0m:     [31-07-2025 11:54:27] Started server process [[36m50644[0m]
+[32mINFO[0m:     [31-07-2025 11:54:27] Waiting for application startup.
+[32mINFO[0m:     [31-07-2025 11:54:27] Application startup complete.
+[32mINFO[0m:     [31-07-2025 11:54:27] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [31-07-2025 11:54:29] ::1:58918 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [31-07-2025 13:41:04] ::1:60573 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[33mWARNING[0m:  [31-07-2025 15:05:14] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [31-07-2025 15:05:14] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [31-07-2025 15:05:14] Starting component System
+[36mDEBUG[0m:    [31-07-2025 15:05:14] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [31-07-2025 15:05:14] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [31-07-2025 15:05:14] Starting component SqliteDB
+[36mDEBUG[0m:    [31-07-2025 15:05:14] Starting component Posthog
+[36mDEBUG[0m:    [31-07-2025 15:05:14] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [31-07-2025 15:05:14] Starting component SegmentAPI
+[32mINFO[0m:     [31-07-2025 15:05:14] Started server process [[36m8376[0m]
+[32mINFO[0m:     [31-07-2025 15:05:14] Waiting for application startup.
+[32mINFO[0m:     [31-07-2025 15:05:14] Application startup complete.
+[32mINFO[0m:     [31-07-2025 15:05:14] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [31-07-2025 15:05:16] ::1:51947 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [31-07-2025 15:25:22] ::1:52324 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [31-07-2025 16:22:34] ::1:53832 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[33mWARNING[0m:  [01-08-2025 18:01:39] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [01-08-2025 18:01:40] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [01-08-2025 18:01:40] Starting component System
+[36mDEBUG[0m:    [01-08-2025 18:01:40] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [01-08-2025 18:01:40] Starting component SimpleAssignmentPolicy
+[36mDEBUG[0m:    [01-08-2025 18:01:40] Starting component SqliteDB
+[36mDEBUG[0m:    [01-08-2025 18:01:40] Starting component Posthog
+[36mDEBUG[0m:    [01-08-2025 18:01:40] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [01-08-2025 18:01:40] Starting component SegmentAPI
+[32mINFO[0m:     [01-08-2025 18:01:40] Started server process [[36m46056[0m]
+[32mINFO[0m:     [01-08-2025 18:01:40] Waiting for application startup.
+[32mINFO[0m:     [01-08-2025 18:01:40] Application startup complete.
+[32mINFO[0m:     [01-08-2025 18:01:40] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [01-08-2025 18:01:41] ::1:60154 - "GET /api/v1/heartbeat HTTP/1.1" 200

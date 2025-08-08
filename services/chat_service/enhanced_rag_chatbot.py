@@ -12,6 +12,7 @@ Features:
 import sys
 import os
 import re
+import pickle
 from typing import List, Dict, Any, Optional, Tuple
 from pathlib import Path
 import numpy as np
@@ -32,18 +33,202 @@ from langchain.retrievers.ensemble import EnsembleRetriever
 from shared.config import config
 from shared.chroma_service import ChromaService
 
+class EnhancedEmbeddingManager:
+    """Enhanced embedding manager that works around ChromaDB persistence issues"""
+    
+    def __init__(self, embedding_file="enhanced_embeddings_cache.pkl"):
+        self.embedding_file = embedding_file
+        self.embeddings_cache = {}
+        self.document_embeddings = {}
+        self.embeddings_model = None
+        self.load_cache()
+    
+    def load_cache(self):
+        """Load embeddings from cache file"""
+        try:
+            if os.path.exists(self.embedding_file):
+                with open(self.embedding_file, 'rb') as f:
+                    cache_data = pickle.load(f)
+                    self.embeddings_cache = cache_data.get('query_cache', {})
+                    self.document_embeddings = cache_data.get('document_embeddings', {})
+                print(f"[OK] Loaded {len(self.embeddings_cache)} query embeddings")
+                print(f"[OK] Loaded {len(self.document_embeddings)} document embeddings")
+            else:
+                print("[INFO] No enhanced embedding cache found, will create new one")
+        except Exception as e:
+            print(f"[ERROR] Error loading embedding cache: {e}")
+            self.embeddings_cache = {}
+            self.document_embeddings = {}
+    
+    def save_cache(self):
+        """Save embeddings to cache file"""
+        try:
+            cache_data = {
+                'query_cache': self.embeddings_cache,
+                'document_embeddings': self.document_embeddings
+            }
+            with open(self.embedding_file, 'wb') as f:
+                pickle.dump(cache_data, f)
+            print(f"[OK] Saved {len(self.embeddings_cache)} query embeddings")
+            print(f"[OK] Saved {len(self.document_embeddings)} document embeddings")
+        except Exception as e:
+            print(f"[ERROR] Error saving embedding cache: {e}")
+    
+    def get_embedding_model(self):
+        """Get or create embedding model"""
+        if self.embeddings_model is None:
+            print("Loading embedding model...")
+            self.embeddings_model = HuggingFaceEmbeddings(
+                model_name="all-MiniLM-L6-v2",
+                model_kwargs={'device': 'cpu'},
+                encode_kwargs={'normalize_embeddings': True}
+            )
+            print("[OK] Embedding model loaded")
+        return self.embeddings_model
+    
+    def get_document_hash(self, content):
+        """Generate hash for document content"""
+        return hashlib.md5(content.encode()).hexdigest()
+    
+    def get_query_embedding(self, content):
+        """Get embedding for query content"""
+        doc_hash = self.get_document_hash(content)
+        
+        if doc_hash in self.embeddings_cache:
+            return self.embeddings_cache[doc_hash]
+        
+        model = self.get_embedding_model()
+        embedding = model.embed_query(content)
+        self.embeddings_cache[doc_hash] = embedding
+        return embedding
+    
+    def get_document_embedding(self, doc_id, content):
+        """Get embedding for document content"""
+        if doc_id in self.document_embeddings:
+            return self.document_embeddings[doc_id]
+        
+        model = self.get_embedding_model()
+        embedding = model.embed_query(content)
+        self.document_embeddings[doc_id] = embedding
+        return embedding
+    
+    def cosine_similarity(self, vec1, vec2):
+        """Calculate cosine similarity between two vectors"""
+        vec1 = np.array(vec1)
+        vec2 = np.array(vec2)
+        return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+    
+    def search_documents(self, query, n_results=10, university_id=None):
+        """Custom search using cached embeddings"""
+        try:
+            query_embedding = self.get_query_embedding(query)
+            
+            from services.shared.database import get_collection
+            collection = get_collection('documents')
+            result = collection.get()
+            
+            if not result or not result.get('ids'):
+                return []
+            
+            similarities = []
+            for i, doc_id in enumerate(result['ids']):
+                doc_content = result['documents'][i]
+                doc_metadata = result['metadatas'][i] if result.get('metadatas') else {}
+                
+                if university_id and doc_metadata.get('university_id') != university_id:
+                    continue
+                
+                doc_embedding = self.get_document_embedding(doc_id, doc_content)
+                similarity = self.cosine_similarity(query_embedding, doc_embedding)
+                
+                similarities.append({
+                    'id': doc_id,
+                    'content': doc_content,
+                    'metadata': doc_metadata,
+                    'similarity': similarity
+                })
+            
+            similarities.sort(key=lambda x: x['similarity'], reverse=True)
+            return similarities[:n_results]
+            
+        except Exception as e:
+            print(f"Error in custom search: {e}")
+            return []
+
+class EmbeddingService:
+    """Service to manage embeddings for ChromaDB embedded mode"""
+    
+    def __init__(self, cache_file="embeddings_cache.pkl"):
+        self.cache_file = cache_file
+        self.embeddings_cache = {}
+        self.embeddings_model = None
+        self.load_cache()
+    
+    def load_cache(self):
+        """Load embeddings from cache"""
+        try:
+            if os.path.exists(self.cache_file):
+                with open(self.cache_file, 'rb') as f:
+                    self.embeddings_cache = pickle.load(f)
+                print(f"✅ Loaded {len(self.embeddings_cache)} cached embeddings")
+            else:
+                print("📝 No embedding cache found, will create new one")
+        except Exception as e:
+            print(f"⚠️  Error loading embedding cache: {e}")
+            self.embeddings_cache = {}
+    
+    def save_cache(self):
+        """Save embeddings to cache"""
+        try:
+            with open(self.cache_file, 'wb') as f:
+                pickle.dump(self.embeddings_cache, f)
+            print(f"✅ Saved {len(self.embeddings_cache)} embeddings to cache")
+        except Exception as e:
+            print(f"❌ Error saving embedding cache: {e}")
+    
+    def get_embedding_model(self):
+        """Get or create embedding model"""
+        if self.embeddings_model is None:
+            print("Loading embedding model...")
+            self.embeddings_model = HuggingFaceEmbeddings(
+                model_name="all-MiniLM-L6-v2",
+                model_kwargs={'device': 'cpu'},
+                encode_kwargs={'normalize_embeddings': True}
+            )
+            print("✅ Embedding model loaded")
+        return self.embeddings_model
+    
+    def get_document_hash(self, content):
+        """Generate hash for document content"""
+        return hashlib.md5(content.encode()).hexdigest()
+    
+    def get_embedding(self, content):
+        """Get embedding for content (from cache or generate)"""
+        doc_hash = self.get_document_hash(content)
+        
+        if doc_hash in self.embeddings_cache:
+            return self.embeddings_cache[doc_hash]
+        
+        # Generate new embedding
+        model = self.get_embedding_model()
+        embedding = model.embed_query(content)
+        
+        # Cache it
+        self.embeddings_cache[doc_hash] = embedding
+        return embedding
+
 class EnhancedUniversityRAGChatbot:
     def __init__(self, model_name: str = "llama2:7b"):
         # Initialize ChromaDB service
         self.chroma_service = ChromaService()
         
-        # Initialize enhanced embeddings
+        # Initialize enhanced embedding manager for persistence
+        print("Initializing enhanced embedding manager...")
+        self.enhanced_embedding_manager = EnhancedEmbeddingManager()
+        
+        # Initialize enhanced embeddings (for backward compatibility)
         print("Loading enhanced embedding model...")
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L6-v2",
-            model_kwargs={'device': 'cpu'},
-            encode_kwargs={'normalize_embeddings': True}
-        )
+        self.embeddings = self.enhanced_embedding_manager.get_embedding_model()
         
         # Initialize local LLM
         print(f"Loading local LLM: {model_name}")
@@ -188,13 +373,20 @@ Alternative queries (one per line):"""
             doc_metadata = []
             
             for doc in all_docs:
+                # Extract file_name from extra_data if present
+                file_name = None
+                if doc.extra_data and isinstance(doc.extra_data, dict):
+                    file_name = doc.extra_data.get('file_name')
+                if not file_name and hasattr(doc, 'file_name'):
+                    file_name = getattr(doc, 'file_name', None)
                 doc_texts.append(doc.content)
                 doc_metadata.append({
                     'id': doc.id,
                     'title': doc.title,
                     'source_url': doc.source_url,
                     'university_id': doc.university_id,
-                    'extra_data': doc.extra_data
+                    'extra_data': doc.extra_data,
+                    'file_name': file_name
                 })
             
             # Perform semantic search
@@ -216,34 +408,34 @@ Alternative queries (one per line):"""
             return self.semantic_search(query, k=k, university_id=university_id)
     
     def semantic_search(self, query: str, k: int = 10, university_id: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Enhanced semantic search with query embedding"""
+        """Enhanced semantic search using custom embedding system"""
         try:
-            # Generate embedding for the query
-            query_embedding = self.embeddings.embed_query(query)
-            
-            # Search for similar documents
-            results = self.chroma_service.search_documents(
+            # Use enhanced embedding manager for search
+            results = self.enhanced_embedding_manager.search_documents(
                 query=query,
-                embedding=query_embedding,
-                n_results=k * 2,  # Get more results for reranking
+                n_results=k * 2,
                 university_id=university_id
             )
             
             documents = []
-            for doc, distance in results:
-                similarity = 1.0 - distance
+            for result in results:
+                # Extract file name from metadata or extra_data
+                file_name = None
+                if result['metadata'].get('extra_data'):
+                    file_name = result['metadata']['extra_data'].get('file_name')
+                if not file_name and result['metadata'].get('file_name'):
+                    file_name = result['metadata']['file_name']
                 documents.append({
-                    'id': doc.id,
-                    'title': doc.title,
-                    'content': doc.content,
-                    'source_url': doc.source_url,
-                    'metadata': doc.extra_data,
-                    'similarity': similarity,
-                    'search_type': 'semantic'
+                    'id': result['id'],
+                    'title': result['metadata'].get('title', ''),
+                    'content': result['content'],
+                    'source_url': result['metadata'].get('source_url', ''),
+                    'metadata': result['metadata'],
+                    'similarity': result['similarity'],
+                    'search_type': 'semantic',
+                    'file_name': file_name
                 })
-            
             return documents
-            
         except Exception as e:
             print(f"Error in semantic search: {e}")
             return []
@@ -253,30 +445,30 @@ Alternative queries (one per line):"""
         try:
             query_terms = set(re.findall(r'\b\w+\b', query.lower()))
             results = []
-            
             for i, (text, metadata) in enumerate(zip(doc_texts, doc_metadata)):
                 text_lower = text.lower()
                 text_terms = set(re.findall(r'\b\w+\b', text_lower))
-                
                 # Calculate keyword overlap
                 overlap = len(query_terms.intersection(text_terms))
                 total_terms = len(query_terms)
-                
                 if total_terms > 0:
                     keyword_score = overlap / total_terms
-                    
                     # Boost score for exact phrase matches
                     if query.lower() in text_lower:
                         keyword_score += 0.3
-                    
                     # Boost score for title matches
                     if metadata.get('title'):
                         title_lower = metadata['title'].lower()
                         title_overlap = len(query_terms.intersection(set(re.findall(r'\b\w+\b', title_lower))))
                         if title_overlap > 0:
                             keyword_score += 0.2
-                    
                     if keyword_score > 0:
+                        # Extract file name from both metadata and extra_data
+                        file_name = None
+                        if metadata.get('file_name'):
+                            file_name = metadata['file_name']
+                        if not file_name and metadata.get('extra_data'):
+                            file_name = metadata['extra_data'].get('file_name')
                         results.append({
                             'id': metadata['id'],
                             'title': metadata['title'],
@@ -284,13 +476,12 @@ Alternative queries (one per line):"""
                             'source_url': metadata['source_url'],
                             'metadata': metadata.get('extra_data', {}),
                             'similarity': min(keyword_score, 1.0),
-                            'search_type': 'keyword'
+                            'search_type': 'keyword',
+                            'file_name': file_name
                         })
-            
             # Sort by similarity and return top k
             results.sort(key=lambda x: x['similarity'], reverse=True)
             return results[:k]
-            
         except Exception as e:
             print(f"Error in keyword search: {e}")
             return []
@@ -382,46 +573,74 @@ Alternative queries (one per line):"""
     def calculate_confidence(self, relevant_docs: List[Dict], question: str, answer: str) -> float:
         """Calculate enhanced confidence score based on multiple factors"""
         try:
+            # Convert ChromaDB distance scores to similarity scores (distance is 0-2, similarity should be 0-1)
+            def distance_to_similarity(distance):
+                # ChromaDB uses cosine distance: 0 = identical, 2 = opposite
+                # Convert to similarity: 1 = identical, 0 = opposite
+                return max(0.0, 1.0 - (distance / 2.0))
+            
             # Factor 1: Average similarity of retrieved documents (weighted by rank)
             weighted_similarities = []
             for i, doc in enumerate(relevant_docs):
                 weight = 1.0 / (i + 1)  # Higher weight for top-ranked documents
-                similarity = doc.get('combined_score', doc['similarity'])
+                # Handle both distance and similarity scores
+                if 'distance' in doc:
+                    similarity = distance_to_similarity(doc['distance'])
+                elif 'similarity' in doc:
+                    similarity = doc['similarity']
+                else:
+                    similarity = doc.get('combined_score', 0.5)  # Default fallback
                 weighted_similarities.append(similarity * weight)
             
             avg_weighted_similarity = sum(weighted_similarities) / len(weighted_similarities) if weighted_similarities else 0
             
             # Factor 2: Top document similarity (most important)
-            top_doc_similarity = relevant_docs[0].get('combined_score', relevant_docs[0]['similarity']) if relevant_docs else 0
+            if relevant_docs:
+                if 'distance' in relevant_docs[0]:
+                    top_doc_similarity = distance_to_similarity(relevant_docs[0]['distance'])
+                elif 'similarity' in relevant_docs[0]:
+                    top_doc_similarity = relevant_docs[0]['similarity']
+                else:
+                    top_doc_similarity = relevant_docs[0].get('combined_score', 0.5)
+            else:
+                top_doc_similarity = 0
             
-            # Factor 3: Number of relevant documents with good similarity
-            good_docs = [doc for doc in relevant_docs if doc.get('combined_score', doc['similarity']) > 0.6]
-            doc_coverage_score = min(len(good_docs) / 3.0, 1.0)
+            # Factor 3: Number of relevant documents with good similarity (lowered threshold)
+            good_docs = []
+            for doc in relevant_docs:
+                if 'distance' in doc:
+                    similarity = distance_to_similarity(doc['distance'])
+                elif 'similarity' in doc:
+                    similarity = doc['similarity']
+                else:
+                    similarity = doc.get('combined_score', 0.5)
+                if similarity > 0.4:  # Lowered from 0.6 to 0.4
+                    good_docs.append(doc)
+            doc_coverage_score = min(len(good_docs) / 2.0, 1.0)  # Lowered from 3.0 to 2.0
             
-            # Factor 4: Answer quality indicators
+            # Factor 4: Answer quality indicators (more lenient)
             answer_length = len(answer.split())
             length_score = 1.0
-            if answer_length < 15:
-                length_score = 0.4  # Too short
-            elif answer_length < 30:
-                length_score = 0.7  # Short but acceptable
-            elif answer_length > 800:
-                length_score = 0.8  # Very long, might be verbose
+            if answer_length < 10:  # Lowered from 15
+                length_score = 0.6  # Increased from 0.4
+            elif answer_length < 20:  # Lowered from 30
+                length_score = 0.8  # Increased from 0.7
+            elif answer_length > 1000:  # Increased from 800
+                length_score = 0.9  # Increased from 0.8
             
-            # Factor 5: Presence of uncertainty indicators in answer
+            # Factor 5: Presence of uncertainty indicators in answer (less penalizing)
             uncertainty_indicators = [
                 "i don't know", "i'm not sure", "i don't have", "not enough information",
-                "unclear", "uncertain", "might", "could", "possibly", "i cannot",
-                "unable to", "no information available", "contact the department"
+                "unclear", "uncertain", "i cannot", "unable to", "no information available"
             ]
             uncertainty_score = 1.0
             answer_lower = answer.lower()
             uncertainty_count = sum(1 for indicator in uncertainty_indicators if indicator in answer_lower)
-            uncertainty_score = max(0.3, 1.0 - (uncertainty_count * 0.2))
+            uncertainty_score = max(0.5, 1.0 - (uncertainty_count * 0.1))  # Less penalizing
             
             # Factor 6: Source diversity and quality
-            unique_sources = len(set(doc['source_url'] for doc in relevant_docs))
-            source_diversity_score = min(unique_sources / 3.0, 1.0)
+            unique_sources = len(set(doc.get('source_url', '') for doc in relevant_docs))
+            source_diversity_score = min(unique_sources / 2.0, 1.0)  # Lowered from 3.0
             
             # Factor 7: Question-answer relevance (simple keyword matching)
             question_words = set(question.lower().split())
@@ -429,46 +648,50 @@ Alternative queries (one per line):"""
             common_words = question_words.intersection(answer_words)
             relevance_score = len(common_words) / max(len(question_words), 1)
             
-            # Factor 8: Presence of specific Northeastern information
+            # Factor 8: Presence of specific Northeastern information (more generous)
             northeastern_indicators = [
                 "northeastern", "neu", "boston", "co-op", "cooperative education",
-                "snell library", "husky", "registrar", "admissions", "housing"
+                "snell library", "husky", "registrar", "admissions", "housing", "university", "college"
             ]
-            northeastern_score = 0.5  # Base score
+            northeastern_score = 0.6  # Increased base score from 0.5
             for indicator in northeastern_indicators:
                 if indicator in answer_lower:
-                    northeastern_score += 0.1
+                    northeastern_score += 0.05  # Reduced increment from 0.1
             northeastern_score = min(northeastern_score, 1.0)
             
-            # Combine all factors with weights
+            # Combine all factors with adjusted weights (more emphasis on similarity)
             confidence = (
-                top_doc_similarity * 0.25 +
-                avg_weighted_similarity * 0.20 +
+                top_doc_similarity * 0.35 +  # Increased from 0.25
+                avg_weighted_similarity * 0.25 +  # Increased from 0.20
                 doc_coverage_score * 0.15 +
-                length_score * 0.10 +
-                uncertainty_score * 0.15 +
-                source_diversity_score * 0.05 +
-                relevance_score * 0.05 +
-                northeastern_score * 0.05
+                length_score * 0.08 +  # Reduced from 0.10
+                uncertainty_score * 0.10 +  # Reduced from 0.15
+                source_diversity_score * 0.02 +  # Reduced from 0.05
+                relevance_score * 0.03 +  # Reduced from 0.05
+                northeastern_score * 0.02  # Reduced from 0.05
             )
+            
+            # Boost confidence if we have good top document similarity
+            if top_doc_similarity > 0.6:
+                confidence = min(1.0, confidence * 1.2)  # 20% boost
             
             return min(max(confidence, 0.0), 1.0)
             
         except Exception as e:
             print(f"Error calculating confidence: {e}")
-            return 0.3  # Lower default confidence on error
+            return 0.5  # Increased default confidence from 0.3
     
     def should_show_answer(self, confidence: float, question: str, answer: str) -> Tuple[bool, str]:
         """Determine if answer should be shown based on confidence threshold"""
-        # Dynamic threshold based on question type
-        base_threshold = 0.4
+        # Lower base threshold for more lenient filtering
+        base_threshold = 0.25  # Lowered from 0.4
         
         # Lower threshold for general questions
         if any(word in question.lower() for word in ['what', 'how', 'when', 'where', 'why']):
-            threshold = base_threshold - 0.1
+            threshold = base_threshold - 0.05  # Reduced from 0.1
         # Higher threshold for specific factual questions
         elif any(word in question.lower() for word in ['cost', 'deadline', 'requirement', 'policy', 'fee']):
-            threshold = base_threshold + 0.2
+            threshold = base_threshold + 0.15  # Reduced from 0.2
         else:
             threshold = base_threshold
         
@@ -621,22 +844,58 @@ Alternative queries (one per line):"""
                     'feedback_requested': True
                 }
             
-            # Prepare context with better formatting
+            # Prepare context with better formatting and enhanced source information
             context_parts = []
             sources = []
             
-            for i, doc in enumerate(relevant_docs):
+            # Filter and prioritize high similarity sources
+            high_similarity_threshold = 0.6
+            high_similarity_docs = [doc for doc in relevant_docs if doc.get('combined_score', doc.get('similarity', 0)) >= high_similarity_threshold]
+            other_docs = [doc for doc in relevant_docs if doc.get('combined_score', doc.get('similarity', 0)) < high_similarity_threshold]
+            
+            # Prioritize high similarity documents first
+            prioritized_docs = high_similarity_docs + other_docs
+            
+            for i, doc in enumerate(prioritized_docs):
                 # Create a more structured context
                 content_preview = doc['content'][:1000] + "..." if len(doc['content']) > 1000 else doc['content']
-                
-                context_part = f"Document {i+1}: {doc['title']}\nSource: {doc['source_url']}\nContent: {content_preview}"
+                # Use title and source, but no numbering
+                if doc['title'] and doc['source_url']:
+                    context_part = f"{doc['title']} ({doc['source_url']}):\n{content_preview}"
+                elif doc['title']:
+                    context_part = f"{doc['title']}:\n{content_preview}"
+                elif doc['source_url']:
+                    context_part = f"Source: {doc['source_url']}\n{content_preview}"
+                else:
+                    context_part = content_preview
                 context_parts.append(context_part)
+                
+                # Enhanced source information
+                similarity_score = doc.get('combined_score', doc.get('similarity', 0))
+                search_type = doc.get('search_type', 'combined')
+                
+                # Get file_name directly from metadata since it's flattened
+                file_name = doc.get('file_name', '')
+                
+                # Determine source quality indicator
+                if similarity_score >= 0.8:
+                    quality_indicator = "excellent"
+                elif similarity_score >= 0.6:
+                    quality_indicator = "good"
+                elif similarity_score >= 0.4:
+                    quality_indicator = "moderate"
+                else:
+                    quality_indicator = "low"
                 
                 sources.append({
                     'title': doc['title'],
                     'url': doc['source_url'],
-                    'similarity': doc.get('combined_score', doc['similarity']),
-                    'search_type': doc.get('search_type', 'combined')
+                    'file_name': file_name,
+                    'similarity': similarity_score,
+                    'search_type': search_type,
+                    'quality': quality_indicator,
+                    'content_preview': content_preview[:200] + "..." if len(content_preview) > 200 else content_preview,
+                    'rank': i + 1
                 })
             
             context = "\n\n".join(context_parts)

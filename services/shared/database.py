@@ -38,37 +38,18 @@ except ImportError as e:
     config = DefaultConfig()
 
 # Global ChromaDB client
-chroma_client: Optional[chromadb.HttpClient] = None
+chroma_client = None
 
-def get_chroma_client() -> chromadb.HttpClient:
-    """Get or create ChromaDB client"""
+def get_chroma_client():
+    """Get or create ChromaDB client (always embedded mode, absolute path)"""
     global chroma_client
-    
     if chroma_client is None:
-        try:
-            # Use a simpler configuration to avoid tenant issues
-            chroma_client = chromadb.HttpClient(
-                host=getattr(config, 'CHROMADB_HOST', 'localhost'),
-                port=getattr(config, 'CHROMADB_HTTP_PORT', 8000)
-            )
-            print(f"[OK] ChromaDB client connected to {getattr(config, 'CHROMADB_HOST', 'localhost')}:{getattr(config, 'CHROMADB_HTTP_PORT', 8000)}")
-        except Exception as e:
-            print(f"[ERROR] ChromaDB client connection failed: {e}")
-            # Try alternative connection method
-            try:
-                print("[INFO] Trying alternative connection method...")
-                chroma_client = chromadb.Client(
-                    chromadb.config.Settings(
-                        chroma_api_impl="rest",
-                        chroma_server_host=getattr(config, 'CHROMADB_HOST', 'localhost'),
-                        chroma_server_http_port=getattr(config, 'CHROMADB_HTTP_PORT', 8000)
-                    )
-                )
-                print(f"[OK] ChromaDB client connected using alternative method")
-            except Exception as e2:
-                print(f"[ERROR] Alternative connection also failed: {e2}")
-                raise
-    
+        import chromadb
+        # Always use absolute path from project root
+        project_root = os.path.dirname(os.path.abspath(__file__))
+        chroma_data_path = os.path.abspath(os.path.join(project_root, "../../chroma_data"))
+        chroma_client = chromadb.PersistentClient(path=chroma_data_path)
+        print(f"[OK] ChromaDB embedded client created at {chroma_data_path}")
     return chroma_client
 
 def get_collection(name: str, create_if_not_exists: bool = True) -> chromadb.Collection:
@@ -184,6 +165,20 @@ if __name__ == "__main__":
         
         print(f"\n[OK] Setup complete! ChromaDB has {len(final_collections)} collections.")
         
+        # Debug: List number of documents in each collection
+        print("\n[DEBUG] Document counts per collection:")
+        client = get_chroma_client()
+        for name in final_collections:
+            try:
+                col = client.get_collection(name=name)
+                # Try to count documents (if API supports it)
+                try:
+                    count = len(col.get()['ids'])
+                except Exception:
+                    count = 'unknown'
+                print(f"  - {name}: {count} documents")
+            except Exception as e:
+                print(f"  - {name}: error ({e})")
     else:
         print("\n[ERROR] Cannot connect to ChromaDB.")
         print("\nTroubleshooting:")

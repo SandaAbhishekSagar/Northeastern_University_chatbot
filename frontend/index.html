@@ -18,11 +18,11 @@
                     <span class="version-badge">v2.0</span>
                 </div>
                 <div class="header-actions">
-                    <button id="clearChat" class="btn-secondary">
-                        <i class="fas fa-trash"></i> Clear Chat
+                    <button id="clearChat" class="btn-secondary" title="Clear chat history" aria-label="Clear chat history">
+                        <i class="fas fa-trash" aria-hidden="true"></i> Clear Chat
                     </button>
-                    <button id="viewStats" class="btn-secondary">
-                        <i class="fas fa-chart-bar"></i> View Stats
+                    <button id="viewStats" class="btn-secondary" title="View system statistics" aria-label="View system statistics">
+                        <i class="fas fa-chart-bar" aria-hidden="true"></i> View Stats
                     </button>
                 </div>
             </div>
@@ -58,18 +58,19 @@
                 <div class="chat-input-container">
                     <div class="chat-input-wrapper">
                         <input type="text" id="chatInput" placeholder="Ask about Northeastern programs, admissions, co-op..." autocomplete="off">
-                        <button id="sendMessage" class="send-btn">
-                            <i class="fas fa-paper-plane"></i>
+                        <button id="sendMessage" class="send-btn" title="Send message" aria-label="Send message">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                            <span class="sr-only">Send</span>
                         </button>
                     </div>
                     <div class="input-actions">
-                        <button class="suggestion-btn" data-query="What programs does Northeastern University offer?">
+                        <button class="suggestion-btn" data-query="What programs does Northeastern University offer?" title="Ask about Northeastern programs" aria-label="Ask about Northeastern programs">
                             Programs
                         </button>
-                        <button class="suggestion-btn" data-query="Tell me about Northeastern admissions">
+                        <button class="suggestion-btn" data-query="Tell me about Northeastern admissions" title="Ask about Northeastern admissions" aria-label="Ask about Northeastern admissions">
                             Admissions
                         </button>
-                        <button class="suggestion-btn" data-query="How does the co-op program work?">
+                        <button class="suggestion-btn" data-query="How does the co-op program work?" title="Ask about Northeastern co-op program" aria-label="Ask about Northeastern co-op program">
                             Co-op
                         </button>
                     </div>
@@ -78,16 +79,6 @@
 
             <!-- Sidebar -->
             <div class="sidebar">
-                <div class="sidebar-section">
-                    <h3><i class="fas fa-search"></i> Quick Search</h3>
-                    <div class="search-box">
-                        <input type="text" id="quickSearch" placeholder="Search Northeastern documents...">
-                        <button id="searchBtn" class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-
                 <div class="sidebar-section">
                     <h3><i class="fas fa-database"></i> System Status</h3>
                     <div class="status-item">
@@ -146,8 +137,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>System Statistics</h2>
-                <button class="close-btn" id="closeStatsModal">
-                    <i class="fas fa-times"></i>
+                <button class="close-btn" id="closeStatsModal" title="Close statistics modal" aria-label="Close statistics modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    <span class="sr-only">Close</span>
                 </button>
             </div>
             <div class="modal-body">

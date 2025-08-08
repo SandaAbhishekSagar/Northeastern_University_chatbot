@@ -65,21 +65,33 @@ class ChromaDBPipeline:
                 has_changed = existing_doc.content_hash != item['content_hash']
             
             if has_changed and university and university.id:
-                # Create new document version - flatten metadata for ChromaDB
-                # Extract metadata values directly to avoid nested dictionaries
-                metadata = item.get('metadata', {})
+                # Extract file name from URL path
+                from urllib.parse import urlparse
+                parsed_url = urlparse(item['url'])
+                path_parts = parsed_url.path.strip('/').split('/')
+                file_name = path_parts[-1] if path_parts else 'index.html'
+                if not file_name or file_name.isspace():
+                    file_name = 'index.html'
+                if not '.' in file_name:
+                    file_name += '.html'
+                
+                # Create metadata dictionary with file name
+                metadata = {
+                    'file_name': file_name,  # Include file name in metadata
+                    'content_hash': item['content_hash'],
+                    'status_code': item.get('metadata', {}).get('status_code'),
+                    'content_length': item.get('metadata', {}).get('content_length'),
+                    'page_type': item.get('metadata', {}).get('page_type'),
+                    'scraped_at': item['scraped_at']
+                }
+                
                 self.chroma_service.create_document(
                     source_url=item['url'],
                     title=item['title'],
                     content=item['content'],
                     university_id=university.id,
-                    extra_data={
-                        'content_hash': item['content_hash'],
-                        'status_code': metadata.get('status_code'),
-                        'content_length': metadata.get('content_length'),
-                        'page_type': metadata.get('page_type'),
-                        'scraped_at': item['scraped_at']
-                    }
+                    file_name=file_name,  # Pass file name explicitly
+                    extra_data=metadata  # Pass complete metadata dictionary
                 )
                 
                 # Update university last scraped time
