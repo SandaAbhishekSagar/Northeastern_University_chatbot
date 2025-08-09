@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "northeasternuniversitychatbot-production.up.railway.app/"
+      "destination": "https://northeasternuniversitychatbot-production.up.railway.app/$1"
     }
   ]
 }
