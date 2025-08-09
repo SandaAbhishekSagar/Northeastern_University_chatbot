@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "northeasternuniversitychatbot-production.up.railway.app/"
+    }
+  ]
+}
+

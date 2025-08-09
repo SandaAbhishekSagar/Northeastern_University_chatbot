@@ -3,8 +3,12 @@ class UniversityChatbot {
     constructor() {
         console.log('UniversityChatbot constructor called');
         
-        // Use environment variable or default to localhost for development
-        this.apiBaseUrl = window.location.hostname === 'localhost' ? 'http://localhost:8001' : `${window.location.protocol}//${window.location.hostname}:8001`;
+        // API base URL
+        // - Local dev: talk to FastAPI on localhost:8001
+        // - Production (e.g., Vercel): use relative "/api" and let Vercel rewrite to Railway
+        this.apiBaseUrl = window.location.hostname === 'localhost'
+            ? 'http://localhost:8001'
+            : '/api';
         this.sessionId = this.generateSessionId();
         this.messageCount = 0;
         this.responseTimes = [];
