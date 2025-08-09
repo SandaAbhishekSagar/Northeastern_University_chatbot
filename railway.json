@@ -3,7 +3,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python start_production.py",
+    "startCommand": "bash -c 'if [ ! -f /app/chroma_data/chroma.sqlite3 ]; then mkdir -p chroma_backups && cd chroma_backups && curl -L -o backup.zip "$CHROMA_RESTORE_URL" && unzip -q backup.zip && cd .. && python restore_chromadb.py restore; fi && python start_production.py'",
     "healthcheckPath": "/health/enhanced",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
