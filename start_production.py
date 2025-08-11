@@ -41,38 +41,93 @@ def reset_chromadb_on_schema_error():
         
         chroma_data_path = Path("/app/chroma_data")
         
-        # Remove existing ChromaDB files
+        # Force remove all ChromaDB files and directories
         import shutil
+        import time
+        
         if chroma_data_path.exists():
-            # Try to remove individual files first
-            try:
-                for item in chroma_data_path.iterdir():
-                    if item.is_file():
-                        item.unlink()
-                    elif item.is_dir():
-                        shutil.rmtree(item)
-                print("🗑️  Removed ChromaDB files")
-            except Exception as e:
-                print(f"⚠️  Could not remove some files: {e}")
+            print("🗑️  Removing all ChromaDB files...")
             
-            # Try to remove the directory itself
-            try:
-                chroma_data_path.rmdir()
-                print("🗑️  Removed ChromaDB directory")
-            except Exception as e:
-                print(f"⚠️  Could not remove directory: {e}")
+            # Try multiple times to ensure files are released
+            for attempt in range(3):
+                try:
+                    # Remove all contents recursively
+                    for item in chroma_data_path.rglob("*"):
+                        try:
+                            if item.is_file():
+                                item.unlink()
+                            elif item.is_dir():
+                                shutil.rmtree(item)
+                        except Exception as e:
+                            print(f"⚠️  Could not remove {item}: {e}")
+                    
+                    # Remove the main directory
+                    shutil.rmtree(chroma_data_path)
+                    print(f"✅ Removed ChromaDB directory (attempt {attempt + 1})")
+                    break
+                except Exception as e:
+                    print(f"⚠️  Attempt {attempt + 1} failed: {e}")
+                    if attempt < 2:  # Don't sleep on last attempt
+                        time.sleep(1)  # Wait a bit before retrying
+                    else:
+                        # Last resort: try to remove individual files
+                        try:
+                            for item in chroma_data_path.iterdir():
+                                if item.is_file():
+                                    item.unlink()
+                                elif item.is_dir():
+                                    shutil.rmtree(item)
+                            chroma_data_path.rmdir()
+                            print("✅ Removed ChromaDB directory (fallback method)")
+                        except Exception as final_e:
+                            print(f"❌ Failed to remove ChromaDB directory: {final_e}")
+                            return False
+        
+        # Wait a moment to ensure filesystem sync
+        time.sleep(1)
         
         # Recreate directory
         chroma_data_path.mkdir(exist_ok=True)
         print("📁 Recreated ChromaDB directory")
         
-        # Initialize fresh ChromaDB
-        from services.shared.database import get_chroma_client, init_db
-        client = get_chroma_client()
-        init_db()
-        print("✅ Fresh ChromaDB initialized")
+        # Force a fresh ChromaDB client
+        try:
+            import chromadb
+            from chromadb.config import Settings
+            
+            # Create a completely fresh client
+            fresh_client = chromadb.PersistentClient(
+                path=str(chroma_data_path),
+                settings=Settings(anonymized_telemetry=False)
+            )
+            print("✅ Created fresh ChromaDB client")
+            
+            # Initialize collections manually
+            collections = [
+                "universities",
+                "documents", 
+                "scrape_logs",
+                "chat_sessions",
+                "chat_messages",
+                "feedback"
+            ]
+            
+            for collection_name in collections:
+                try:
+                    fresh_client.create_collection(name=collection_name)
+                    print(f"✅ Created collection: {collection_name}")
+                except Exception as e:
+                    print(f"⚠️  Could not create collection {collection_name}: {e}")
+            
+            print("✅ Fresh ChromaDB initialized successfully")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Failed to initialize fresh ChromaDB: {e}")
+            import traceback
+            traceback.print_exc()
+            return False
         
-        return True
     except Exception as e:
         print(f"❌ Failed to reset ChromaDB: {e}")
         import traceback
