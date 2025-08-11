@@ -21,12 +21,24 @@ def check_and_restore_chromadb():
     chroma_data_path = Path("/app/chroma_data")
     chroma_sqlite = chroma_data_path / "chroma.sqlite3"
     
-    # Check if ChromaDB data already exists
+    # Check if ChromaDB data already exists and has content
     if chroma_sqlite.exists():
-        print("✅ ChromaDB data found, skipping restore")
-        return True
-    
-    print("🔄 ChromaDB data not found, attempting auto-restore...")
+        # Check if the collection actually has documents
+        try:
+            from services.shared.database import get_chroma_client, get_collection
+            client = get_chroma_client()
+            collection = get_collection('documents')
+            result = collection.get()
+            
+            if result and result.get('ids') and len(result['ids']) > 0:
+                print(f"✅ ChromaDB data found with {len(result['ids'])} documents, skipping restore")
+                return True
+            else:
+                print("⚠️  ChromaDB exists but is empty, proceeding with restore...")
+        except Exception as e:
+            print(f"⚠️  Error checking ChromaDB content: {e}, proceeding with restore...")
+    else:
+        print("🔄 ChromaDB data not found, attempting auto-restore...")
     
     # Get backup URL from environment
     backup_url = os.environ.get("CHROMA_RESTORE_URL")
@@ -41,7 +53,7 @@ def check_and_restore_chromadb():
         
         # Download backup
         print(f"📥 Downloading backup from: {backup_url}")
-        response = requests.get(backup_url, stream=True)
+        response = requests.get(backup_url, stream=True, timeout=300)
         response.raise_for_status()
         
         backup_file = backup_dir / "backup.zip"
@@ -92,11 +104,28 @@ def check_and_restore_chromadb():
                     shutil.copytree(collection_dir, dest_dir)
                     print(f"✅ Restored collection: {collection_dir.name}")
         
-        print("✅ ChromaDB restore completed successfully!")
-        return True
+        # Verify restore
+        try:
+            from services.shared.database import get_chroma_client, get_collection
+            client = get_chroma_client()
+            collection = get_collection('documents')
+            result = collection.get()
+            
+            if result and result.get('ids') and len(result['ids']) > 0:
+                print(f"✅ ChromaDB restore verified: {len(result['ids'])} documents found")
+                return True
+            else:
+                print("❌ Restore completed but no documents found")
+                return False
+                
+        except Exception as e:
+            print(f"⚠️  Could not verify restore: {e}")
+            return True  # Assume success if we can't verify
         
     except Exception as e:
         print(f"❌ Restore failed: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 def main():
