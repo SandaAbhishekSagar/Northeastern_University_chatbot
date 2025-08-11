@@ -21,13 +21,46 @@ def reset_chromadb_on_schema_error():
     print("🔄 Detected ChromaDB schema version mismatch, resetting database...")
     
     try:
+        # First, close any existing ChromaDB client connections
+        try:
+            from services.shared.database import chroma_client
+            if chroma_client is not None:
+                # Close the client to release file handles
+                chroma_client._client.close()
+                print("🔌 Closed existing ChromaDB client")
+        except Exception as e:
+            print(f"⚠️  Could not close ChromaDB client: {e}")
+        
+        # Clear the global client reference
+        try:
+            import services.shared.database
+            services.shared.database.chroma_client = None
+            print("🧹 Cleared ChromaDB client reference")
+        except Exception as e:
+            print(f"⚠️  Could not clear client reference: {e}")
+        
         chroma_data_path = Path("/app/chroma_data")
         
         # Remove existing ChromaDB files
         import shutil
         if chroma_data_path.exists():
-            shutil.rmtree(chroma_data_path)
-            print("🗑️  Removed existing ChromaDB data")
+            # Try to remove individual files first
+            try:
+                for item in chroma_data_path.iterdir():
+                    if item.is_file():
+                        item.unlink()
+                    elif item.is_dir():
+                        shutil.rmtree(item)
+                print("🗑️  Removed ChromaDB files")
+            except Exception as e:
+                print(f"⚠️  Could not remove some files: {e}")
+            
+            # Try to remove the directory itself
+            try:
+                chroma_data_path.rmdir()
+                print("🗑️  Removed ChromaDB directory")
+            except Exception as e:
+                print(f"⚠️  Could not remove directory: {e}")
         
         # Recreate directory
         chroma_data_path.mkdir(exist_ok=True)
@@ -42,6 +75,8 @@ def reset_chromadb_on_schema_error():
         return True
     except Exception as e:
         print(f"❌ Failed to reset ChromaDB: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 def check_and_restore_chromadb():
