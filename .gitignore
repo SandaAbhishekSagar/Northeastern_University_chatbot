@@ -1,10 +1,74 @@
-env_py3.9
-chroma
-chroma_backups
-chroma_data_backup_manual
-chroma_data_backup_before_restore_1754159866
-chroma_data_backup_before_rebuild_1754159415
-chroma_data_backup_before_efficient_restore_1754159955
-chroma_data_backup_20250802_141731
-chroma_data_23532
-enhanced_embeddings_cache.pkl
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env_py3.9/
+
+# ChromaDB data and backups
+chroma_data/
+chroma/
+chroma_backups/
+chroma_data_*/
+*.sqlite3
+*.bin
+*.log
+
+# Large files and caches
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.parquet
+*.feather
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Railway and deployment
+.railway/
+railway.toml
+
+# Celery
+celerybeat-schedule.*
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
