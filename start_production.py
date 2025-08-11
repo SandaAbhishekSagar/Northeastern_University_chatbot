@@ -16,6 +16,34 @@ from pathlib import Path
 project_root = Path(__file__).parent.absolute()
 sys.path.append(str(project_root))
 
+def reset_chromadb_on_schema_error():
+    """Reset ChromaDB when schema version mismatch is detected"""
+    print("🔄 Detected ChromaDB schema version mismatch, resetting database...")
+    
+    try:
+        chroma_data_path = Path("/app/chroma_data")
+        
+        # Remove existing ChromaDB files
+        import shutil
+        if chroma_data_path.exists():
+            shutil.rmtree(chroma_data_path)
+            print("🗑️  Removed existing ChromaDB data")
+        
+        # Recreate directory
+        chroma_data_path.mkdir(exist_ok=True)
+        print("📁 Recreated ChromaDB directory")
+        
+        # Initialize fresh ChromaDB
+        from services.shared.database import get_chroma_client, init_db
+        client = get_chroma_client()
+        init_db()
+        print("✅ Fresh ChromaDB initialized")
+        
+        return True
+    except Exception as e:
+        print(f"❌ Failed to reset ChromaDB: {e}")
+        return False
+
 def check_and_restore_chromadb():
     """Check if ChromaDB data exists, restore from backup if needed"""
     chroma_data_path = Path("/app/chroma_data")
@@ -36,7 +64,15 @@ def check_and_restore_chromadb():
             else:
                 print("⚠️  ChromaDB exists but is empty, proceeding with restore...")
         except Exception as e:
-            print(f"⚠️  Error checking ChromaDB content: {e}, proceeding with restore...")
+            if "no such column: collections.topic" in str(e):
+                print("⚠️  ChromaDB schema version mismatch detected")
+                if reset_chromadb_on_schema_error():
+                    print("🔄 ChromaDB reset successful, proceeding with restore...")
+                else:
+                    print("❌ Failed to reset ChromaDB, skipping restore")
+                    return False
+            else:
+                print(f"⚠️  Error checking ChromaDB content: {e}, proceeding with restore...")
     else:
         print("🔄 ChromaDB data not found, attempting auto-restore...")
     
@@ -159,8 +195,17 @@ def check_and_restore_chromadb():
                 return False
                 
         except Exception as e:
-            print(f"⚠️  Could not verify restore: {e}")
-            return True  # Assume success if we can't verify
+            if "no such column: collections.topic" in str(e):
+                print("⚠️  Schema mismatch after restore, resetting ChromaDB...")
+                if reset_chromadb_on_schema_error():
+                    print("✅ ChromaDB reset successful after restore")
+                    return True
+                else:
+                    print("❌ Failed to reset ChromaDB after restore")
+                    return False
+            else:
+                print(f"⚠️  Could not verify restore: {e}")
+                return True  # Assume success if we can't verify
         
     except Exception as e:
         print(f"❌ Restore failed: {e}")
