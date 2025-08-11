@@ -68,14 +68,43 @@ def check_and_restore_chromadb():
         with zipfile.ZipFile(backup_file, 'r') as zip_ref:
             zip_ref.extractall(backup_dir)
         
-        # Find the extracted backup directory
-        extracted_dirs = [d for d in backup_dir.iterdir() if d.is_dir() and d.name.startswith("chroma_backup_")]
+        # List extracted contents for debugging
+        print("📁 Extracted contents:")
+        for item in backup_dir.iterdir():
+            print(f"   - {item.name} ({'dir' if item.is_dir() else 'file'})")
+        
+        # Find the extracted backup directory - try multiple patterns
+        extracted_dirs = []
+        
+        # Pattern 1: chroma_backup_*
+        extracted_dirs.extend([d for d in backup_dir.iterdir() if d.is_dir() and d.name.startswith("chroma_backup_")])
+        
+        # Pattern 2: Any directory that might contain chroma data
+        if not extracted_dirs:
+            for item in backup_dir.iterdir():
+                if item.is_dir():
+                    # Check if this directory contains chroma.sqlite3 or embeddings
+                    if (item / "chroma.sqlite3").exists() or (item / "embeddings").exists():
+                        extracted_dirs.append(item)
+                    # Also check for any subdirectories that might be the actual backup
+                    for subitem in item.iterdir():
+                        if subitem.is_dir() and ((subitem / "chroma.sqlite3").exists() or (subitem / "embeddings").exists()):
+                            extracted_dirs.append(subitem)
+        
+        # Pattern 3: Look for chroma.sqlite3 directly in backup_dir
+        if not extracted_dirs and (backup_dir / "chroma.sqlite3").exists():
+            extracted_dirs.append(backup_dir)
+        
         if not extracted_dirs:
             print("❌ No valid backup found in downloaded file")
+            print("🔍 Available files and directories:")
+            for item in backup_dir.rglob("*"):
+                if item.is_file():
+                    print(f"   - {item.relative_to(backup_dir)}")
             return False
         
         extracted_backup = extracted_dirs[0]
-        print(f"📁 Extracted to: {extracted_backup}")
+        print(f"📁 Using backup directory: {extracted_backup}")
         
         # Restore ChromaDB data
         print("🔄 Restoring ChromaDB data...")
@@ -86,6 +115,8 @@ def check_and_restore_chromadb():
             import shutil
             shutil.copy2(sqlite_backup, chroma_sqlite)
             print("✅ SQLite database restored")
+        else:
+            print("⚠️  No chroma.sqlite3 found in backup")
         
         # Restore embedding files
         embedding_backup = extracted_backup / "embeddings"
@@ -103,6 +134,15 @@ def check_and_restore_chromadb():
                     import shutil
                     shutil.copytree(collection_dir, dest_dir)
                     print(f"✅ Restored collection: {collection_dir.name}")
+        else:
+            print("⚠️  No embeddings directory found in backup")
+            # Try to find embedding files in the backup directory itself
+            for item in extracted_backup.iterdir():
+                if item.is_dir() and item.name not in ["__pycache__", "chroma_data"]:
+                    dest_dir = chroma_data_path / item.name
+                    import shutil
+                    shutil.copytree(item, dest_dir)
+                    print(f"✅ Restored directory: {item.name}")
         
         # Verify restore
         try:
