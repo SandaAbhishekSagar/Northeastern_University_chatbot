@@ -16,6 +16,92 @@ from pathlib import Path
 project_root = Path(__file__).parent.absolute()
 sys.path.append(str(project_root))
 
+def force_chromadb_restart():
+    """Force a complete restart when ChromaDB schema issues persist"""
+    print("🚨 Force restarting ChromaDB - schema issues persist")
+    
+    try:
+        # Import and restart the entire database module
+        import sys
+        import importlib
+        
+        # Reload the database module to clear any cached clients
+        if 'services.shared.database' in sys.modules:
+            importlib.reload(sys.modules['services.shared.database'])
+            print("🔄 Reloaded database module")
+        
+        # Clear any global references
+        for module_name in list(sys.modules.keys()):
+            if 'chromadb' in module_name or 'services.shared.database' in module_name:
+                if module_name in sys.modules:
+                    del sys.modules[module_name]
+                    print(f"🧹 Cleared module: {module_name}")
+        
+        # Force garbage collection
+        import gc
+        gc.collect()
+        print("🗑️  Forced garbage collection")
+        
+        return True
+    except Exception as e:
+        print(f"❌ Failed to force restart: {e}")
+        return False
+
+def start_with_fresh_database():
+    """Start with a completely fresh ChromaDB database"""
+    print("🆕 Starting with fresh ChromaDB database...")
+    
+    try:
+        chroma_data_path = Path("/app/chroma_data")
+        
+        # Ensure clean directory
+        if chroma_data_path.exists():
+            import shutil
+            try:
+                shutil.rmtree(chroma_data_path)
+                print("🗑️  Removed existing ChromaDB directory")
+            except Exception as e:
+                print(f"⚠️  Could not remove existing directory: {e}")
+        
+        chroma_data_path.mkdir(exist_ok=True)
+        print("📁 Created fresh ChromaDB directory")
+        
+        # Initialize fresh ChromaDB
+        import chromadb
+        from chromadb.config import Settings
+        
+        fresh_client = chromadb.PersistentClient(
+            path=str(chroma_data_path),
+            settings=Settings(anonymized_telemetry=False)
+        )
+        print("✅ Created fresh ChromaDB client")
+        
+        # Create basic collections
+        collections = [
+            "universities",
+            "documents", 
+            "scrape_logs",
+            "chat_sessions",
+            "chat_messages",
+            "feedback"
+        ]
+        
+        for collection_name in collections:
+            try:
+                fresh_client.create_collection(name=collection_name)
+                print(f"✅ Created collection: {collection_name}")
+            except Exception as e:
+                print(f"⚠️  Could not create collection {collection_name}: {e}")
+        
+        print("✅ Fresh ChromaDB database ready")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Failed to create fresh database: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
 def reset_chromadb_on_schema_error():
     """Reset ChromaDB when schema version mismatch is detected"""
     print("🔄 Detected ChromaDB schema version mismatch, resetting database...")
@@ -25,9 +111,16 @@ def reset_chromadb_on_schema_error():
         try:
             from services.shared.database import chroma_client
             if chroma_client is not None:
-                # Close the client to release file handles
-                chroma_client._client.close()
-                print("🔌 Closed existing ChromaDB client")
+                # Try different ways to close the client
+                try:
+                    chroma_client._client.close()
+                    print("🔌 Closed existing ChromaDB client (method 1)")
+                except:
+                    try:
+                        chroma_client.close()
+                        print("🔌 Closed existing ChromaDB client (method 2)")
+                    except:
+                        print("⚠️  Could not close ChromaDB client")
         except Exception as e:
             print(f"⚠️  Could not close ChromaDB client: {e}")
         
@@ -81,6 +174,10 @@ def reset_chromadb_on_schema_error():
                             print("✅ Removed ChromaDB directory (fallback method)")
                         except Exception as final_e:
                             print(f"❌ Failed to remove ChromaDB directory: {final_e}")
+                            # Force restart as last resort
+                            if force_chromadb_restart():
+                                print("🔄 Forced ChromaDB restart")
+                                return True
                             return False
         
         # Wait a moment to ensure filesystem sync
@@ -126,12 +223,20 @@ def reset_chromadb_on_schema_error():
             print(f"❌ Failed to initialize fresh ChromaDB: {e}")
             import traceback
             traceback.print_exc()
+            # Force restart as last resort
+            if force_chromadb_restart():
+                print("🔄 Forced ChromaDB restart after initialization failure")
+                return True
             return False
         
     except Exception as e:
         print(f"❌ Failed to reset ChromaDB: {e}")
         import traceback
         traceback.print_exc()
+        # Force restart as last resort
+        if force_chromadb_restart():
+            print("🔄 Forced ChromaDB restart after reset failure")
+            return True
         return False
 
 def check_and_restore_chromadb():
@@ -159,8 +264,8 @@ def check_and_restore_chromadb():
                 if reset_chromadb_on_schema_error():
                     print("🔄 ChromaDB reset successful, proceeding with restore...")
                 else:
-                    print("❌ Failed to reset ChromaDB, skipping restore")
-                    return False
+                    print("❌ Failed to reset ChromaDB, starting with fresh database...")
+                    return start_with_fresh_database()
             else:
                 print(f"⚠️  Error checking ChromaDB content: {e}, proceeding with restore...")
     else:
@@ -169,8 +274,8 @@ def check_and_restore_chromadb():
     # Get backup URL from environment
     backup_url = os.environ.get("CHROMA_RESTORE_URL")
     if not backup_url:
-        print("⚠️  CHROMA_RESTORE_URL not set, skipping restore")
-        return False
+        print("⚠️  CHROMA_RESTORE_URL not set, starting with fresh database...")
+        return start_with_fresh_database()
     
     try:
         # Create backup directory
@@ -227,7 +332,8 @@ def check_and_restore_chromadb():
             for item in backup_dir.rglob("*"):
                 if item.is_file():
                     print(f"   - {item.relative_to(backup_dir)}")
-            return False
+            print("🔄 Starting with fresh database...")
+            return start_with_fresh_database()
         
         extracted_backup = extracted_dirs[0]
         print(f"📁 Using backup directory: {extracted_backup}")
@@ -282,7 +388,8 @@ def check_and_restore_chromadb():
                 return True
             else:
                 print("❌ Restore completed but no documents found")
-                return False
+                print("🔄 Starting with fresh database...")
+                return start_with_fresh_database()
                 
         except Exception as e:
             if "no such column: collections.topic" in str(e):
@@ -292,16 +399,19 @@ def check_and_restore_chromadb():
                     return True
                 else:
                     print("❌ Failed to reset ChromaDB after restore")
-                    return False
+                    print("🔄 Starting with fresh database...")
+                    return start_with_fresh_database()
             else:
                 print(f"⚠️  Could not verify restore: {e}")
-                return True  # Assume success if we can't verify
+                print("🔄 Starting with fresh database...")
+                return start_with_fresh_database()
         
     except Exception as e:
         print(f"❌ Restore failed: {e}")
         import traceback
         traceback.print_exc()
-        return False
+        print("🔄 Starting with fresh database...")
+        return start_with_fresh_database()
 
 def main():
     """Start the production server with cloud-optimized settings"""
