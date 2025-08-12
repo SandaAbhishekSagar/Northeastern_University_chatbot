@@ -153,14 +153,32 @@ class EnhancedGPUUniversityRAGChatbot:
         
         # Initialize LLM with GPU-optimized settings
         print("[ENHANCED GPU] Loading LLM...")
-        self.llm = Ollama(
-            model=model_name,
-            temperature=0.1,          # Lower for more factual responses
-            num_ctx=4096,             # Larger context window for 10 documents
-            repeat_penalty=1.2,       # Prevent repetitive text
-            top_k=10,                 # More focused vocabulary
-            top_p=0.8                 # More deterministic
-        )
+        
+        # Try to use Ollama first, fallback to cloud LLM if not available
+        try:
+            self.llm = Ollama(
+                model=model_name,
+                temperature=0.1,          # Lower for more factual responses
+                num_ctx=4096,             # Larger context window for 10 documents
+                repeat_penalty=1.2,       # Prevent repetitive text
+                top_k=10,                 # More focused vocabulary
+                top_p=0.8                 # More deterministic
+            )
+            
+            # Test Ollama connection
+            test_response = self.llm("Hello")
+            print(f"[ENHANCED GPU] Ollama LLM {model_name} is working!")
+            self.llm_type = "ollama"
+            
+        except Exception as e:
+            print(f"[ENHANCED GPU] Ollama not available: {e}")
+            print("[ENHANCED GPU] Falling back to cloud LLM...")
+            
+            # Fallback to a simple text generation approach
+            # This will provide basic responses without requiring external LLM
+            self.llm = None
+            self.llm_type = "fallback"
+            print("[ENHANCED GPU] Using fallback text generation")
         
         # Enhanced prompt templates
         self.query_expansion_prompt = PromptTemplate(
@@ -287,6 +305,10 @@ Answer:"""
     def expand_query(self, query: str, conversation_history: Optional[List[Dict]] = None) -> List[str]:
         """Expand query using LLM for better search results"""
         try:
+            # If using fallback mode, return original query
+            if self.llm_type == "fallback" or self.llm is None:
+                return [query]
+            
             # Prepare conversation history
             history_text = ""
             if conversation_history:
@@ -572,7 +594,25 @@ Be direct and concise."""
                 conversation_history=history_text
             )
             
-            answer = self.llm(prompt)
+            # Handle fallback mode when LLM is not available
+            if self.llm_type == "fallback" or self.llm is None:
+                # Generate a simple response based on context
+                if context and context.strip():
+                    # Extract key information from context
+                    context_lines = context.split('\n')
+                    relevant_info = []
+                    for line in context_lines:
+                        if any(keyword in line.lower() for keyword in question.lower().split()):
+                            relevant_info.append(line)
+                    
+                    if relevant_info:
+                        answer = f"Based on the available information: {' '.join(relevant_info[:3])}"
+                    else:
+                        answer = "I don't have enough specific information about this topic in my knowledge base."
+                else:
+                    answer = "I don't have enough specific information about this topic in my knowledge base."
+            else:
+                answer = self.llm(prompt)
             llm_time = time.time() - llm_start
             
             # Step 4: Validate and improve answer if needed
