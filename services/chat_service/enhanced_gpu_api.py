@@ -77,6 +77,11 @@ class StatsResponse(BaseModel):
     device: str
     features: List[str]
 
+class DocumentUpload(BaseModel):
+    documents: List[str]
+    metadatas: List[Dict[str, Any]]
+    ids: List[str]
+
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint"""
@@ -235,6 +240,34 @@ async def search_documents(request: ChatRequest):
     except Exception as e:
         print(f"[ENHANCED GPU API] Error in search endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@app.post("/upload-documents")
+async def upload_documents(data: DocumentUpload):
+    """Upload documents to ChromaDB (temporary endpoint for migration)"""
+    try:
+        from services.shared.database import get_chroma_client, get_collection
+        
+        # Get or create documents collection
+        try:
+            collection = get_collection('documents')
+        except:
+            client = get_chroma_client()
+            collection = client.create_collection(name="documents")
+        
+        # Add documents
+        collection.add(
+            documents=data.documents,
+            metadatas=data.metadatas,
+            ids=data.ids
+        )
+        
+        print(f"[ENHANCED GPU API] Uploaded {len(data.ids)} documents to ChromaDB")
+        
+        return {"status": "success", "uploaded": len(data.ids)}
+        
+    except Exception as e:
+        print(f"[ENHANCED GPU API] Error uploading documents: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/")
 async def root():
