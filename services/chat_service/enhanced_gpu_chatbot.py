@@ -24,7 +24,7 @@ import hashlib
 import time
 import uuid
 from typing import List, Dict, Any, Optional
-from langchain.llms import Ollama
+from langchain_ollama import Ollama
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
@@ -83,7 +83,7 @@ class EnhancedGPUChatbot:
             )
             
             # Test Ollama connection
-            test_response = self.llm("Hello")
+            test_response = self.llm.invoke("Hello")
             print(f"[ENHANCED GPU] Ollama LLM {model_name} is working!")
             self.llm_type = "ollama"
             
@@ -120,7 +120,7 @@ class EnhancedGPUChatbot:
             Return only the queries, one per line, without numbering or explanations.
             """
             
-            response = self.llm(prompt)
+            response = self.llm.invoke(prompt)
             expanded_queries = [line.strip() for line in response.split('\n') if line.strip()]
             
             # Add original query and ensure we have at least 2 queries
@@ -269,7 +269,7 @@ class EnhancedGPUChatbot:
             Answer:
             """
             
-            answer = self.llm(prompt)
+            answer = self.llm.invoke(prompt)
         
         return answer
     

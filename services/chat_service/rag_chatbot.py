@@ -1,5 +1,5 @@
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.llms import Ollama
+from langchain_ollama import Ollama
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 import sys
@@ -33,7 +33,7 @@ class UniversityRAGChatbot:
         
         # Test if model is available
         try:
-            test_response = self.llm("Hello")
+            test_response = self.llm.invoke("Hello")
             print(f"[OK] Local LLM {model_name} is working!")
         except Exception as e:
             print(f"[ERROR] Error with local LLM: {e}")
@@ -124,7 +124,7 @@ Answer:"""
             prompt = self.prompt_template.format(context=context, question=question)
             
             print(f"Generating response for: {question[:50]}...")
-            answer = self.llm(prompt)
+            answer = self.llm.invoke(prompt)
             
             # Calculate confidence based on similarity scores
             avg_similarity = sum(doc['similarity'] for doc in relevant_docs) / len(relevant_docs)
