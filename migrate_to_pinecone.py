@@ -19,12 +19,12 @@ def setup_pinecone():
     print("🌲 Setting up Pinecone Vector Database...")
     
     try:
-        # Install pinecone-client if not available
+        # Install pinecone if not available
         try:
             import pinecone
         except ImportError:
-            print("📦 Installing pinecone-client...")
-            os.system("pip install pinecone-client")
+            print("📦 Installing pinecone...")
+            os.system("pip install pinecone")
             import pinecone
         
         # Check for Pinecone API key
