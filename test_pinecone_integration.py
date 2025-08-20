@@ -72,21 +72,20 @@ def test_api_integration():
     
     try:
         from services.chat_service.enhanced_gpu_api import app
-        from fastapi.testclient import TestClient
+        import httpx
         
-        client = TestClient(app)
-        
-        # Test health endpoint
-        response = client.get("/health/enhanced")
-        if response.status_code == 200:
-            data = response.json()
-            print(f"✅ Health check successful")
-            print(f"📊 Database type: {data['features']['database_type']}")
-            print(f"📄 Document count: {data['features']['document_count']}")
-            return True
-        else:
-            print(f"❌ Health check failed: {response.status_code}")
-            return False
+        # Test health endpoint directly
+        with httpx.Client(app=app, base_url="http://test") as client:
+            response = client.get("/health/enhanced")
+            if response.status_code == 200:
+                data = response.json()
+                print(f"✅ Health check successful")
+                print(f"📊 Database type: {data['features']['database_type']}")
+                print(f"📄 Document count: {data['features']['document_count']}")
+                return True
+            else:
+                print(f"❌ Health check failed: {response.status_code}")
+                return False
             
     except Exception as e:
         print(f"❌ API integration test failed: {e}")
