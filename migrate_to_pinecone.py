@@ -21,11 +21,11 @@ def setup_pinecone():
     try:
         # Install pinecone if not available
         try:
-            import pinecone
+            from pinecone import Pinecone, ServerlessSpec
         except ImportError:
             print("📦 Installing pinecone...")
             os.system("pip install pinecone")
-            import pinecone
+            from pinecone import Pinecone, ServerlessSpec
         
         # Check for Pinecone API key
         api_key = os.environ.get("PINECONE_API_KEY")
@@ -35,17 +35,21 @@ def setup_pinecone():
             print("💡 Set it with: $env:PINECONE_API_KEY='your_key_here'")
             return False
         
-        # Initialize Pinecone
-        pinecone.init(api_key=api_key, environment="us-east-1-aws")
+        # Initialize Pinecone with new API
+        pc = Pinecone(api_key=api_key)
         
         # Create index if it doesn't exist
         index_name = "northeastern-university"
-        if index_name not in pinecone.list_indexes():
+        if index_name not in pc.list_indexes().names():
             print(f"📊 Creating Pinecone index: {index_name}")
-            pinecone.create_index(
+            pc.create_index(
                 name=index_name,
                 dimension=384,  # For all-MiniLM-L6-v2 embeddings
-                metric="cosine"
+                metric="cosine",
+                spec=ServerlessSpec(
+                    cloud="aws",
+                    region="us-east-1"
+                )
             )
             print("✅ Pinecone index created")
         else:
@@ -64,13 +68,13 @@ def migrate_to_pinecone():
         return False
     
     try:
-        import pinecone
+        from pinecone import Pinecone
         from sentence_transformers import SentenceTransformer
         
         # Initialize Pinecone
         api_key = os.environ.get("PINECONE_API_KEY")
-        pinecone.init(api_key=api_key, environment="us-east-1-aws")
-        index = pinecone.Index("northeastern-university")
+        pc = Pinecone(api_key=api_key)
+        index = pc.Index("northeastern-university")
         
         # Load embedding model
         print("🤖 Loading embedding model...")
@@ -125,13 +129,33 @@ def migrate_to_pinecone():
             # Prepare vectors for Pinecone
             vectors = []
             for j, (doc_id, embedding, metadata) in enumerate(zip(batch_ids, embeddings, batch_metadatas)):
+                # Create a hash of the document content for efficient storage
+                import hashlib
+                doc_hash = hashlib.md5(batch_docs[j].encode()).hexdigest()
+                
+                # Optimize metadata to stay within Pinecone's 40KB limit
+                optimized_metadata = {
+                    'collection': 'documents',
+                    'doc_hash': doc_hash,
+                    'doc_length': len(batch_docs[j])
+                }
+                
+                # Add essential metadata fields only
+                if metadata:
+                    # Keep only essential fields and truncate long values
+                    for key, value in metadata.items():
+                        if key in ['title', 'url', 'source', 'type']:  # Keep important fields
+                            if isinstance(value, str) and len(value) > 200:
+                                # Truncate long text fields
+                                optimized_metadata[key] = value[:200] + "..."
+                            elif isinstance(value, (str, int, float, bool)) and len(str(value)) < 500:
+                                # Keep reasonable-sized fields
+                                optimized_metadata[key] = value
+                
                 vectors.append({
                     'id': doc_id,
                     'values': embedding,
-                    'metadata': {
-                        'text': batch_docs[j],
-                        **metadata
-                    }
+                    'metadata': optimized_metadata
                 })
             
             # Upsert to Pinecone

@@ -113,25 +113,29 @@ def get_pinecone_index():
         return pinecone_index
     
     try:
-        import pinecone
+        from pinecone import Pinecone, ServerlessSpec
         
-        # Initialize Pinecone
-        pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
+        # Initialize Pinecone with new API
+        pc = Pinecone(api_key=PINECONE_API_KEY)
         
         # Check if index exists, create if not
-        if PINECONE_INDEX_NAME not in pinecone.list_indexes():
+        if PINECONE_INDEX_NAME not in pc.list_indexes().names():
             print(f"📊 Creating Pinecone index: {PINECONE_INDEX_NAME}")
-            pinecone.create_index(
+            pc.create_index(
                 name=PINECONE_INDEX_NAME,
                 dimension=384,  # For all-MiniLM-L6-v2 embeddings
-                metric="cosine"
+                metric="cosine",
+                spec=ServerlessSpec(
+                    cloud="aws",
+                    region="us-east-1"
+                )
             )
             print("✅ Pinecone index created")
         else:
             print(f"✅ Using existing Pinecone index: {PINECONE_INDEX_NAME}")
         
         # Get the index
-        pinecone_index = pinecone.Index(PINECONE_INDEX_NAME)
+        pinecone_index = pc.Index(PINECONE_INDEX_NAME)
         return pinecone_index
         
     except Exception as e:
@@ -188,18 +192,26 @@ def add_documents_to_pinecone(documents, metadatas=None, ids=None, collection_na
         # Prepare vectors for Pinecone
         vectors = []
         for i, (doc_id, embedding, document) in enumerate(zip(ids, embeddings, documents)):
-            metadata = {
-                'text': document,
+            # Optimize metadata to stay within Pinecone's 40KB limit
+            optimized_metadata = {
                 'collection': collection_name
             }
             
+            # Add essential metadata fields only
             if metadatas and i < len(metadatas):
-                metadata.update(metadatas[i])
+                metadata = metadatas[i]
+                for key, value in metadata.items():
+                    if isinstance(value, str) and len(value) > 500:
+                        # Truncate long text fields
+                        optimized_metadata[key] = value[:500] + "..."
+                    elif isinstance(value, (str, int, float, bool)) and len(str(value)) < 1000:
+                        # Keep reasonable-sized fields
+                        optimized_metadata[key] = value
             
             vectors.append({
                 'id': doc_id,
                 'values': embedding,
-                'metadata': metadata
+                'metadata': optimized_metadata
             })
         
         # Add to Pinecone
@@ -235,7 +247,7 @@ def query_pinecone(query_text, n_results=10, collection_name="documents"):
         # Format results to match ChromaDB format
         formatted_results = {
             'ids': [match['id'] for match in results['matches']],
-            'documents': [match['metadata']['text'] for match in results['matches']],
+            'documents': [match['metadata'].get('text', '') for match in results['matches']],  # Note: text is not stored in metadata anymore
             'metadatas': [{k: v for k, v in match['metadata'].items() if k != 'text'} for match in results['matches']],
             'distances': [match['score'] for match in results['matches']]
         }
