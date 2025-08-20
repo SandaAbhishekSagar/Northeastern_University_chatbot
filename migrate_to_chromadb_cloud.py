@@ -27,15 +27,75 @@ def migrate_to_chromadb_cloud():
         return False
     
     try:
-        # Connect to ChromaDB Cloud
+        # Connect to ChromaDB Cloud with better SSL handling
         print(f"☁️  Connecting to ChromaDB Cloud at {cloud_host}")
-        cloud_client = chromadb.HttpClient(
-            host=cloud_host,
-            port=443,
-            ssl=True,
-            headers={"Authorization": f"Bearer {cloud_token}"}
-        )
-        print("✅ Connected to ChromaDB Cloud")
+        
+        # Try different connection methods
+        cloud_client = None
+        
+        # Method 1: Standard connection
+        try:
+            cloud_client = chromadb.HttpClient(
+                host=cloud_host,
+                port=443,
+                ssl=True,
+                headers={"Authorization": f"Bearer {cloud_token}"}
+            )
+            # Test the connection
+            cloud_client.heartbeat()
+            print("✅ Connected to ChromaDB Cloud (Method 1)")
+        except Exception as e1:
+            print(f"⚠️  Method 1 failed: {e1}")
+            
+            # Method 2: Try without SSL verification
+            try:
+                import ssl
+                import httpx
+                
+                # Create custom SSL context
+                ssl_context = ssl.create_default_context()
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
+                
+                # Create custom transport
+                transport = httpx.HTTPTransport(verify=ssl_context)
+                
+                cloud_client = chromadb.HttpClient(
+                    host=cloud_host,
+                    port=443,
+                    ssl=True,
+                    headers={"Authorization": f"Bearer {cloud_token}"},
+                    transport=transport
+                )
+                cloud_client.heartbeat()
+                print("✅ Connected to ChromaDB Cloud (Method 2)")
+            except Exception as e2:
+                print(f"⚠️  Method 2 failed: {e2}")
+                
+                # Method 3: Try with different host format
+                try:
+                    # Remove https:// from host if present
+                    clean_host = cloud_host.replace("https://", "").replace("http://", "")
+                    
+                    cloud_client = chromadb.HttpClient(
+                        host=clean_host,
+                        port=443,
+                        ssl=True,
+                        headers={"Authorization": f"Bearer {cloud_token}"}
+                    )
+                    cloud_client.heartbeat()
+                    print("✅ Connected to ChromaDB Cloud (Method 3)")
+                except Exception as e3:
+                    print(f"❌ All connection methods failed:")
+                    print(f"   Method 1: {e1}")
+                    print(f"   Method 2: {e2}")
+                    print(f"   Method 3: {e3}")
+                    print("\n💡 Possible solutions:")
+                    print("   1. Check your internet connection")
+                    print("   2. Verify your ChromaDB Cloud token is correct")
+                    print("   3. Try using a different network")
+                    print("   4. Contact ChromaDB support")
+                    return False
         
         # Connect to local ChromaDB
         local_data_path = project_root / "chroma_data"

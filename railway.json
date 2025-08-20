@@ -3,10 +3,17 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python start_production.py",
+    "startCommand": "python start_production_simple.py",
     "healthcheckPath": "/health/enhanced",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
-    "numReplicas": 1
+    "numReplicas": 1,
+    "volumes": [
+      {
+        "name": "chroma-data",
+        "mountPath": "/app/chroma_data",
+        "size": "10GB"
+      }
+    ]
   }
 } 
