@@ -37,67 +37,78 @@ except ImportError as e:
         CHROMADB_HTTP_PORT = 8000
     config = DefaultConfig()
 
-# Global ChromaDB client
+# ChromaDB configuration
+chroma_data_path = Path(__file__).parent.parent.parent / "chroma_data"
+
+# Check if using ChromaDB Cloud
+CHROMA_CLOUD_TOKEN = os.environ.get("CHROMA_CLOUD_TOKEN")
+CHROMA_CLOUD_HOST = os.environ.get("CHROMA_CLOUD_HOST", "https://api.chromadb.com")
+
+# Global client instance
 chroma_client = None
 
 def get_chroma_client():
-    """Get or create ChromaDB client (always embedded mode, absolute path)"""
+    """Get ChromaDB client - supports both local and cloud"""
     global chroma_client
-    if chroma_client is None:
-        import chromadb
-        # Always use absolute path from project root
-        project_root = os.path.dirname(os.path.abspath(__file__))
-        chroma_data_path = os.path.abspath(os.path.join(project_root, "../../chroma_data"))
-        chroma_client = chromadb.PersistentClient(path=chroma_data_path)
-        print(f"[OK] ChromaDB embedded client created at {chroma_data_path}")
-    return chroma_client
+    
+    if chroma_client is not None:
+        return chroma_client
+    
+    try:
+        if CHROMA_CLOUD_TOKEN:
+            # Use ChromaDB Cloud
+            print(f"☁️  Connecting to ChromaDB Cloud at {CHROMA_CLOUD_HOST}")
+            chroma_client = chromadb.HttpClient(
+                host=CHROMA_CLOUD_HOST,
+                port=443,
+                ssl=True,
+                headers={"Authorization": f"Bearer {CHROMA_CLOUD_TOKEN}"}
+            )
+            print("✅ Connected to ChromaDB Cloud")
+        else:
+            # Use local ChromaDB
+            print(f"📁 Using local ChromaDB at {chroma_data_path}")
+            chroma_client = chromadb.PersistentClient(
+                path=str(chroma_data_path),
+                settings=Settings(anonymized_telemetry=False)
+            )
+            print("✅ Connected to local ChromaDB")
+        
+        return chroma_client
+        
+    except Exception as e:
+        print(f"❌ Failed to connect to ChromaDB: {e}")
+        raise
 
-def get_collection(name: str, create_if_not_exists: bool = True) -> chromadb.Collection:
-    """Get a ChromaDB collection by name"""
+def get_collection(collection_name: str):
+    """Get a ChromaDB collection"""
     client = get_chroma_client()
     
     try:
-        collection = client.get_collection(name=name)
-        print(f"[OK] Retrieved collection: {name}")
+        collection = client.get_collection(name=collection_name)
+        print(f"[OK] Retrieved collection: {collection_name}")
         return collection
     except Exception as e:
-        if create_if_not_exists:
-            print(f"[INFO] Collection {name} not found, creating...")
-            collection = client.create_collection(name=name)
-            print(f"[OK] Created collection: {name}")
-            return collection
-        else:
-            raise
+        print(f"[INFO] Collection {collection_name} not found, creating...")
+        collection = client.create_collection(name=collection_name)
+        print(f"[OK] Created collection: {collection_name}")
+        return collection
 
 def init_db():
-    """Initialize ChromaDB collections"""
-    print("Initializing ChromaDB collections...")
+    """Initialize database with required collections"""
+    collections = [
+        "universities",
+        "documents", 
+        "scrape_logs",
+        "chat_sessions",
+        "chat_messages",
+        "feedback"
+    ]
     
-    try:
-        client = get_chroma_client()
-        
-        # Create collections for different data types
-        collections = [
-            "universities",
-            "documents", 
-            "scrape_logs",
-            "chat_sessions",
-            "chat_messages"
-        ]
-        
-        for collection_name in collections:
-            try:
-                collection = client.get_collection(name=collection_name)
-                print(f"[OK] Collection exists: {collection_name}")
-            except:
-                collection = client.create_collection(name=collection_name)
-                print(f"[OK] Created collection: {collection_name}")
-        
-        print("ChromaDB collections initialized successfully!")
-        
-    except Exception as e:
-        print(f"[ERROR] Error initializing collections: {e}")
-        raise
+    for collection_name in collections:
+        get_collection(collection_name)
+    
+    print("✅ Database initialized with all collections")
 
 def test_connection():
     """Test ChromaDB connection"""
