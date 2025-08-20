@@ -274,8 +274,8 @@ def check_and_restore_chromadb():
     # Get backup URL from environment
     backup_url = os.environ.get("CHROMA_RESTORE_URL")
     if not backup_url:
-        print("⚠️  CHROMA_RESTORE_URL not set, starting with fresh database...")
-        return start_with_fresh_database()
+        print("⚠️  CHROMA_RESTORE_URL not set, creating sample data...")
+        return create_sample_northeastern_data()
     
     try:
         # Create backup directory
@@ -332,8 +332,8 @@ def check_and_restore_chromadb():
             for item in backup_dir.rglob("*"):
                 if item.is_file():
                     print(f"   - {item.relative_to(backup_dir)}")
-            print("🔄 Starting with fresh database...")
-            return start_with_fresh_database()
+            print("🔄 Attempting to create sample data...")
+            return create_sample_northeastern_data()
         
         extracted_backup = extracted_dirs[0]
         print(f"📁 Using backup directory: {extracted_backup}")
@@ -388,8 +388,8 @@ def check_and_restore_chromadb():
                 return True
             else:
                 print("❌ Restore completed but no documents found")
-                print("🔄 Starting with fresh database...")
-                return start_with_fresh_database()
+                print("🔄 Attempting to create sample data...")
+                return create_sample_northeastern_data()
                 
         except Exception as e:
             if "no such column: collections.topic" in str(e):
@@ -399,19 +399,154 @@ def check_and_restore_chromadb():
                     return True
                 else:
                     print("❌ Failed to reset ChromaDB after restore")
-                    print("🔄 Starting with fresh database...")
-                    return start_with_fresh_database()
+                    print("🔄 Attempting to create sample data...")
+                    return create_sample_northeastern_data()
             else:
                 print(f"⚠️  Could not verify restore: {e}")
-                print("🔄 Starting with fresh database...")
-                return start_with_fresh_database()
+                print("🔄 Attempting to create sample data...")
+                return create_sample_northeastern_data()
         
     except Exception as e:
         print(f"❌ Restore failed: {e}")
         import traceback
         traceback.print_exc()
-        print("🔄 Starting with fresh database...")
-        return start_with_fresh_database()
+        print("🔄 Attempting to create sample data...")
+        return create_sample_northeastern_data()
+
+def create_sample_northeastern_data():
+    """Create sample Northeastern University data for immediate functionality"""
+    print("📚 Creating sample Northeastern University data...")
+    
+    try:
+        from services.shared.database import get_chroma_client, get_collection
+        import chromadb
+        
+        client = get_chroma_client()
+        
+        # Sample Northeastern University documents
+        sample_documents = [
+            {
+                "title": "Northeastern University Overview",
+                "content": "Northeastern University is a private research university in Boston, Massachusetts. Founded in 1898, it offers undergraduate and graduate programs across nine colleges and schools. The university is known for its cooperative education (co-op) program, which integrates classroom study with professional experience.",
+                "url": "https://www.northeastern.edu",
+                "metadata": {"source": "university_website", "category": "overview"}
+            },
+            {
+                "title": "Cooperative Education Program",
+                "content": "Northeastern's cooperative education program is one of the largest and most innovative in the world. Students alternate between academic study and full-time employment, gaining up to 18 months of professional experience before graduation. The co-op program is available in over 100 majors and is a key differentiator of Northeastern education.",
+                "url": "https://www.northeastern.edu/coop",
+                "metadata": {"source": "coop_website", "category": "academics"}
+            },
+            {
+                "title": "Admission Requirements",
+                "content": "Northeastern University has competitive admission requirements. For undergraduate programs, applicants need strong academic records, standardized test scores (SAT/ACT), letters of recommendation, and extracurricular activities. The university practices holistic review, considering academic achievement, personal qualities, and potential for success.",
+                "url": "https://www.northeastern.edu/admissions",
+                "metadata": {"source": "admissions_website", "category": "admissions"}
+            },
+            {
+                "title": "Computer Science Program",
+                "content": "The Khoury College of Computer Sciences at Northeastern offers undergraduate and graduate programs in computer science, data science, cybersecurity, and related fields. The program emphasizes experiential learning through co-ops, research opportunities, and industry partnerships. Students learn programming, algorithms, software engineering, and emerging technologies.",
+                "url": "https://www.khoury.northeastern.edu",
+                "metadata": {"source": "khoury_website", "category": "academics"}
+            },
+            {
+                "title": "Tuition and Financial Aid",
+                "content": "Northeastern University's tuition for the 2024-2025 academic year is approximately $60,000 for undergraduate programs. The university offers generous financial aid packages, including merit scholarships, need-based grants, and work-study opportunities. Over 90% of students receive some form of financial assistance.",
+                "url": "https://www.northeastern.edu/financialaid",
+                "metadata": {"source": "financial_aid_website", "category": "financial"}
+            },
+            {
+                "title": "Campus Life and Housing",
+                "content": "Northeastern's campus is located in the heart of Boston, offering students access to cultural, professional, and recreational opportunities. The university provides on-campus housing for all four years, with modern residence halls and apartment-style living. Campus life includes over 400 student organizations, Division I athletics, and cultural events.",
+                "url": "https://www.northeastern.edu/campuslife",
+                "metadata": {"source": "campus_life_website", "category": "student_life"}
+            },
+            {
+                "title": "Research and Innovation",
+                "content": "Northeastern is classified as an R1 research university, conducting cutting-edge research in areas like artificial intelligence, cybersecurity, health sciences, and sustainability. The university has research centers and institutes that collaborate with industry partners and government agencies. Students can participate in research through co-ops, internships, and independent study.",
+                "url": "https://www.northeastern.edu/research",
+                "metadata": {"source": "research_website", "category": "research"}
+            },
+            {
+                "title": "International Students",
+                "content": "Northeastern welcomes international students from over 140 countries. The university provides comprehensive support services including English language programs, cultural adjustment assistance, and visa guidance. International students are eligible for the co-op program and can work in the US during their studies.",
+                "url": "https://www.northeastern.edu/international",
+                "metadata": {"source": "international_website", "category": "admissions"}
+            },
+            {
+                "title": "Graduate Programs",
+                "content": "Northeastern offers over 200 graduate programs across nine colleges, including master's, doctoral, and professional degrees. Graduate programs emphasize interdisciplinary learning, research opportunities, and industry connections. Many programs offer flexible scheduling and online options for working professionals.",
+                "url": "https://www.northeastern.edu/graduate",
+                "metadata": {"source": "graduate_website", "category": "academics"}
+            },
+            {
+                "title": "Alumni Network",
+                "content": "Northeastern has a global alumni network of over 300,000 graduates working in diverse industries worldwide. The alumni network provides career support, networking opportunities, and mentorship programs. Northeastern alumni are known for their practical experience and professional success.",
+                "url": "https://www.northeastern.edu/alumni",
+                "metadata": {"source": "alumni_website", "category": "community"}
+            }
+        ]
+        
+        # Get or create documents collection
+        try:
+            collection = client.get_collection(name="documents")
+            print("📚 Using existing documents collection")
+        except:
+            collection = client.create_collection(name="documents")
+            print("📚 Created new documents collection")
+        
+        # Add sample documents
+        documents = [doc["content"] for doc in sample_documents]
+        metadatas = [doc["metadata"] for doc in sample_documents]
+        ids = [f"sample_{i}" for i in range(len(sample_documents))]
+        
+        collection.add(
+            documents=documents,
+            metadatas=metadatas,
+            ids=ids
+        )
+        
+        print(f"✅ Added {len(sample_documents)} sample documents to ChromaDB")
+        
+        # Create universities collection with Northeastern
+        try:
+            universities_collection = client.get_collection(name="universities")
+            print("🏫 Using existing universities collection")
+        except:
+            universities_collection = client.create_collection(name="universities")
+            print("🏫 Created new universities collection")
+        
+        northeastern_data = {
+            "name": "Northeastern University",
+            "location": "Boston, Massachusetts",
+            "type": "Private Research University",
+            "founded": "1898",
+            "website": "https://www.northeastern.edu",
+            "description": "A private research university known for its cooperative education program and experiential learning approach."
+        }
+        
+        universities_collection.add(
+            documents=[northeastern_data["description"]],
+            metadatas=[northeastern_data],
+            ids=["northeastern_university"]
+        )
+        
+        print("✅ Added Northeastern University to universities collection")
+        
+        # Verify the data
+        result = collection.get()
+        if result and result.get('ids') and len(result['ids']) > 0:
+            print(f"✅ Sample data verified: {len(result['ids'])} documents available")
+            return True
+        else:
+            print("❌ Sample data creation failed")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Failed to create sample data: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
 
 def main():
     """Start the production server with cloud-optimized settings"""
