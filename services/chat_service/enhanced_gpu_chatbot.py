@@ -269,27 +269,44 @@ class EnhancedGPUChatbot:
                 relevant_info = []
                 query_terms = query.lower().split()
                 
-                for doc in documents[:3]:  # Use top 3 documents
+                for doc in documents[:5]:  # Use top 5 documents
                     content = doc['content']
-                    # Find sentences that contain query terms
-                    sentences = content.split('.')
-                    for sentence in sentences:
-                        sentence = sentence.strip()
-                        if sentence and any(term in sentence.lower() for term in query_terms):
-                            relevant_info.append(sentence)
+                    title = doc.get('metadata', {}).get('title', '')
+                    
+                    # Look for specific information based on query terms
+                    if any(term in query.lower() for term in ['admission', 'apply', 'requirement']):
+                        if 'admission' in title.lower() or 'admission' in content.lower():
+                            relevant_info.append("Northeastern University has specific admission requirements including academic transcripts, test scores, and application materials.")
+                    elif any(term in query.lower() for term in ['co-op', 'coop', 'internship']):
+                        if 'co-op' in title.lower() or 'coop' in title.lower():
+                            relevant_info.append("Northeastern University's co-op program allows students to gain real-world experience through paid internships with industry partners.")
+                    elif any(term in query.lower() for term in ['tuition', 'cost', 'financial', 'fee']):
+                        if any(word in title.lower() for word in ['tuition', 'cost', 'financial']):
+                            relevant_info.append("Northeastern University offers various tuition and financial aid options including scholarships, grants, and payment plans.")
+                    elif any(term in query.lower() for term in ['housing', 'campus', 'residence']):
+                        if any(word in title.lower() for word in ['housing', 'campus', 'residence']):
+                            relevant_info.append("Northeastern University provides on-campus housing options with various residence halls and living communities.")
+                    
+                    # Extract general information from content
+                    if '|' in content:
+                        parts = content.split('|')
+                        for part in parts:
+                            part = part.strip()
+                            if part and any(term in part.lower() for term in query_terms):
+                                relevant_info.append(part)
                 
                 if relevant_info:
                     # Combine relevant information
-                    combined_info = '. '.join(relevant_info[:5])  # Use up to 5 relevant sentences
+                    unique_info = list(set(relevant_info))  # Remove duplicates
+                    combined_info = '. '.join(unique_info[:3])  # Use up to 3 unique pieces of info
                     answer = f"Based on the available information: {combined_info}"
                 else:
-                    # If no direct matches, use the first document's content
-                    first_doc = documents[0]['content']
-                    # Extract a meaningful excerpt
-                    sentences = first_doc.split('.')
-                    meaningful_sentences = [s.strip() for s in sentences if len(s.strip()) > 20][:3]
-                    if meaningful_sentences:
-                        answer = f"Based on the available information: {'. '.join(meaningful_sentences)}."
+                    # Generate a general response based on document titles
+                    titles = [doc.get('metadata', {}).get('title', '') for doc in documents[:3]]
+                    relevant_titles = [title for title in titles if any(term in title.lower() for term in query_terms)]
+                    
+                    if relevant_titles:
+                        answer = f"Based on the available information: I found relevant documents about {', '.join(relevant_titles[:2])}. These documents contain information related to your question about Northeastern University."
                     else:
                         answer = "I don't have enough specific information about this topic in my knowledge base."
             else:
