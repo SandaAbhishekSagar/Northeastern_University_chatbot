@@ -24,7 +24,7 @@ import hashlib
 import time
 import uuid
 from typing import List, Dict, Any, Optional
-from langchain_ollama import Ollama
+from langchain_ollama import OllamaLLM
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
@@ -73,7 +73,7 @@ class EnhancedGPUChatbot:
         
         # Try to use Ollama first, fallback to cloud LLM if not available
         try:
-            self.llm = Ollama(
+            self.llm = OllamaLLM(
                 model=model_name,
                 temperature=0.1,          # Lower for more factual responses
                 num_ctx=4096,             # Larger context window for 10 documents

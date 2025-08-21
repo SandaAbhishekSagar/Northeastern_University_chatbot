@@ -1,5 +1,5 @@
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain_ollama import Ollama
+from langchain_ollama import OllamaLLM
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 import sys
@@ -26,7 +26,7 @@ class UniversityRAGChatbot:
         
         # Initialize local LLM with Ollama
         print(f"Loading local LLM: {model_name}")
-        self.llm = Ollama(
+        self.llm = OllamaLLM(
             model=model_name,
             temperature=0.7
         )
