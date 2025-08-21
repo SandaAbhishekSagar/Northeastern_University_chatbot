@@ -108,10 +108,21 @@ async def health_check():
         "llm_available": chatbot.llm_type != "fallback",
         "database_type": db_type,
         "document_count": doc_count,
-        "query_expansion": True,
-        "hybrid_search": True,
-        "confidence_scoring": True
+        "query_expansion": chatbot.llm_type != "fallback" or True,  # Always available
+        "hybrid_search": True,  # Always available
+        "confidence_scoring": True  # Always available
     }
+    
+    # Calculate active features count
+    active_features = sum([
+        features["gpu_acceleration"],
+        features["llm_available"], 
+        features["query_expansion"],
+        features["hybrid_search"]
+    ])
+    
+    features["active_features"] = active_features
+    features["total_features"] = 4
     
     return HealthResponse(
         status="healthy",
