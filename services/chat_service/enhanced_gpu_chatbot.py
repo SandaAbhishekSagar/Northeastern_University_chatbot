@@ -108,7 +108,32 @@ class EnhancedGPUChatbot:
     def expand_query(self, query: str) -> List[str]:
         """Expand query using LLM for better search results"""
         if self.llm_type == "fallback" or self.llm is None:
-            return [query]
+            # Basic query expansion for fallback mode
+            expanded_queries = [query]
+            
+            # Add common variations
+            query_lower = query.lower()
+            if "program" in query_lower:
+                expanded_queries.extend([
+                    query.replace("program", "programs"),
+                    query.replace("program", "degree"),
+                    query.replace("program", "course")
+                ])
+            if "co-op" in query_lower or "coop" in query_lower:
+                expanded_queries.extend([
+                    query.replace("co-op", "cooperative education"),
+                    query.replace("coop", "cooperative education"),
+                    "cooperative education program"
+                ])
+            if "northeastern" in query_lower:
+                expanded_queries.extend([
+                    query.replace("Northeastern", "NEU"),
+                    query.replace("northeastern", "NEU")
+                ])
+            
+            # Remove duplicates and limit
+            unique_queries = list(dict.fromkeys(expanded_queries))
+            return unique_queries[:3]  # Limit to 3 queries
         
         try:
             prompt = f"""
@@ -238,20 +263,35 @@ class EnhancedGPUChatbot:
         
         # Handle fallback mode when LLM is not available
         if self.llm_type == "fallback" or self.llm is None:
-            # Generate a simple response based on context
+            # Generate a better response based on context
             if documents and documents[0]['content'].strip():
-                # Extract key information from context
-                context = documents[0]['content']
-                context_lines = context.split('\n')
+                # Extract key information from all relevant documents
                 relevant_info = []
-                for line in context_lines:
-                    if any(keyword in line.lower() for keyword in query.lower().split()):
-                        relevant_info.append(line)
+                query_terms = query.lower().split()
+                
+                for doc in documents[:3]:  # Use top 3 documents
+                    content = doc['content']
+                    # Find sentences that contain query terms
+                    sentences = content.split('.')
+                    for sentence in sentences:
+                        sentence = sentence.strip()
+                        if sentence and any(term in sentence.lower() for term in query_terms):
+                            relevant_info.append(sentence)
                 
                 if relevant_info:
-                    answer = f"Based on the available information: {' '.join(relevant_info[:3])}"
+                    # Combine relevant information
+                    combined_info = '. '.join(relevant_info[:5])  # Use up to 5 relevant sentences
+                    answer = f"Based on the available information: {combined_info}"
                 else:
-                    answer = "I don't have enough specific information about this topic in my knowledge base."
+                    # If no direct matches, use the first document's content
+                    first_doc = documents[0]['content']
+                    # Extract a meaningful excerpt
+                    sentences = first_doc.split('.')
+                    meaningful_sentences = [s.strip() for s in sentences if len(s.strip()) > 20][:3]
+                    if meaningful_sentences:
+                        answer = f"Based on the available information: {'. '.join(meaningful_sentences)}."
+                    else:
+                        answer = "I don't have enough specific information about this topic in my knowledge base."
             else:
                 answer = "I don't have enough specific information about this topic in my knowledge base."
         else:
