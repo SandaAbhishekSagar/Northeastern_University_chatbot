@@ -193,11 +193,12 @@ class UniversityChatbot {
                 
                 // Update enhanced features status
                 if (this.enhancedFeatures) {
-                    if (healthData.features) {
-                        const enabledFeatures = Object.values(healthData.features).filter(status => status === 'enabled').length;
-                        console.log('Enabled features count:', enabledFeatures);
-                        this.enhancedFeatures.textContent = `${enabledFeatures}/4 Active`;
-                        this.enhancedFeatures.className = 'status-value online';
+                    if (healthData.features && healthData.features.active_features !== undefined) {
+                        const activeFeatures = healthData.features.active_features;
+                        const totalFeatures = healthData.features.total_features || 4;
+                        console.log('Active features count:', activeFeatures);
+                        this.enhancedFeatures.textContent = `${activeFeatures}/${totalFeatures} Active`;
+                        this.enhancedFeatures.className = activeFeatures > 0 ? 'status-value online' : 'status-value offline';
                     } else {
                         // Fallback to default count
                         console.log('No features data, using fallback');
@@ -453,14 +454,37 @@ class UniversityChatbot {
                 const item = document.createElement('li');
                 const title = source.title || source.file_name || 'Untitled Document';
                 const fileName = source.file_name ? ` <span class="file-name">(${source.file_name})</span>` : '';
-                const similarity = (source.similarity * 100).toFixed(1);
+                
+                // Handle relevance score - backend sends it as a string with "%" or as a number
+                let relevanceDisplay = 'N/A';
+                if (source.relevance) {
+                    // If it's already a string with %, use it directly
+                    if (typeof source.relevance === 'string' && source.relevance.includes('%')) {
+                        relevanceDisplay = source.relevance;
+                    } else if (typeof source.relevance === 'number') {
+                        relevanceDisplay = `${source.relevance.toFixed(1)}%`;
+                    } else if (typeof source.relevance === 'string') {
+                        // Try to parse as number
+                        const num = parseFloat(source.relevance);
+                        if (!isNaN(num)) {
+                            relevanceDisplay = `${num.toFixed(1)}%`;
+                        } else {
+                            relevanceDisplay = source.relevance;
+                        }
+                    }
+                } else if (source.similarity) {
+                    // Fallback to similarity if relevance not available
+                    const similarity = (source.similarity * 100).toFixed(1);
+                    relevanceDisplay = `${similarity}%`;
+                }
+                
                 const url = source.url ? `<a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">View Document</a>` : '';
                 item.innerHTML = `
                     <div style="margin-bottom: 0.2em;">
                         <strong>${title}</strong>${fileName}
                     </div>
                     <div style="font-size: 0.95em; margin-bottom: 0.2em;">
-                        <span class="similarity-score"><strong>Relevance:</strong> ${similarity}%</span>
+                        <span class="similarity-score"><strong>Relevance:</strong> ${relevanceDisplay}</span>
                     </div>
                     <div style="font-size: 0.95em;">${url}</div>
                 `;
