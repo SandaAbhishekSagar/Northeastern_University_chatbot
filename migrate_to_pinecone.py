@@ -21,11 +21,11 @@ def setup_pinecone():
     try:
         # Install pinecone if not available
         try:
-            from pinecone import Pinecone, ServerlessSpec
+            import pinecone
         except ImportError:
-            print("📦 Installing pinecone...")
-            os.system("pip install pinecone")
-            from pinecone import Pinecone, ServerlessSpec
+            print("📦 Installing pinecone-client...")
+            os.system("pip install pinecone-client==3.0.0")
+            import pinecone
         
         # Check for Pinecone API key
         api_key = os.environ.get("PINECONE_API_KEY")
@@ -35,21 +35,17 @@ def setup_pinecone():
             print("💡 Set it with: $env:PINECONE_API_KEY='your_key_here'")
             return False
         
-        # Initialize Pinecone with new API
-        pc = Pinecone(api_key=api_key)
+        # Initialize Pinecone with older API
+        pinecone.init(api_key=api_key, environment="us-east-1-aws")
         
         # Create index if it doesn't exist
         index_name = "northeastern-university"
-        if index_name not in pc.list_indexes().names():
+        if index_name not in pinecone.list_indexes():
             print(f"📊 Creating Pinecone index: {index_name}")
-            pc.create_index(
+            pinecone.create_index(
                 name=index_name,
                 dimension=384,  # For all-MiniLM-L6-v2 embeddings
-                metric="cosine",
-                spec=ServerlessSpec(
-                    cloud="aws",
-                    region="us-east-1"
-                )
+                metric="cosine"
             )
             print("✅ Pinecone index created")
         else:
@@ -68,13 +64,12 @@ def migrate_to_pinecone():
         return False
     
     try:
-        from pinecone import Pinecone
+        import pinecone
         from sentence_transformers import SentenceTransformer
         
         # Initialize Pinecone
         api_key = os.environ.get("PINECONE_API_KEY")
-        pc = Pinecone(api_key=api_key)
-        index = pc.Index("northeastern-university")
+        pc = pinecone.Index("northeastern-university")
         
         # Load embedding model
         print("🤖 Loading embedding model...")
@@ -159,7 +154,7 @@ def migrate_to_pinecone():
                 })
             
             # Upsert to Pinecone
-            index.upsert(vectors=vectors)
+            pc.upsert(vectors=vectors)
             total_migrated += len(vectors)
             print(f"✅ Migrated batch {i//batch_size + 1}: {len(vectors)} documents")
         

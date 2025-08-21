@@ -113,29 +113,25 @@ def get_pinecone_index():
         return pinecone_index
     
     try:
-        from pinecone import Pinecone, ServerlessSpec
+        import pinecone
         
-        # Initialize Pinecone with new API
-        pc = Pinecone(api_key=PINECONE_API_KEY)
+        # Initialize Pinecone with older API
+        pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
         
         # Check if index exists, create if not
-        if PINECONE_INDEX_NAME not in pc.list_indexes().names():
+        if PINECONE_INDEX_NAME not in pinecone.list_indexes():
             print(f"📊 Creating Pinecone index: {PINECONE_INDEX_NAME}")
-            pc.create_index(
+            pinecone.create_index(
                 name=PINECONE_INDEX_NAME,
                 dimension=384,  # For all-MiniLM-L6-v2 embeddings
-                metric="cosine",
-                spec=ServerlessSpec(
-                    cloud="aws",
-                    region="us-east-1"
-                )
+                metric="cosine"
             )
             print("✅ Pinecone index created")
         else:
             print(f"✅ Using existing Pinecone index: {PINECONE_INDEX_NAME}")
         
         # Get the index
-        pinecone_index = pc.Index(PINECONE_INDEX_NAME)
+        pinecone_index = pinecone.Index(PINECONE_INDEX_NAME)
         return pinecone_index
         
     except Exception as e:
@@ -240,8 +236,7 @@ def query_pinecone(query_text, n_results=10, collection_name="documents"):
         results = index.query(
             vector=query_embedding,
             top_k=n_results,
-            include_metadata=True,
-            filter={"collection": collection_name}
+            include_metadata=True
         )
         
         # Format results to match ChromaDB format
