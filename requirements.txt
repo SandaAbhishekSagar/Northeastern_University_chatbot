@@ -29,4 +29,4 @@ pyyaml==6.0.1
 tqdm==4.66.1
 colorama==0.4.6
 rich==13.7.0
-ollama==0.1.8
+ollama==0.3.0
