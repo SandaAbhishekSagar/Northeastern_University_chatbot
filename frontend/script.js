@@ -445,12 +445,12 @@ class UniversityChatbot {
         if (sources && sources.length > 0) {
             const sourcesDiv = document.createElement('div');
             sourcesDiv.className = 'message-sources';
-            sourcesDiv.innerHTML = `<strong>📚 Source Documents Consulted:</strong>`;
+            sourcesDiv.innerHTML = `<strong>📚 All Source Documents (${sources.length} total):</strong>`;
 
             const sourcesList = document.createElement('ol');
             sourcesList.className = 'sources-list';
 
-            sources.forEach((source) => {
+            sources.forEach((source, index) => {
                 const item = document.createElement('li');
                 const title = source.title || source.file_name || 'Untitled Document';
                 const fileName = source.file_name ? ` <span class="file-name">(${source.file_name})</span>` : '';
@@ -478,15 +478,33 @@ class UniversityChatbot {
                     relevanceDisplay = `${similarity}%`;
                 }
                 
-                const url = source.url ? `<a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">View Document</a>` : '';
+                // Handle URL display and validation
+                let urlDisplay = '';
+                if (source.url && source.url.trim()) {
+                    // Ensure URL is properly formatted
+                    let url = source.url.trim();
+                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                        url = 'https://' + url;
+                    }
+                    
+                    // Create clickable link with proper styling
+                    urlDisplay = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="source-link" style="color: #4a90e2; text-decoration: none; font-weight: 500; padding: 4px 8px; border: 1px solid #4a90e2; border-radius: 4px; background: rgba(74, 144, 226, 0.1); transition: all 0.2s ease;">🌐 Visit Website</a>`;
+                } else {
+                    urlDisplay = '<span style="color: #999; font-style: italic;">No URL available</span>';
+                }
+                
                 item.innerHTML = `
-                    <div style="margin-bottom: 0.2em;">
-                        <strong>${title}</strong>${fileName}
+                    <div style="margin-bottom: 0.5em; padding: 8px; border-left: 3px solid #4a90e2; background: rgba(74, 144, 226, 0.05); border-radius: 4px;">
+                        <div style="margin-bottom: 0.3em; font-weight: 600; color: #2c3e50;">
+                            ${index + 1}. ${title}${fileName}
+                        </div>
+                        <div style="font-size: 0.9em; margin-bottom: 0.3em; color: #7f8c8d;">
+                            <span class="similarity-score"><strong>Relevance:</strong> <span style="color: #e74c3c; font-weight: 600;">${relevanceDisplay}</span></span>
+                        </div>
+                        <div style="font-size: 0.9em;">
+                            ${urlDisplay}
+                        </div>
                     </div>
-                    <div style="font-size: 0.95em; margin-bottom: 0.2em;">
-                        <span class="similarity-score"><strong>Relevance:</strong> ${relevanceDisplay}</span>
-                    </div>
-                    <div style="font-size: 0.95em;">${url}</div>
                 `;
                 sourcesList.appendChild(item);
             });

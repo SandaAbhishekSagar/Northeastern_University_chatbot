@@ -336,14 +336,19 @@ class EnhancedGPUChatbot:
         
         # Prepare sources with relevance scores
         sources = []
-        for doc in documents[:3]:  # Top 3 sources
+        for doc in documents:  # All documents (up to 10)
             # Calculate relevance score (convert distance to similarity)
             relevance_score = 1.0 - doc.get('score', 0.0) if doc.get('score', 0.0) <= 1.0 else 0.0
             relevance_percentage = max(0, min(100, relevance_score * 100))
             
+            # Get URL and ensure it's properly formatted
+            url = doc.get('metadata', {}).get('url', '')
+            if url and not url.startswith('http'):
+                url = 'https://' + url.lstrip('/')
+            
             source = {
                 'title': doc.get('metadata', {}).get('title', 'Document'),
-                'url': doc.get('metadata', {}).get('url', ''),
+                'url': url,
                 'content': doc['content'][:200] + "..." if len(doc['content']) > 200 else doc['content'],
                 'relevance': f"{relevance_percentage:.1f}%"
             }
