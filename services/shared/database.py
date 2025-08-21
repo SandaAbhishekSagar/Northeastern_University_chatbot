@@ -297,29 +297,43 @@ def generate_northeastern_url(title):
     # Base URL for Northeastern University
     base_url = "https://northeastern.edu"
     
-    # Map keywords to specific Northeastern pages
-    if any(word in title_lower for word in ['admission', 'apply', 'requirement']):
+    # Map keywords to specific Northeastern pages (expanded list)
+    if any(word in title_lower for word in ['admission', 'apply', 'requirement', 'enroll']):
         return f"{base_url}/admissions"
-    elif any(word in title_lower for word in ['co-op', 'coop', 'internship']):
+    elif any(word in title_lower for word in ['co-op', 'coop', 'internship', 'experiential', 'eeba']):
         return f"{base_url}/co-op"
-    elif any(word in title_lower for word in ['tuition', 'cost', 'financial', 'fee']):
+    elif any(word in title_lower for word in ['tuition', 'cost', 'financial', 'fee', 'aid', 'scholarship']):
         return f"{base_url}/financial-aid"
-    elif any(word in title_lower for word in ['housing', 'campus', 'residence']):
+    elif any(word in title_lower for word in ['housing', 'campus', 'residence', 'dorm', 'living']):
         return f"{base_url}/housing"
-    elif any(word in title_lower for word in ['athletic', 'sport', 'volleyball', 'soccer', 'track']):
+    elif any(word in title_lower for word in ['athletic', 'sport', 'volleyball', 'soccer', 'track', 'hockey', 'basketball', 'baseball', 'rowing', 'swimming', 'tennis', 'hockey', 'huskies']):
         return f"{base_url}/athletics"
-    elif any(word in title_lower for word in ['graduate', 'master', 'phd']):
+    elif any(word in title_lower for word in ['graduate', 'master', 'phd', 'doctoral', 'ms', 'ma', 'mba']):
         return f"{base_url}/graduate"
-    elif any(word in title_lower for word in ['undergraduate', 'bachelor']):
+    elif any(word in title_lower for word in ['undergraduate', 'bachelor', 'bs', 'ba', 'college']):
         return f"{base_url}/undergraduate"
-    elif any(word in title_lower for word in ['international', 'global']):
+    elif any(word in title_lower for word in ['international', 'global', 'abroad', 'overseas', 'study abroad']):
         return f"{base_url}/international"
-    elif any(word in title_lower for word in ['research', 'study']):
+    elif any(word in title_lower for word in ['research', 'study', 'laboratory', 'lab', 'investigation']):
         return f"{base_url}/research"
-    elif any(word in title_lower for word in ['faculty', 'professor', 'staff']):
+    elif any(word in title_lower for word in ['faculty', 'professor', 'staff', 'instructor', 'lecturer']):
         return f"{base_url}/faculty"
-    elif any(word in title_lower for word in ['alumni', 'career']):
+    elif any(word in title_lower for word in ['alumni', 'career', 'job', 'employment', 'professional']):
         return f"{base_url}/alumni"
+    elif any(word in title_lower for word in ['law', 'legal', 'justice', 'court']):
+        return f"{base_url}/law"
+    elif any(word in title_lower for word in ['engineering', 'computer', 'technology', 'tech']):
+        return f"{base_url}/engineering"
+    elif any(word in title_lower for word in ['business', 'management', 'mba', 'd\'amore-mckim']):
+        return f"{base_url}/business"
+    elif any(word in title_lower for word in ['health', 'medical', 'nursing', 'pharmacy', 'bouvé']):
+        return f"{base_url}/health"
+    elif any(word in title_lower for word in ['arts', 'media', 'design', 'creative', 'camd']):
+        return f"{base_url}/arts"
+    elif any(word in title_lower for word in ['science', 'chemistry', 'physics', 'biology', 'mathematics']):
+        return f"{base_url}/science"
+    elif any(word in title_lower for word in ['social', 'humanities', 'psychology', 'sociology', 'political']):
+        return f"{base_url}/social-sciences"
     else:
         # Default to main Northeastern website
         return base_url
