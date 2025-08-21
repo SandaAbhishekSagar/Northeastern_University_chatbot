@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Production Startup Script for Enhanced GPU Chatbot
-Optimized for cloud deployment with ChromaDB Cloud
+Optimized for cloud deployment with ChromaDB Cloud or Pinecone
 """
 
 import os
@@ -13,37 +13,45 @@ from pathlib import Path
 project_root = Path(__file__).parent.absolute()
 sys.path.append(str(project_root))
 
-def check_chromadb_connection():
-    """Check ChromaDB connection (local or cloud)"""
+def check_database_connection():
+    """Check database connection (ChromaDB or Pinecone)"""
     try:
-        from services.shared.database import get_chroma_client, init_db
+        from services.shared.database import get_database_type, init_db
         
-        # Test connection
-        client = get_chroma_client()
+        # Get database type
+        db_type = get_database_type()
+        print(f"🌐 Using database type: {db_type}")
         
-        # Initialize collections
+        # Initialize database
         init_db()
         
-        # Test a simple query
-        from services.shared.database import get_collection
-        collection = get_collection('documents')
-        result = collection.get()
-        
-        doc_count = len(result.get('ids', [])) if result else 0
-        print(f"✅ ChromaDB connected successfully - {doc_count} documents available")
-        return True
+        if db_type == "pinecone":
+            # For Pinecone, just check if we can connect
+            from services.shared.database import get_pinecone_count
+            doc_count = get_pinecone_count()
+            print(f"✅ Pinecone connected successfully - {doc_count} documents available")
+            return True
+        else:
+            # For ChromaDB, test a simple query
+            from services.shared.database import get_collection
+            collection = get_collection('documents')
+            result = collection.get()
+            
+            doc_count = len(result.get('ids', [])) if result else 0
+            print(f"✅ ChromaDB connected successfully - {doc_count} documents available")
+            return True
         
     except Exception as e:
-        print(f"❌ ChromaDB connection failed: {e}")
-        print("💡 Make sure your ChromaDB Cloud token is set correctly")
+        print(f"❌ Database connection failed: {e}")
+        print("💡 Make sure your database configuration is set correctly")
         return False
 
 def main():
     """Start the production server with cloud-optimized settings"""
     
-    # Check ChromaDB connection
-    if not check_chromadb_connection():
-        print("❌ Cannot start without ChromaDB connection")
+    # Check database connection
+    if not check_database_connection():
+        print("❌ Cannot start without database connection")
         sys.exit(1)
     
     # Get configuration from environment variables
