@@ -108,7 +108,7 @@ async def health_check():
         "llm_available": chatbot.llm_type != "fallback",
         "database_type": db_type,
         "document_count": doc_count,
-        "query_expansion": chatbot.llm_type != "fallback" or True,  # Always available
+        "query_expansion": True,  # Always available
         "hybrid_search": True,  # Always available
         "confidence_scoring": True  # Always available
     }

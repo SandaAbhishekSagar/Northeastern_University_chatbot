@@ -239,13 +239,36 @@ def query_pinecone(query_text, n_results=10, collection_name="documents"):
             include_metadata=True
         )
         
-        # Format results to match ChromaDB format
-        formatted_results = {
-            'ids': [match['id'] for match in results['matches']],
-            'documents': [match['metadata'].get('text', '') for match in results['matches']],  # Note: text is not stored in metadata anymore
-            'metadatas': [{k: v for k, v in match['metadata'].items() if k != 'text'} for match in results['matches']],
-            'distances': [match['score'] for match in results['matches']]
-        }
+        # Try to get original document content from local ChromaDB if available
+        try:
+            from .database import get_chroma_client
+            chroma_client = get_chroma_client()
+            chroma_collection = chroma_client.get_collection(name="documents")
+            
+            # Get document IDs from Pinecone results
+            pinecone_ids = [match['id'] for match in results['matches']]
+            
+            # Fetch original content from ChromaDB
+            chroma_results = chroma_collection.get(ids=pinecone_ids)
+            original_documents = dict(zip(chroma_results['ids'], chroma_results['documents']))
+            
+            # Format results with original content
+            formatted_results = {
+                'ids': [match['id'] for match in results['matches']],
+                'documents': [original_documents.get(match['id'], f"Content not available for {match['id']}") for match in results['matches']],
+                'metadatas': [{k: v for k, v in match['metadata'].items() if k != 'text'} for match in results['matches']],
+                'distances': [match['score'] for match in results['matches']]
+            }
+            
+        except Exception as chroma_error:
+            print(f"⚠️ Could not fetch original content from ChromaDB: {chroma_error}")
+            # Fallback to metadata-based content
+            formatted_results = {
+                'ids': [match['id'] for match in results['matches']],
+                'documents': [f"Document content for {match['id']} - {match['metadata'].get('title', 'Unknown')}" for match in results['matches']],
+                'metadatas': [{k: v for k, v in match['metadata'].items() if k != 'text'} for match in results['matches']],
+                'distances': [match['score'] for match in results['matches']]
+            }
         
         return formatted_results
         
