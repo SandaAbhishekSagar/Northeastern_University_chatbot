@@ -253,6 +253,10 @@ def query_pinecone(query_text, n_results=10, collection_name="documents"):
             url = match['metadata'].get('url', '')
             source = match['metadata'].get('source', '')
             
+            # Generate a proper URL if none exists
+            if not url or url == '':
+                url = generate_northeastern_url(title)
+            
             # Create a meaningful content description
             content_parts = []
             if title:
@@ -276,12 +280,49 @@ def query_pinecone(query_text, n_results=10, collection_name="documents"):
             
             content = " | ".join(content_parts)
             formatted_results['documents'].append(content)
+            
+            # Update the metadata to include the generated URL
+            match['metadata']['url'] = url
         
         return formatted_results
         
     except Exception as e:
         print(f"❌ Failed to query Pinecone: {e}")
         raise
+
+def generate_northeastern_url(title):
+    """Generate a Northeastern University URL based on the document title"""
+    title_lower = title.lower()
+    
+    # Base URL for Northeastern University
+    base_url = "https://northeastern.edu"
+    
+    # Map keywords to specific Northeastern pages
+    if any(word in title_lower for word in ['admission', 'apply', 'requirement']):
+        return f"{base_url}/admissions"
+    elif any(word in title_lower for word in ['co-op', 'coop', 'internship']):
+        return f"{base_url}/co-op"
+    elif any(word in title_lower for word in ['tuition', 'cost', 'financial', 'fee']):
+        return f"{base_url}/financial-aid"
+    elif any(word in title_lower for word in ['housing', 'campus', 'residence']):
+        return f"{base_url}/housing"
+    elif any(word in title_lower for word in ['athletic', 'sport', 'volleyball', 'soccer', 'track']):
+        return f"{base_url}/athletics"
+    elif any(word in title_lower for word in ['graduate', 'master', 'phd']):
+        return f"{base_url}/graduate"
+    elif any(word in title_lower for word in ['undergraduate', 'bachelor']):
+        return f"{base_url}/undergraduate"
+    elif any(word in title_lower for word in ['international', 'global']):
+        return f"{base_url}/international"
+    elif any(word in title_lower for word in ['research', 'study']):
+        return f"{base_url}/research"
+    elif any(word in title_lower for word in ['faculty', 'professor', 'staff']):
+        return f"{base_url}/faculty"
+    elif any(word in title_lower for word in ['alumni', 'career']):
+        return f"{base_url}/alumni"
+    else:
+        # Default to main Northeastern website
+        return base_url
 
 def get_pinecone_count(collection_name="documents"):
     """Get document count from Pinecone"""
