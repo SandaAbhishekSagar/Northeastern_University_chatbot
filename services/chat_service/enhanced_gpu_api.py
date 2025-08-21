@@ -6,6 +6,7 @@ Features:
 - Query expansion and hybrid search
 - Conversation history integration
 - Response time target: 5-15 seconds with GPU
+- VERSION: 2.1.0 - Improved fallback response generation
 """
 
 from fastapi import FastAPI, HTTPException, Request
