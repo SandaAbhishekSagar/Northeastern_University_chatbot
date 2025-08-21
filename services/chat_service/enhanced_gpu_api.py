@@ -28,9 +28,9 @@ from services.shared.database import (
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Enhanced GPU Northeastern University Chatbot API",
-    description="Advanced RAG chatbot with GPU acceleration and multiple database support",
-    version="2.0.0"
+    title="Enhanced GPU Northeastern University Chatbot API v2.1.0",
+    description="Advanced RAG chatbot with GPU acceleration and multiple database support - FIXED VERSION",
+    version="2.1.0"
 )
 
 # Add CORS middleware
@@ -123,6 +123,13 @@ async def health_check():
     
     features["active_features"] = active_features
     features["total_features"] = 4
+    
+    # Debug print for Railway deployment verification
+    print(f"[ENHANCED GPU API] Enhanced Features: {active_features}/4 Active")
+    print(f"[ENHANCED GPU API] GPU Acceleration: {features['gpu_acceleration']}")
+    print(f"[ENHANCED GPU API] LLM Available: {features['llm_available']}")
+    print(f"[ENHANCED GPU API] Query Expansion: {features['query_expansion']}")
+    print(f"[ENHANCED GPU API] Hybrid Search: {features['hybrid_search']}")
     
     return HealthResponse(
         status="healthy",
