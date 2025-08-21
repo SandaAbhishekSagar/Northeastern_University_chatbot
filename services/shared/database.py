@@ -113,15 +113,15 @@ def get_pinecone_index():
         return pinecone_index
     
     try:
-        import pinecone
+        from pinecone import Pinecone
         
-        # Initialize Pinecone with older API
-        pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENVIRONMENT)
+        # Initialize Pinecone with newer API
+        pc = Pinecone(api_key=PINECONE_API_KEY)
         
         # Check if index exists, create if not
-        if PINECONE_INDEX_NAME not in pinecone.list_indexes():
+        if PINECONE_INDEX_NAME not in pc.list_indexes().names():
             print(f"📊 Creating Pinecone index: {PINECONE_INDEX_NAME}")
-            pinecone.create_index(
+            pc.create_index(
                 name=PINECONE_INDEX_NAME,
                 dimension=384,  # For all-MiniLM-L6-v2 embeddings
                 metric="cosine"
@@ -131,7 +131,7 @@ def get_pinecone_index():
             print(f"✅ Using existing Pinecone index: {PINECONE_INDEX_NAME}")
         
         # Get the index
-        pinecone_index = pinecone.Index(PINECONE_INDEX_NAME)
+        pinecone_index = pc.Index(PINECONE_INDEX_NAME)
         return pinecone_index
         
     except Exception as e:
