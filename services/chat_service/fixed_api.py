@@ -58,9 +58,43 @@ class HealthResponse(BaseModel):
     document_count: int
     features: Dict[str, str]
 
+@app.get("/health", response_model=HealthResponse)
+async def health():
+    """Health check endpoint"""
+    try:
+        # Get document count
+        db_type = get_database_type()
+        if db_type == "pinecone":
+            doc_count = get_pinecone_count()
+        else:
+            # For ChromaDB, we'll estimate or get from collection
+            doc_count = 76428  # Fallback estimate
+        
+        return HealthResponse(
+            status="healthy",
+            message="Fixed Northeastern University Chatbot API is running",
+            database_type=db_type,
+            document_count=doc_count,
+            features={
+                "chatgpt_integration": "enabled",
+                "url_handling": "fixed",
+                "source_attribution": "enabled",
+                "confidence_scoring": "enabled",
+                "fallback_mode": "enabled"
+            }
+        )
+    except Exception as e:
+        return HealthResponse(
+            status="error",
+            message=f"System error: {str(e)}",
+            database_type="unknown",
+            document_count=0,
+            features={}
+        )
+
 @app.get("/", response_model=HealthResponse)
 async def root():
-    """Health check endpoint"""
+    """Root endpoint - same as health check"""
     try:
         # Get document count
         db_type = get_database_type()
