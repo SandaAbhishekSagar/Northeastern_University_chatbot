@@ -31,7 +31,7 @@ COPY . .
 RUN mkdir -p chroma_data
 
 # Set permissions
-RUN chmod +x start_hybrid.py
+RUN chmod +x start_ultra_minimal.py
 
 # Expose port
 EXPOSE 8001
@@ -41,4 +41,4 @@ HEALTHCHECK --interval=10s --timeout=30s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8001/health || exit 1
 
 # Start the fixed application
-CMD ["python", "start_hybrid.py"] 
+CMD ["python", "start_ultra_minimal.py"] 

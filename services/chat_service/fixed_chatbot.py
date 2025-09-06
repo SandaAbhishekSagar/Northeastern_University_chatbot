@@ -115,8 +115,15 @@ class FixedUniversityChatbot:
         """Search for relevant documents using the appropriate database"""
         # Use the current database type (may have been updated during initialization)
         current_db_type = get_database_type()
+        
         if current_db_type == "pinecone":
-            return self._search_pinecone(query, n_results)
+            # Try Pinecone first
+            documents = self._search_pinecone(query, n_results)
+            # If Pinecone fails or returns no results, fall back to ChromaDB
+            if not documents:
+                print("🔄 Pinecone returned no results, falling back to ChromaDB...")
+                documents = self._search_chromadb(query, n_results)
+            return documents
         else:
             return self._search_chromadb(query, n_results)
     
@@ -125,16 +132,21 @@ class FixedUniversityChatbot:
         try:
             results = query_pinecone(query, n_results=n_results, collection_name="documents")
             
+            if not results or not results.get('ids'):
+                print("⚠️  Pinecone returned empty results")
+                return []
+            
             documents = []
             for i in range(len(results.get('ids', []))):
                 doc = {
                     'id': results['ids'][i],
-                    'content': results['documents'][i],
-                    'metadata': results['metadatas'][i],
-                    'score': results['distances'][i]
+                    'content': results['documents'][i] if i < len(results.get('documents', [])) else '',
+                    'metadata': results['metadatas'][i] if i < len(results.get('metadatas', [])) else {},
+                    'score': results['distances'][i] if i < len(results.get('distances', [])) else 1.0
                 }
                 documents.append(doc)
             
+            print(f"✅ Pinecone returned {len(documents)} documents")
             return documents
         except Exception as e:
             print(f"❌ Pinecone search error: {e}")
@@ -162,16 +174,17 @@ class FixedUniversityChatbot:
                 )
             
             documents = []
-            if results['ids'] and results['ids'][0]:
+            if results and results.get('ids') and results['ids'][0]:
                 for i in range(len(results['ids'][0])):
                     doc = {
                         'id': results['ids'][0][i],
-                        'content': results['documents'][0][i],
-                        'metadata': results['metadatas'][0][i] if results['metadatas'] else {},
-                        'score': results['distances'][0][i] if results['distances'] else 0.0
+                        'content': results['documents'][0][i] if results.get('documents') and results['documents'][0] else '',
+                        'metadata': results['metadatas'][0][i] if results.get('metadatas') and results['metadatas'][0] else {},
+                        'score': results['distances'][0][i] if results.get('distances') and results['distances'][0] else 0.0
                     }
                     documents.append(doc)
             
+            print(f"✅ ChromaDB returned {len(documents)} documents")
             return documents
         except Exception as e:
             print(f"❌ ChromaDB search error: {e}")
