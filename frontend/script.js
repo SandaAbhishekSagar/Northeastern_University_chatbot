@@ -9,6 +9,9 @@ class UniversityChatbot {
         this.apiBaseUrl = window.location.hostname === 'localhost'
             ? 'http://localhost:8001'
             : '/api';
+        
+        // Check if we should use the fixed API
+        this.useFixedAPI = true;
         this.sessionId = this.generateSessionId();
         this.messageCount = 0;
         this.responseTimes = [];

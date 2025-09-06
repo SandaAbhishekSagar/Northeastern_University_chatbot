@@ -2,10 +2,11 @@ fastapi==0.104.1
 uvicorn[standard]==0.24.0
 chromadb==0.4.18
 sentence-transformers>=2.6.1
-langchain==0.2.0
-langchain-community==0.2.0
-langchain-core==0.2.20
-langchain-ollama==0.1.0
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-core>=0.2.0
+langchain-openai>=0.1.0
+openai>=1.0.0
 pinecone-client==3.0.0
 numpy>=1.26.0
 pandas>=2.1.0
@@ -29,5 +30,4 @@ pyyaml==6.0.1
 tqdm==4.66.1
 colorama==0.4.6
 rich==13.7.0
-ollama==0.3.0
 huggingface-hub==0.34.0
