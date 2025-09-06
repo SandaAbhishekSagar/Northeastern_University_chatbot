@@ -58,9 +58,14 @@ class HealthResponse(BaseModel):
     document_count: int
     features: Dict[str, str]
 
-@app.get("/health", response_model=HealthResponse)
+@app.get("/health")
 async def health():
-    """Health check endpoint"""
+    """Simple health check endpoint"""
+    return {"status": "healthy", "message": "API is running"}
+
+@app.get("/health/detailed", response_model=HealthResponse)
+async def health_detailed():
+    """Detailed health check endpoint"""
     try:
         # Get document count
         db_type = get_database_type()
