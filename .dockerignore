@@ -1,25 +1,80 @@
-venv/
-env_py3.9/
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.db
-*.sqlite3
-*.log
-*.csv
-*.tsv
-*.xlsx
-*.xls
-*.parquet
-*.feather
-*.h5
-*.hdf5
-*.ipynb
-celerybeat-schedule.*
-frontend/
-*.bat
-*.sh
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+env_py3.9/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
 *.md
-test_*
-docker-compose.yml 
+!README.md
+
+# Logs
+*.log
+logs/
+
+# Database backups (keep only the latest)
+chroma_backups/
+chroma_data_backup_*/
+chroma_data_*/
+
+# Cache files
+*.pkl
+*.cache
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Development files
+dev_*.py
+debug_*.py
