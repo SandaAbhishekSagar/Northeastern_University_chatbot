@@ -31,7 +31,7 @@ COPY . .
 RUN mkdir -p chroma_data
 
 # Set permissions
-RUN chmod +x start_production_fixed.py
+RUN chmod +x start_production_simple.py
 
 # Expose port
 EXPOSE 8001
@@ -41,4 +41,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8001/health || exit 1
 
 # Start the fixed application
-CMD ["python", "start_production_fixed.py"] 
+CMD ["python", "start_production_simple.py"] 
