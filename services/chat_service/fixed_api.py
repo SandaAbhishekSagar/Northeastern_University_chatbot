@@ -17,10 +17,20 @@ import sys
 
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append('.')
 
 # Import the fixed chatbot
-from services.chat_service.fixed_chatbot import chatbot
-from services.shared.database import get_database_type, get_pinecone_count
+try:
+    from services.chat_service.fixed_chatbot import chatbot
+    from services.shared.database import get_database_type, get_pinecone_count
+except ImportError as e:
+    print(f"⚠️  Import error: {e}")
+    # Create dummy functions for fallback
+    def get_database_type():
+        return "unknown"
+    def get_pinecone_count():
+        return 0
+    chatbot = None
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -138,6 +148,17 @@ async def chat(request: ChatRequest):
         # Generate session ID if not provided
         session_id = request.session_id or str(uuid.uuid4())
         
+        # Check if chatbot is available
+        if chatbot is None:
+            return ChatResponse(
+                answer="Chatbot is being initialized. Please try again in a moment.",
+                sources=[],
+                confidence=0.0,
+                session_id=session_id,
+                response_time=0.0,
+                documents_analyzed=0
+            )
+        
         # Process the question using the fixed chatbot
         result = chatbot.chat(request.question, session_id)
         
@@ -158,6 +179,9 @@ async def chat(request: ChatRequest):
 async def search_documents(query: str, k: int = 5):
     """Search for similar documents"""
     try:
+        if chatbot is None:
+            return {"error": "Chatbot is being initialized. Please try again in a moment."}
+        
         documents = chatbot.search_documents(query, k)
         
         # Format results for API response

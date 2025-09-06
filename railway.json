@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python start_production_robust.py",
+    "startCommand": "python start_hybrid.py",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "healthcheckInterval": 10,
