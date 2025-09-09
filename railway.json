@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python start_ultra_minimal.py",
+    "startCommand": "python app.py",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "healthcheckInterval": 10,
