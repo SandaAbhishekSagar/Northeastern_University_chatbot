@@ -127,9 +127,9 @@ Query Cost:
 
 **🎉 Amazing Discovery**: Chroma Cloud is **EXTREMELY CHEAP** for our use case!
 
-**Previous Estimate**: $99/month (Starter plan)  
+  
 **Actual Cost**: $0.15-$0.74/month (usage-based)  
-**Savings**: **$98-99/month!** 💰
+
 
 ---
 
@@ -179,9 +179,9 @@ Query Cost:
 | **Infrastructure** | Various | Domain, SSL, CDN, Backup | **$50/mo** |
 | **TOTAL** | - | - | **$749/mo** |
 
-**Previous Estimate**: $849/month  
+
 **Revised Estimate**: $749/month  
-**Savings**: **$100/month** ($1,200/year) ✅
+
 
 ---
 
@@ -366,9 +366,6 @@ Total Monthly: $749.27/month
 
 ## 🚀 Massive Chroma Cloud Savings!
 
-### What We Learned
-**Previous Assumption**: We thought we needed Chroma Cloud Starter ($99/mo)  
-**Reality**: Usage-based pricing is **WAY cheaper** for our use case!
 
 ### Cost Breakdown
 ```
@@ -403,9 +400,9 @@ Operations (12 months):     $8,988 ($749 × 12)
 TOTAL FIRST YEAR:           $38,388-$62,988
 ```
 
-**Previous Estimate**: $39,588-$64,188  
+
 **Revised Estimate**: $38,388-$62,988  
-**Savings**: $1,200/year from Chroma Cloud! ✅
+
 
 ### Expected Returns (Annual)
 ```
@@ -428,9 +425,9 @@ Year 5: +$91K
 ──────────────────────────────────────
 5-Year Net: $326K to $301K
 
-Previous: $296K to $320K
+
 Revised:  $301K to $326K
-Improvement: +$6K to +$5K (better!)
+
 ```
 
 ---
