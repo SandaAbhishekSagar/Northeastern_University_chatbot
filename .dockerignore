@@ -1,12 +1,25 @@
+# Virtual environments
 venv/
 env_py3.9/
 __pycache__/
+
+# Python cache files
 *.pyc
 *.pyo
 *.pyd
+
+# Database files (not needed in container)
 *.db
 *.sqlite3
+chroma_data/
+chroma_data_*/
+chroma_backups/
+chroma/
+
+# Logs
 *.log
+
+# Data files (not needed in container)
 *.csv
 *.tsv
 *.xlsx
@@ -15,12 +28,36 @@ __pycache__/
 *.feather
 *.h5
 *.hdf5
+
+# Development files
 *.ipynb
 celerybeat-schedule.*
-frontend/
 *.bat
 *.sh
-*.md
 test_*
-*.txt
-docker-compose.yml 
+*.md
+
+# Docker files
+docker-compose.yml
+
+# Frontend (deploy separately if needed)
+frontend/
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Environment files (will be set as env vars in Railway)
+.env
+
+# Documentation and URLs (not needed in container)
+northeastern_urls.txt
+*.tex
+
+# IMPORTANT: Don't ignore requirements.txt - it's needed!
+# IMPORTANT: Don't ignore runtime.txt - it's needed!
+# IMPORTANT: Don't ignore Procfile - it's needed! 

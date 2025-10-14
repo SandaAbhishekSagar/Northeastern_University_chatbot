@@ -1,24 +1,21 @@
-# Use official Python image
+# Dockerfile for Railway Deployment - OpenAI Version
+# Optimized for production with minimal dependencies
+
 FROM python:3.9-slim
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
-ENV DEBIAN_FRONTEND=noninteractive
 
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies (minimal)
 RUN apt-get update && apt-get install -y \
     curl \
-    git \
-    wget \
-    build-essential \
+    gcc \
+    g++ \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Ollama
-RUN curl -fsSL https://ollama.ai/install.sh | sh
 
 # Copy requirements first for better caching
 COPY requirements.txt .
@@ -30,18 +27,12 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY . .
 
-# Create necessary directories
-RUN mkdir -p chroma_data
-
-# Set permissions
-RUN chmod +x start_production.py
-
-# Expose port
-EXPOSE 8001
+# Expose port (Railway will set PORT env variable)
+EXPOSE 8000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8001/health/enhanced || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-8000}/health/enhanced || exit 1
 
-# Start the application
-CMD ["python", "start_production.py"] 
+# Start command - use Railway's PORT environment variable
+CMD uvicorn services.chat_service.enhanced_openai_api:app --host 0.0.0.0 --port ${PORT:-8000}
