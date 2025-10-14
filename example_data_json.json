@@ -1,0 +1,55 @@
+[
+  {
+    "title": "Computer Science Bachelor's Degree",
+    "content": "The Bachelor of Science in Computer Science at Northeastern University combines theoretical foundations with hands-on experience through our renowned co-op program. Students learn programming, algorithms, data structures, software engineering, and more. The program includes opportunities to specialize in areas like artificial intelligence, cybersecurity, game development, and human-computer interaction.",
+    "source_url": "https://www.northeastern.edu/programs/computer-science-bs",
+    "metadata": {
+      "program_type": "undergraduate",
+      "department": "Khoury College of Computer Sciences",
+      "degree_type": "Bachelor of Science",
+      "credits": "128"
+    }
+  },
+  {
+    "title": "MBA Program Overview",
+    "content": "The Master of Business Administration (MBA) at Northeastern University's D'Amore-McKim School of Business prepares students for leadership roles in today's dynamic business environment. The program offers concentrations in finance, marketing, supply chain management, and entrepreneurship. Students gain real-world experience through consulting projects and co-op opportunities.",
+    "source_url": "https://www.northeastern.edu/programs/mba",
+    "metadata": {
+      "program_type": "graduate",
+      "department": "D'Amore-McKim School of Business",
+      "degree_type": "Master of Business Administration",
+      "duration": "2 years"
+    }
+  },
+  {
+    "title": "Undergraduate Admission Requirements",
+    "content": "Northeastern University seeks students who demonstrate academic excellence, leadership potential, and a passion for experiential learning. Application requirements include: high school transcript with strong grades in challenging courses, SAT or ACT scores (test-optional for recent admissions cycles), letters of recommendation, personal essay, and demonstrated extracurricular involvement. The middle 50% of admitted students have SAT scores ranging from 1430-1540 and ACT scores from 33-35.",
+    "source_url": "https://www.northeastern.edu/admissions/undergraduate-requirements",
+    "metadata": {
+      "admission_type": "undergraduate",
+      "application_deadline": "January 1 (Regular Decision)",
+      "early_decision_deadline": "November 1"
+    }
+  },
+  {
+    "title": "Co-op Program Information",
+    "content": "Northeastern's signature co-op program allows students to alternate semesters of full-time study with full-time professional work experiences. Students typically complete 1-3 co-ops during their undergraduate career, working for leading companies and organizations around the world. Co-op positions are paid and provide invaluable real-world experience, helping students clarify career goals, build professional networks, and often leading to full-time job offers upon graduation.",
+    "source_url": "https://www.northeastern.edu/coop",
+    "metadata": {
+      "program_feature": "cooperative education",
+      "employers": "3000+",
+      "countries": "136+"
+    }
+  },
+  {
+    "title": "Campus Housing Options",
+    "content": "Northeastern University offers a variety of on-campus housing options for students. First-year students are guaranteed housing in residence halls with traditional doubles and community bathrooms. Upper-class students can choose from apartment-style housing, suite-style residences, and special interest housing. All residence halls feature study lounges, laundry facilities, and 24/7 security. Popular residence halls include International Village, West Village, and Light Hall.",
+    "source_url": "https://www.northeastern.edu/housing",
+    "metadata": {
+      "category": "student_life",
+      "housing_guarantee": "first_year_students",
+      "residence_halls": "20+"
+    }
+  }
+]
+

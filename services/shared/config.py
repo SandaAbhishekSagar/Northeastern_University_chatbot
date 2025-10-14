@@ -32,9 +32,13 @@ class Config:
         "redis://localhost:6379/0"
     )
     
-    # Local LLM settings (no API key needed!)
+    # Local LLM settings (Ollama - no API key needed!)
     LOCAL_LLM_MODEL = os.getenv("LOCAL_LLM_MODEL", "llama2:7b")
     EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+    
+    # OpenAI settings (for OpenAI-powered chatbot)
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")  # Options: gpt-4o-mini (recommended), gpt-4o, gpt-4, o4-mini-2025-04-16
     
     # Scraping settings
     SCRAPING_DELAY = int(os.getenv("SCRAPING_DELAY", 3))
@@ -58,5 +62,7 @@ if __name__ == "__main__":
     print(f"REDIS_URL: {config.REDIS_URL}")
     print(f"LOCAL_LLM_MODEL: {config.LOCAL_LLM_MODEL}")
     print(f"EMBEDDING_MODEL: {config.EMBEDDING_MODEL}")
+    print(f"OPENAI_API_KEY: {'***' + config.OPENAI_API_KEY[-4:] if len(config.OPENAI_API_KEY) > 4 else 'Not set'}")
+    print(f"OPENAI_MODEL: {config.OPENAI_MODEL}")
     print(f"UNIVERSITY_URLS: {config.UNIVERSITY_URLS}")
     print(f"SCRAPING_DELAY: {config.SCRAPING_DELAY}")

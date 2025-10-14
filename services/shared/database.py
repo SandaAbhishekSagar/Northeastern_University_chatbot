@@ -37,325 +37,87 @@ except ImportError as e:
         CHROMADB_HTTP_PORT = 8000
     config = DefaultConfig()
 
-# ChromaDB configuration
-chroma_data_path = Path(__file__).parent.parent.parent / "chroma_data"
-
-# Check if using ChromaDB Cloud
-CHROMA_CLOUD_TOKEN = os.environ.get("CHROMA_CLOUD_TOKEN")
-CHROMA_CLOUD_HOST = os.environ.get("CHROMA_CLOUD_HOST", "https://api.chromadb.com")
-
-# Check if using Pinecone
-PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
-PINECONE_ENVIRONMENT = os.environ.get("PINECONE_ENVIRONMENT", "us-east-1-aws")
-PINECONE_INDEX_NAME = os.environ.get("PINECONE_INDEX_NAME", "northeastern-university")
-
-# Global client instances
+# Global ChromaDB client
 chroma_client = None
-pinecone_index = None
-database_type = None
-
-def get_database_type():
-    """Determine which database to use based on environment variables"""
-    global database_type
-    
-    if database_type is None:
-        if PINECONE_API_KEY:
-            database_type = "pinecone"
-            print("🌲 Using Pinecone Vector Database")
-        elif CHROMA_CLOUD_TOKEN:
-            database_type = "chromadb_cloud"
-            print("☁️  Using ChromaDB Cloud")
-        else:
-            database_type = "chromadb_local"
-            print("📁 Using Local ChromaDB")
-    
-    return database_type
 
 def get_chroma_client():
-    """Get ChromaDB client - supports both local and cloud"""
+    """Get or create ChromaDB client (cloud for production, local for development)"""
     global chroma_client
+    if chroma_client is None:
+        import chromadb
+        
+        # Check if we should use cloud ChromaDB (production)
+        use_cloud = os.getenv('USE_CLOUD_CHROMA', 'false').lower() == 'true'
+        
+        if use_cloud:
+            # PRODUCTION: Use Chroma Cloud
+            try:
+                from chroma_cloud_config import get_chroma_cloud_client
+                chroma_client = get_chroma_cloud_client()
+                print("[OK] ChromaDB Cloud client created (PRODUCTION MODE)")
+                print("    Connected to Chroma Cloud")
+                print("    Ready for production deployment")
+            except Exception as e:
+                print(f"[ERROR] Failed to connect to Chroma Cloud: {e}")
+                print("[WARNING] Falling back to local ChromaDB")
+                use_cloud = False
+        
+        if not use_cloud:
+            # DEVELOPMENT: Use local ChromaDB
+            project_root = os.path.dirname(os.path.abspath(__file__))
+            chroma_data_path = os.path.abspath(os.path.join(project_root, "../../chroma_data"))
+            chroma_client = chromadb.PersistentClient(path=chroma_data_path)
+            print(f"[OK] ChromaDB local client created (DEVELOPMENT MODE)")
+            print(f"    Local path: {chroma_data_path}")
     
-    if chroma_client is not None:
-        return chroma_client
+    return chroma_client
+
+def get_collection(name: str, create_if_not_exists: bool = True) -> chromadb.Collection:
+    """Get a ChromaDB collection by name"""
+    client = get_chroma_client()
     
     try:
-        if CHROMA_CLOUD_TOKEN:
-            # Use ChromaDB Cloud
-            print(f"☁️  Connecting to ChromaDB Cloud at {CHROMA_CLOUD_HOST}")
-            chroma_client = chromadb.HttpClient(
-                host=CHROMA_CLOUD_HOST,
-                port=443,
-                ssl=True,
-                headers={"Authorization": f"Bearer {CHROMA_CLOUD_TOKEN}"}
-            )
-            print("✅ Connected to ChromaDB Cloud")
-        else:
-            # Use local ChromaDB
-            print(f"📁 Using local ChromaDB at {chroma_data_path}")
-            chroma_data_path.mkdir(exist_ok=True)
-            chroma_client = chromadb.PersistentClient(
-                path=str(chroma_data_path),
-                settings=Settings(anonymized_telemetry=False)
-            )
-            print("✅ Connected to local ChromaDB")
-        
-        return chroma_client
-        
+        collection = client.get_collection(name=name)
+        print(f"[OK] Retrieved collection: {name}")
+        return collection
     except Exception as e:
-        print(f"❌ Failed to connect to ChromaDB: {e}")
-        raise
-
-def get_pinecone_index():
-    """Get Pinecone index"""
-    global pinecone_index
-    
-    if pinecone_index is not None:
-        return pinecone_index
-    
-    try:
-        from pinecone import Pinecone
-        
-        # Initialize Pinecone with newer API
-        pc = Pinecone(api_key=PINECONE_API_KEY)
-        
-        # Check if index exists, create if not
-        if PINECONE_INDEX_NAME not in pc.list_indexes().names():
-            print(f"📊 Creating Pinecone index: {PINECONE_INDEX_NAME}")
-            pc.create_index(
-                name=PINECONE_INDEX_NAME,
-                dimension=384,  # For all-MiniLM-L6-v2 embeddings
-                metric="cosine"
-            )
-            print("✅ Pinecone index created")
+        if create_if_not_exists:
+            print(f"[INFO] Collection {name} not found, creating...")
+            collection = client.create_collection(name=name)
+            print(f"[OK] Created collection: {name}")
+            return collection
         else:
-            print(f"✅ Using existing Pinecone index: {PINECONE_INDEX_NAME}")
-        
-        # Get the index
-        pinecone_index = pc.Index(PINECONE_INDEX_NAME)
-        return pinecone_index
-        
-    except Exception as e:
-        print(f"❌ Failed to connect to Pinecone: {e}")
-        raise
-
-def get_collection(collection_name):
-    """Get collection - works with both ChromaDB and Pinecone"""
-    db_type = get_database_type()
-    
-    if db_type == "pinecone":
-        # For Pinecone, we use a single index with metadata filtering
-        return get_pinecone_index()
-    else:
-        # For ChromaDB
-        client = get_chroma_client()
-        try:
-            return client.get_collection(name=collection_name)
-        except:
-            return client.create_collection(name=collection_name)
+            raise
 
 def init_db():
-    """Initialize database collections"""
-    db_type = get_database_type()
+    """Initialize ChromaDB collections"""
+    print("Initializing ChromaDB collections...")
     
-    if db_type == "pinecone":
-        # Pinecone uses a single index, no need to create collections
-        get_pinecone_index()
-        print("✅ Pinecone database initialized")
-    else:
-        # ChromaDB collections
+    try:
         client = get_chroma_client()
-        collections = ["universities", "documents", "scrape_logs", "chat_sessions", "chat_messages", "feedback"]
+        
+        # Create collections for different data types
+        collections = [
+            "universities",
+            "documents", 
+            "scrape_logs",
+            "chat_sessions",
+            "chat_messages"
+        ]
         
         for collection_name in collections:
             try:
-                client.get_collection(name=collection_name)
-                print(f"[OK] Retrieved collection: {collection_name}")
+                collection = client.get_collection(name=collection_name)
+                print(f"[OK] Collection exists: {collection_name}")
             except:
-                client.create_collection(name=collection_name)
-                print(f"[INFO] Collection {collection_name} not found, creating...")
-
-def add_documents_to_pinecone(documents, metadatas=None, ids=None, collection_name="documents"):
-    """Add documents to Pinecone with proper metadata"""
-    try:
-        from sentence_transformers import SentenceTransformer
+                collection = client.create_collection(name=collection_name)
+                print(f"[OK] Created collection: {collection_name}")
         
-        # Load embedding model
-        model = SentenceTransformer('all-MiniLM-L6-v2')
-        
-        # Generate embeddings
-        embeddings = model.encode(documents).tolist()
-        
-        # Prepare vectors for Pinecone
-        vectors = []
-        for i, (doc_id, embedding, document) in enumerate(zip(ids, embeddings, documents)):
-            # Optimize metadata to stay within Pinecone's 40KB limit
-            optimized_metadata = {
-                'collection': collection_name
-            }
-            
-            # Add essential metadata fields only
-            if metadatas and i < len(metadatas):
-                metadata = metadatas[i]
-                for key, value in metadata.items():
-                    if isinstance(value, str) and len(value) > 500:
-                        # Truncate long text fields
-                        optimized_metadata[key] = value[:500] + "..."
-                    elif isinstance(value, (str, int, float, bool)) and len(str(value)) < 1000:
-                        # Keep reasonable-sized fields
-                        optimized_metadata[key] = value
-            
-            vectors.append({
-                'id': doc_id,
-                'values': embedding,
-                'metadata': optimized_metadata
-            })
-        
-        # Add to Pinecone
-        index = get_pinecone_index()
-        index.upsert(vectors=vectors)
-        
-        return len(vectors)
+        print("ChromaDB collections initialized successfully!")
         
     except Exception as e:
-        print(f"❌ Failed to add documents to Pinecone: {e}")
+        print(f"[ERROR] Error initializing collections: {e}")
         raise
-
-def query_pinecone(query_text, n_results=10, collection_name="documents"):
-    """Query Pinecone with text similarity search"""
-    try:
-        from sentence_transformers import SentenceTransformer
-        
-        # Load embedding model
-        model = SentenceTransformer('all-MiniLM-L6-v2')
-        
-        # Generate query embedding
-        query_embedding = model.encode([query_text]).tolist()[0]
-        
-        # Query Pinecone
-        index = get_pinecone_index()
-        results = index.query(
-            vector=query_embedding,
-            top_k=n_results,
-            include_metadata=True
-        )
-        
-        # Create meaningful content from Pinecone metadata
-        formatted_results = {
-            'ids': [match['id'] for match in results['matches']],
-            'documents': [],
-            'metadatas': [match['metadata'] for match in results['matches']],
-            'distances': [match['score'] for match in results['matches']]
-        }
-        
-        # Generate meaningful content for each document
-        for match in results['matches']:
-            title = match['metadata'].get('title', 'Document')
-            url = match['metadata'].get('url', '')
-            source = match['metadata'].get('source', '')
-            
-            # Generate a proper URL if none exists
-            if not url or url == '':
-                url = generate_northeastern_url(title)
-            
-            # Create a meaningful content description
-            content_parts = []
-            if title:
-                content_parts.append(f"Title: {title}")
-            if source:
-                content_parts.append(f"Source: {source}")
-            if url:
-                content_parts.append(f"URL: {url}")
-            
-            # Add some context about what this document likely contains
-            if 'admission' in title.lower() or 'admission' in source.lower():
-                content_parts.append("This document contains information about Northeastern University admissions requirements, application processes, and admission criteria.")
-            elif 'co-op' in title.lower() or 'coop' in title.lower():
-                content_parts.append("This document contains information about Northeastern University's co-op program, including how it works, benefits, and application process.")
-            elif 'tuition' in title.lower() or 'cost' in title.lower() or 'financial' in title.lower():
-                content_parts.append("This document contains information about Northeastern University's tuition, fees, and financial aid options.")
-            elif 'housing' in title.lower() or 'campus' in title.lower():
-                content_parts.append("This document contains information about Northeastern University's campus housing, residence life, and campus facilities.")
-            else:
-                content_parts.append("This document contains relevant information about Northeastern University programs, services, or policies.")
-            
-            content = " | ".join(content_parts)
-            formatted_results['documents'].append(content)
-            
-            # Update the metadata to include the generated URL
-            match['metadata']['url'] = url
-        
-        return formatted_results
-        
-    except Exception as e:
-        print(f"❌ Failed to query Pinecone: {e}")
-        raise
-
-def generate_northeastern_url(title):
-    """Generate a Northeastern University URL based on the document title"""
-    title_lower = title.lower()
-    
-    # Base URL for Northeastern University
-    base_url = "https://northeastern.edu"
-    
-    # Map keywords to specific Northeastern pages (expanded list)
-    if any(word in title_lower for word in ['admission', 'apply', 'requirement', 'enroll']):
-        return f"{base_url}/admissions"
-    elif any(word in title_lower for word in ['co-op', 'coop', 'internship', 'experiential', 'eeba']):
-        return f"{base_url}/co-op"
-    elif any(word in title_lower for word in ['tuition', 'cost', 'financial', 'fee', 'aid', 'scholarship']):
-        return f"{base_url}/financial-aid"
-    elif any(word in title_lower for word in ['housing', 'campus', 'residence', 'dorm', 'living']):
-        return f"{base_url}/housing"
-    elif any(word in title_lower for word in ['athletic', 'sport', 'volleyball', 'soccer', 'track', 'hockey', 'basketball', 'baseball', 'rowing', 'swimming', 'tennis', 'hockey', 'huskies']):
-        return f"{base_url}/athletics"
-    elif any(word in title_lower for word in ['graduate', 'master', 'phd', 'doctoral', 'ms', 'ma', 'mba']):
-        return f"{base_url}/graduate"
-    elif any(word in title_lower for word in ['undergraduate', 'bachelor', 'bs', 'ba', 'college']):
-        return f"{base_url}/undergraduate"
-    elif any(word in title_lower for word in ['international', 'global', 'abroad', 'overseas', 'study abroad']):
-        return f"{base_url}/international"
-    elif any(word in title_lower for word in ['research', 'study', 'laboratory', 'lab', 'investigation']):
-        return f"{base_url}/research"
-    elif any(word in title_lower for word in ['faculty', 'professor', 'staff', 'instructor', 'lecturer']):
-        return f"{base_url}/faculty"
-    elif any(word in title_lower for word in ['alumni', 'career', 'job', 'employment', 'professional']):
-        return f"{base_url}/alumni"
-    elif any(word in title_lower for word in ['law', 'legal', 'justice', 'court']):
-        return f"{base_url}/law"
-    elif any(word in title_lower for word in ['engineering', 'computer', 'technology', 'tech']):
-        return f"{base_url}/engineering"
-    elif any(word in title_lower for word in ['business', 'management', 'mba', 'd\'amore-mckim']):
-        return f"{base_url}/business"
-    elif any(word in title_lower for word in ['health', 'medical', 'nursing', 'pharmacy', 'bouvé']):
-        return f"{base_url}/health"
-    elif any(word in title_lower for word in ['arts', 'media', 'design', 'creative', 'camd']):
-        return f"{base_url}/arts"
-    elif any(word in title_lower for word in ['science', 'chemistry', 'physics', 'biology', 'mathematics']):
-        return f"{base_url}/science"
-    elif any(word in title_lower for word in ['social', 'humanities', 'psychology', 'sociology', 'political']):
-        return f"{base_url}/social-sciences"
-    else:
-        # Default to main Northeastern website
-        return base_url
-
-def get_pinecone_count(collection_name="documents"):
-    """Get document count from Pinecone"""
-    try:
-        index = get_pinecone_index()
-        stats = index.describe_index_stats()
-        
-        # Count documents in specific collection
-        total_count = 0
-        if 'namespaces' in stats:
-            for namespace, details in stats['namespaces'].items():
-                if namespace == collection_name or collection_name == "documents":
-                    total_count += details.get('vector_count', 0)
-        
-        return total_count
-        
-    except Exception as e:
-        print(f"❌ Failed to get Pinecone count: {e}")
-        return 0
 
 def test_connection():
     """Test ChromaDB connection"""

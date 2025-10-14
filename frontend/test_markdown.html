@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Rendering Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #D32F2F;
+            border-bottom: 3px solid #D32F2F;
+            padding-bottom: 10px;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .test-section h2 {
+            color: #B71C1C;
+            margin-top: 0;
+        }
+        
+        .input-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+        
+        .output-box {
+            background: white;
+            padding: 20px;
+            border: 2px solid #D32F2F;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        /* Markdown Content Styling (same as main app) */
+        .markdown-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #1a1a1a;
+        }
+        
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3 {
+            color: #D32F2F;
+            font-weight: 700;
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+        }
+        
+        .markdown-content h3 {
+            font-size: 1.3em;
+            color: #B71C1C;
+        }
+        
+        .markdown-content p {
+            margin: 0.75em 0;
+        }
+        
+        .markdown-content ul,
+        .markdown-content ol {
+            margin: 1em 0;
+            padding-left: 2em;
+        }
+        
+        .markdown-content li {
+            margin: 0.5em 0;
+            line-height: 1.6;
+        }
+        
+        .markdown-content strong {
+            font-weight: 700;
+            color: #D32F2F;
+        }
+        
+        .markdown-content em {
+            font-style: italic;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #D32F2F, #B71C1C);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Markdown Rendering Test</h1>
+        
+        <div id="status"></div>
+        
+        <div class="test-section">
+            <h2>Test 1: Simple Markdown</h2>
+            <div class="input-box">### Heading
+**Bold text** and *italic text*</div>
+            <div class="output-box markdown-content" id="test1"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 2: Lists</h2>
+            <div class="input-box">**Main Points:**
+- Item 1
+- Item 2
+- Item 3</div>
+            <div class="output-box markdown-content" id="test2"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 3: Complex (Co-op Example)</h2>
+            <div class="input-box">### Overview
+
+Northeastern University's **co-op program** is a hallmark.
+
+**Main Points**:
+- Co-op stands for cooperative education
+- Students can participate for **4, 6, or 8 months**
+- Regular meetings with advisers
+
+**Benefits**:
+1. Practical work experience
+2. Career exploration
+3. Professional networking</div>
+            <div class="output-box markdown-content" id="test3"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Interactive Test</h2>
+            <p>Enter your own markdown:</p>
+            <textarea id="customInput" style="width: 100%; height: 150px; padding: 10px; font-family: monospace;"></textarea>
+            <button onclick="renderCustom()">Render Markdown</button>
+            <button onclick="clearCustom()">Clear</button>
+            <div class="output-box markdown-content" id="customOutput"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Diagnostic Information</h2>
+            <div id="diagnostics" style="font-family: monospace; background: #f9f9f9; padding: 15px;"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Check if marked.js loaded
+        function checkMarked() {
+            const statusDiv = document.getElementById('status');
+            const diagDiv = document.getElementById('diagnostics');
+            
+            let diagnostics = '<strong>Diagnostic Report:</strong><br><br>';
+            diagnostics += `marked.js loaded: ${typeof marked !== 'undefined' ? '✅ YES' : '❌ NO'}<br>`;
+            
+            if (typeof marked !== 'undefined') {
+                statusDiv.innerHTML = '<div class="status success">✅ SUCCESS: marked.js loaded correctly!</div>';
+                diagnostics += `marked version: ✅ ${marked.options ? 'Available' : 'Unknown'}<br>`;
+                
+                // Configure marked
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    headerIds: false,
+                    mangle: false
+                });
+                
+                // Run tests
+                runTests();
+            } else {
+                statusDiv.innerHTML = '<div class="status error">❌ ERROR: marked.js failed to load! Check your internet connection or firewall settings.</div>';
+                diagnostics += `Error: Cannot load marked.js from CDN<br>`;
+                diagnostics += `Solution: Check internet connection or firewall settings<br>`;
+            }
+            
+            // Add browser info
+            diagnostics += `<br><strong>Browser Info:</strong><br>`;
+            diagnostics += `User Agent: ${navigator.userAgent}<br>`;
+            diagnostics += `Online: ${navigator.onLine ? '✅ YES' : '❌ NO'}<br>`;
+            
+            diagDiv.innerHTML = diagnostics;
+        }
+        
+        function runTests() {
+            // Test 1
+            const test1Input = '### Heading\n**Bold text** and *italic text*';
+            document.getElementById('test1').innerHTML = marked.parse(test1Input);
+            
+            // Test 2
+            const test2Input = '**Main Points:**\n- Item 1\n- Item 2\n- Item 3';
+            document.getElementById('test2').innerHTML = marked.parse(test2Input);
+            
+            // Test 3
+            const test3Input = `### Overview
+
+Northeastern University's **co-op program** is a hallmark.
+
+**Main Points**:
+- Co-op stands for cooperative education
+- Students can participate for **4, 6, or 8 months**
+- Regular meetings with advisers
+
+**Benefits**:
+1. Practical work experience
+2. Career exploration
+3. Professional networking`;
+            document.getElementById('test3').innerHTML = marked.parse(test3Input);
+        }
+        
+        function renderCustom() {
+            const input = document.getElementById('customInput').value;
+            const output = document.getElementById('customOutput');
+            
+            if (typeof marked !== 'undefined') {
+                try {
+                    output.innerHTML = marked.parse(input);
+                } catch (error) {
+                    output.innerHTML = '<div style="color: red;">Error parsing markdown: ' + error.message + '</div>';
+                }
+            } else {
+                output.innerHTML = '<div style="color: red;">marked.js not loaded!</div>';
+            }
+        }
+        
+        function clearCustom() {
+            document.getElementById('customInput').value = '';
+            document.getElementById('customOutput').innerHTML = '';
+        }
+        
+        // Wait for marked.js to load, then run check
+        window.addEventListener('load', () => {
+            setTimeout(checkMarked, 100);
+        });
+    </script>
+</body>
+</html>
+

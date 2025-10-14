@@ -29,13 +29,23 @@ def main():
     # Change to the frontend directory
     os.chdir(FRONTEND_DIR)
     
-    PORT = 3000
+    # Use Railway's assigned port if available
+    PORT = int(os.environ.get("PORT", 3000))
+
+    # Generate a runtime config file for the frontend from env vars
+    api_base_url = os.environ.get("API_BASE_URL", "")
+    try:
+        with open("config.js", "w", encoding="utf-8") as f:
+            f.write("window.API_BASE_URL = \"" + api_base_url.replace("\\", "\\\\").replace("\"", "\\\"") + "\";\n")
+        print(f"[CFG] Wrote config.js with API_BASE_URL='{api_base_url}'")
+    except Exception as e:
+        print(f"[WARN] Could not write config.js: {e}")
     
     print(f"[START] Starting University Chatbot Frontend Server")
     print(f"[DIR] Serving files from: {FRONTEND_DIR}")
-    print(f"[URL] Frontend URL: http://localhost:{PORT}")
-    print(f"[API] API URL: http://localhost:8001")
-    print(f"[INFO] Make sure your API server is running on port 8001")
+    print(f"[URL] Frontend URL: http://0.0.0.0:{PORT}")
+    print(f"[API] Default API URL assumption: http://localhost:8001 (override via API_BASE_URL env var)")
+    print(f"[INFO] On Railway, set API_BASE_URL env var to your external GPU API host (e.g., https://gpu-host:8001)")
     print(f"[STOP] Press Ctrl+C to stop the server")
     print("-" * 60)
     

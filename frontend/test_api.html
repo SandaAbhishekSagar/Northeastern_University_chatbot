@@ -12,7 +12,7 @@
     <script>
         async function testAPI() {
             try {
-                const response = await fetch('/api/health/enhanced');
+                const response = await fetch('http://localhost:8001/health/enhanced');
                 const data = await response.json();
                 document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
             } catch (error) {
@@ -22,7 +22,7 @@
 
         async function testChat() {
             try {
-                const response = await fetch('/api/chat', {
+                const response = await fetch('http://localhost:8001/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

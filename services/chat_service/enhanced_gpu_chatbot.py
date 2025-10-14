@@ -22,370 +22,657 @@ import numpy as np
 from datetime import datetime
 import hashlib
 import time
-import uuid
-from typing import List, Dict, Any, Optional
-from langchain_ollama import OllamaLLM
-from sentence_transformers import SentenceTransformer
-import numpy as np
 
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import database functions
-from services.shared.database import (
-    get_database_type, get_collection, add_documents_to_pinecone, 
-    query_pinecone, get_pinecone_count
-)
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.llms import Ollama
+from langchain.prompts import PromptTemplate
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.retrievers import BM25Retriever
+from langchain.retrievers.document_compressors import LLMChainExtractor
+from langchain.retrievers.ensemble import EnsembleRetriever
 
-class EnhancedGPUChatbot:
-    def __init__(self, model_name="llama2:7b"):
-        """Initialize Enhanced GPU-Optimized RAG Chatbot"""
-        print("[ENHANCED GPU] Initializing Enhanced GPU-Optimized RAG Chatbot...")
-        
-        # Check CUDA availability
+from services.shared.config import config
+from services.shared.chroma_service import ChromaService
+
+class EnhancedGPUEmbeddingManager:
+    """Enhanced GPU-optimized embedding manager with automatic device detection"""
+    
+    def __init__(self, embedding_file="enhanced_gpu_embeddings_cache.pkl"):
+        self.embedding_file = embedding_file
+        self.embeddings_cache = {}
+        self.document_embeddings = {}
+        self.embeddings_model = None
+        self.device = self._detect_device()
+        self.load_cache()
+    
+    def _detect_device(self):
+        """Detect best available device for embeddings"""
         try:
             import torch
             if torch.cuda.is_available():
-                print("[ENHANCED GPU] CUDA available, using GPU acceleration")
-                self.device = "cuda"
+                device = 'cuda'
+                print(f"[ENHANCED GPU] CUDA detected: {torch.cuda.get_device_name(0)}")
+                print(f"[ENHANCED GPU] CUDA memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f}GB")
             else:
+                device = 'cpu'
                 print("[ENHANCED GPU] CUDA not available, using CPU")
-                self.device = "cpu"
-        except:
-            print("[ENHANCED GPU] CUDA not available, using CPU")
-            self.device = "cpu"
+        except ImportError:
+            device = 'cpu'
+            print("[ENHANCED GPU] PyTorch not available, using CPU")
         
-        # Initialize embedding model with GPU optimization
-        print("[ENHANCED GPU] Loading embedding model...")
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-        if self.device == "cuda":
-            self.embedding_model = self.embedding_model.to('cuda')
+        return device
+    
+    def load_cache(self):
+        """Load embeddings from cache file"""
+        try:
+            if os.path.exists(self.embedding_file):
+                with open(self.embedding_file, 'rb') as f:
+                    cache_data = pickle.load(f)
+                    self.embeddings_cache = cache_data.get('query_cache', {})
+                    self.document_embeddings = cache_data.get('document_embeddings', {})
+                print(f"[ENHANCED GPU] Loaded {len(self.embeddings_cache)} query embeddings")
+                print(f"[ENHANCED GPU] Loaded {len(self.document_embeddings)} document embeddings")
+            else:
+                print("[ENHANCED GPU] No enhanced GPU embedding cache found, will create new one")
+        except Exception as e:
+            print(f"[ENHANCED GPU] Error loading embedding cache: {e}")
+            self.embeddings_cache = {}
+            self.document_embeddings = {}
+    
+    def save_cache(self):
+        """Save embeddings to cache file"""
+        try:
+            cache_data = {
+                'query_cache': self.embeddings_cache,
+                'document_embeddings': self.document_embeddings
+            }
+            with open(self.embedding_file, 'wb') as f:
+                pickle.dump(cache_data, f)
+            print(f"[ENHANCED GPU] Saved {len(self.embeddings_cache)} query embeddings")
+            print(f"[ENHANCED GPU] Saved {len(self.document_embeddings)} document embeddings")
+        except Exception as e:
+            print(f"[ENHANCED GPU] Error saving embedding cache: {e}")
+    
+    def get_embedding_model(self):
+        """Get or create GPU-optimized embedding model"""
+        if self.embeddings_model is None:
+            print(f"[ENHANCED GPU] Loading embedding model on {self.device}...")
+            self.embeddings_model = HuggingFaceEmbeddings(
+                model_name="all-MiniLM-L6-v2",
+                model_kwargs={'device': self.device},
+                encode_kwargs={'normalize_embeddings': True}
+            )
+            print(f"[ENHANCED GPU] Embedding model loaded on {self.device}")
+        return self.embeddings_model
+    
+    def get_document_hash(self, content):
+        """Generate hash for document content"""
+        return hashlib.md5(content.encode()).hexdigest()
+    
+    def get_query_embedding(self, content):
+        """Get embedding for query content with GPU acceleration"""
+        doc_hash = self.get_document_hash(content)
         
-        # Check for enhanced GPU embedding cache
-        cache_file = "enhanced_gpu_embeddings_cache.pkl"
-        if os.path.exists(cache_file):
-            print("[ENHANCED GPU] Found enhanced GPU embedding cache")
-        else:
-            print("[ENHANCED GPU] No enhanced GPU embedding cache found, will create new one")
+        if doc_hash in self.embeddings_cache:
+            return self.embeddings_cache[doc_hash]
+        
+        model = self.get_embedding_model()
+        embedding = model.embed_query(content)
+        self.embeddings_cache[doc_hash] = embedding
+        return embedding
+    
+    def get_document_embedding(self, doc_id, content):
+        """Get embedding for document content with GPU acceleration"""
+        if doc_id in self.document_embeddings:
+            return self.document_embeddings[doc_id]
+        
+        model = self.get_embedding_model()
+        embedding = model.embed_query(content)
+        self.document_embeddings[doc_id] = embedding
+        return embedding
+    
+    def cosine_similarity(self, vec1, vec2):
+        """Calculate cosine similarity between two vectors"""
+        return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+
+class EnhancedGPUUniversityRAGChatbot:
+    """Enhanced GPU-optimized RAG Chatbot for maximum accuracy"""
+    
+    def __init__(self, model_name: str = "llama2:7b"):
+        print("[ENHANCED GPU] Initializing Enhanced GPU-Optimized RAG Chatbot...")
+        start_time = time.time()
+        
+        # Initialize ChromaDB service
+        self.chroma_service = ChromaService()
+        
+        # Initialize GPU-optimized embedding manager
+        self.embedding_manager = EnhancedGPUEmbeddingManager()
         
         # Initialize LLM with GPU-optimized settings
         print("[ENHANCED GPU] Loading LLM...")
+        self.llm = Ollama(
+            model=model_name,
+            temperature=0.1,          # Lower for more factual responses
+            num_ctx=4096,             # Larger context window for 10 documents
+            repeat_penalty=1.2,       # Prevent repetitive text
+            top_k=10,                 # More focused vocabulary
+            top_p=0.8                 # More deterministic
+        )
         
-        # Try to use Ollama first, fallback to cloud LLM if not available
+        # Enhanced prompt templates
+        self.query_expansion_prompt = PromptTemplate(
+            input_variables=["question", "conversation_history"],
+            template="""Generate 3 different ways to ask the same specific question to improve search results. Focus on the exact topic being asked.
+
+Question: {question}
+Conversation History: {conversation_history}
+
+Generate 3 alternative questions that ask about the SAME specific topic (one per line):
+1. """
+        )
+        
+        self.answer_prompt = PromptTemplate(
+            input_variables=["context", "question", "conversation_history"],
+            template="""You are an expert Northeastern University assistant. Answer the SPECIFIC question asked using ONLY the provided context.
+
+CRITICAL INSTRUCTIONS:
+- Answer ONLY the specific question asked
+- Use EXACT information from the provided context
+- If the context doesn't contain the specific answer, say "I don't have enough specific information about [topic] in my knowledge base"
+- Do NOT provide generic information about Northeastern University
+- Be direct and concise
+- Quote specific details, numbers, dates, or requirements when available
+- If mentioning costs, programs, or policies, specify they are for Northeastern University
+- Be conversational but professional
+
+Previous conversation:
+{conversation_history}
+
+Relevant context from university documents:
+{context}
+
+Student Question: {question}
+
+Answer:"""
+        )
+        
+        # Initialize conversation storage
+        self.conversations = {}
+        self.user_feedback = []
+        
+        init_time = time.time() - start_time
+        print(f"[ENHANCED GPU] Initialization completed in {init_time:.2f} seconds")
+        print(f"[ENHANCED GPU] Device: {self.embedding_manager.device}")
+        print(f"[ENHANCED GPU] Documents to analyze: 10")
+        
+        # Initialize utility methods for enhanced processing
+        self.generic_phrases = [
+            'northeastern university offers a variety',
+            'northeastern university provides',
+            'as an expert assistant',
+            'based on the context',
+            'i can provide you with information',
+            'northeastern university is',
+            'the university offers',
+            'northeastern provides'
+        ]
+    
+    def extract_key_terms(self, text: str) -> List[str]:
+        """Extract key terms from text for relevance scoring"""
+        # Simple keyword extraction - can be enhanced with NLP
+        words = re.findall(r'\b\w+\b', text.lower())
+        # Filter out common stop words
+        stop_words = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'what', 'how', 'when', 'where', 'why', 'who', 'which', 'that', 'this', 'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them', 'my', 'your', 'his', 'her', 'its', 'our', 'their', 'mine', 'yours', 'his', 'hers', 'ours', 'theirs'}
+        key_terms = [word for word in words if word not in stop_words and len(word) > 2]
+        return list(set(key_terms))  # Remove duplicates
+    
+    def split_into_sections(self, content: str, max_length: int = 500) -> List[str]:
+        """Split content into manageable sections"""
+        sentences = re.split(r'[.!?]+', content)
+        sections = []
+        current_section = ""
+        
+        for sentence in sentences:
+            sentence = sentence.strip()
+            if not sentence:
+                continue
+                
+            if len(current_section) + len(sentence) < max_length:
+                current_section += sentence + ". "
+            else:
+                if current_section:
+                    sections.append(current_section.strip())
+                current_section = sentence + ". "
+        
+        if current_section:
+            sections.append(current_section.strip())
+        
+        return sections
+    
+    def calculate_section_relevance(self, section: str, question_terms: List[str]) -> float:
+        """Calculate how relevant a section is to the question terms"""
+        section_lower = section.lower()
+        matches = sum(1 for term in question_terms if term in section_lower)
+        return matches / len(question_terms) if question_terms else 0.0
+    
+    def prepare_context(self, relevant_docs: List[Dict], question: str) -> str:
+        """Prepare context more intelligently"""
+        
+        # Extract key terms from question
+        question_terms = self.extract_key_terms(question)
+        
+        # Filter and rank document sections by relevance
+        relevant_sections = []
+        for doc in relevant_docs:
+            # Find sections that contain question terms
+            sections = self.split_into_sections(doc['content'])
+            for section in sections:
+                relevance = self.calculate_section_relevance(section, question_terms)
+                if relevance > 0.3:  # Only include relevant sections
+                    relevant_sections.append({
+                        'content': section,
+                        'relevance': relevance,
+                        'source': doc['title']
+                    })
+        
+        # Sort by relevance and combine
+        relevant_sections.sort(key=lambda x: x['relevance'], reverse=True)
+        context = "\n\n".join([f"[{s['source']}]: {s['content']}" for s in relevant_sections[:5]])
+        
+        return context
+    
+    def expand_query(self, query: str, conversation_history: Optional[List[Dict]] = None) -> List[str]:
+        """Expand query using LLM for better search results"""
         try:
-            self.llm = OllamaLLM(
-                model=model_name,
-                temperature=0.1,          # Lower for more factual responses
-                num_ctx=4096,             # Larger context window for 10 documents
-                repeat_penalty=1.2,       # Prevent repetitive text
-                top_k=10,                 # More focused vocabulary
-                top_p=0.8                 # More deterministic
+            # Prepare conversation history
+            history_text = ""
+            if conversation_history:
+                history_text = "\n".join([f"Q: {conv['question']}\nA: {conv['answer']}" 
+                                        for conv in conversation_history[-3:]])  # Last 3 exchanges
+            
+            # Generate query variations
+            prompt = self.query_expansion_prompt.format(
+                question=query,
+                conversation_history=history_text
             )
             
-            # Test Ollama connection
-            test_response = self.llm.invoke("Hello")
-            print(f"[ENHANCED GPU] Ollama LLM {model_name} is working!")
-            self.llm_type = "ollama"
+            response = self.llm(prompt)
             
-        except Exception as e:
-            print(f"[ENHANCED GPU] Ollama not available: {e}")
-            print("[ENHANCED GPU] Falling back to cloud LLM...")
+            # Parse the response to extract alternative questions
+            lines = response.strip().split('\n')
+            alternative_queries = [query]  # Start with original query
             
-            # Fallback to a simple text generation approach
-            # This will provide basic responses without requiring external LLM
-            self.llm = None
-            self.llm_type = "fallback"
-            print("[ENHANCED GPU] Using fallback text generation")
-        
-        # Configuration
-        self.documents_to_analyze = 10
-        self.context_size = "~12,000 characters"
-        
-        print(f"[ENHANCED GPU] Initialization completed in {time.time():.2f} seconds")
-        print(f"[ENHANCED GPU] Device: {self.device}")
-        print(f"[ENHANCED GPU] Documents to analyze: {self.documents_to_analyze}")
-    
-    def expand_query(self, query: str) -> List[str]:
-        """Expand query using LLM for better search results"""
-        if self.llm_type == "fallback" or self.llm is None:
-            # Basic query expansion for fallback mode
-            expanded_queries = [query]
+            for line in lines:
+                line = line.strip()
+                if line and not line.startswith(('1.', '2.', '3.')):
+                    # Remove numbering if present
+                    clean_query = re.sub(r'^\d+\.\s*', '', line)
+                    if clean_query and clean_query != query:
+                        alternative_queries.append(clean_query)
             
-            # Add common variations
-            query_lower = query.lower()
-            if "program" in query_lower:
-                expanded_queries.extend([
-                    query.replace("program", "programs"),
-                    query.replace("program", "degree"),
-                    query.replace("program", "course")
-                ])
-            if "co-op" in query_lower or "coop" in query_lower:
-                expanded_queries.extend([
-                    query.replace("co-op", "cooperative education"),
-                    query.replace("coop", "cooperative education"),
-                    "cooperative education program"
-                ])
-            if "northeastern" in query_lower:
-                expanded_queries.extend([
-                    query.replace("Northeastern", "NEU"),
-                    query.replace("northeastern", "NEU")
-                ])
+            # Ensure we have at least 3 queries
+            while len(alternative_queries) < 3:
+                alternative_queries.append(query)
             
-            # Remove duplicates and limit
-            unique_queries = list(dict.fromkeys(expanded_queries))
-            return unique_queries[:3]  # Limit to 3 queries
-        
-        try:
-            prompt = f"""
-            Given the question: "{query}"
-            
-            Generate 3-5 related search queries that would help find relevant information.
-            Focus on different aspects, synonyms, and related concepts.
-            
-            Return only the queries, one per line, without numbering or explanations.
-            """
-            
-            response = self.llm.invoke(prompt)
-            expanded_queries = [line.strip() for line in response.split('\n') if line.strip()]
-            
-            # Add original query and ensure we have at least 2 queries
-            all_queries = [query] + expanded_queries
-            return all_queries[:5]  # Limit to 5 queries
+            return alternative_queries[:3]
             
         except Exception as e:
             print(f"[ENHANCED GPU] Query expansion error: {e}")
             return [query]
     
-    def semantic_search(self, query: str, collection_name: str = "documents") -> List[Dict[str, Any]]:
-        """Perform semantic search using the appropriate database"""
-        db_type = get_database_type()
+    def validate_and_improve_answer(self, question: str, answer: str, context: str) -> str:
+        """Validate answer and regenerate if needed"""
         
-        if db_type == "pinecone":
-            # Use Pinecone for search
-            try:
-                results = query_pinecone(query, n_results=self.documents_to_analyze, collection_name=collection_name)
-                
-                # Convert to list of dictionaries
-                documents = []
-                for i in range(len(results.get('ids', []))):
-                    doc = {
-                        'id': results['ids'][i],
-                        'content': results['documents'][i],
-                        'metadata': results['metadatas'][i],
-                        'score': results['distances'][i]
-                    }
-                    documents.append(doc)
-                
-                return documents
-                
-            except Exception as e:
-                print(f"[ENHANCED GPU] Pinecone search error: {e}")
-                return []
-        else:
-            # Use ChromaDB for search
-            try:
-                collection = get_collection(collection_name)
-                
-                # Generate query embedding
-                query_embedding = self.embedding_model.encode([query])[0].tolist()
-                
-                # Search in ChromaDB
-                results = collection.query(
-                    query_embeddings=[query_embedding],
-                    n_results=self.documents_to_analyze,
-                    include=['documents', 'metadatas', 'distances']
-                )
-                
-                # Convert to list of dictionaries
-                documents = []
-                if results['ids'] and results['ids'][0]:
-                    for i in range(len(results['ids'][0])):
-                        doc = {
-                            'id': results['ids'][0][i],
-                            'content': results['documents'][0][i],
-                            'metadata': results['metadatas'][0][i] if results['metadatas'] else {},
-                            'score': results['distances'][0][i] if results['distances'] else 0.0
-                        }
-                        documents.append(doc)
-                
-                return documents
-                
-            except Exception as e:
-                print(f"[ENHANCED GPU] ChromaDB search error: {e}")
-                return []
-    
-    def hybrid_search(self, query: str, collection_name: str = "documents") -> List[Dict[str, Any]]:
-        """Perform hybrid search combining semantic and keyword search"""
-        start_time = time.time()
+        answer_lower = answer.lower()
         
-        # Expand query for better coverage
-        expanded_queries = self.expand_query(query)
-        print(f"[ENHANCED GPU] Generated {len(expanded_queries)} query variations")
+        # Check for generic indicators
+        is_generic = any(phrase in answer_lower for phrase in self.generic_phrases)
         
-        # Collect documents from all queries
-        all_documents = []
-        seen_ids = set()
+        # Check if answer directly addresses the question
+        question_terms = self.extract_key_terms(question)
+        answer_contains_question_terms = any(term in answer_lower for term in question_terms)
         
-        for expanded_query in expanded_queries:
-            documents = self.semantic_search(expanded_query, collection_name)
-            
-            for doc in documents:
-                if doc['id'] not in seen_ids:
-                    all_documents.append(doc)
-                    seen_ids.add(doc['id'])
-        
-        # Sort by relevance score and take top results
-        all_documents.sort(key=lambda x: x.get('score', 0), reverse=True)
-        unique_documents = all_documents[:self.documents_to_analyze]
-        
-        search_time = time.time() - start_time
-        print(f"[ENHANCED GPU] Hybrid search completed in {search_time:.2f} seconds")
-        print(f"[ENHANCED GPU] Found {len(unique_documents)} unique documents")
-        
-        return unique_documents
-    
-    def calculate_confidence(self, documents: List[Dict[str, Any]], query: str) -> float:
-        """Calculate confidence score based on document relevance"""
-        if not documents:
-            return 0.0
-        
-        # Calculate average similarity score
-        scores = [doc.get('score', 0) for doc in documents]
-        avg_score = sum(scores) / len(scores)
-        
-        # Normalize to 0-1 range (assuming cosine similarity)
-        confidence = max(0.0, min(1.0, avg_score))
-        
-        return confidence
-    
-    def generate_answer(self, query: str, documents: List[Dict[str, Any]]) -> str:
-        """Generate answer using LLM or fallback method"""
-        
-        # Handle fallback mode when LLM is not available
-        if self.llm_type == "fallback" or self.llm is None:
-            # Generate a better response based on context
-            if documents and documents[0]['content'].strip():
-                # Extract key information from all relevant documents
-                relevant_info = []
-                query_terms = query.lower().split()
-                
-                for doc in documents[:5]:  # Use top 5 documents
-                    content = doc['content']
-                    title = doc.get('metadata', {}).get('title', '')
-                    
-                    # Look for specific information based on query terms
-                    if any(term in query.lower() for term in ['admission', 'apply', 'requirement']):
-                        if 'admission' in title.lower() or 'admission' in content.lower():
-                            relevant_info.append("Northeastern University has specific admission requirements including academic transcripts, test scores, and application materials.")
-                    elif any(term in query.lower() for term in ['co-op', 'coop', 'internship']):
-                        if 'co-op' in title.lower() or 'coop' in title.lower():
-                            relevant_info.append("Northeastern University's co-op program allows students to gain real-world experience through paid internships with industry partners.")
-                    elif any(term in query.lower() for term in ['tuition', 'cost', 'financial', 'fee']):
-                        if any(word in title.lower() for word in ['tuition', 'cost', 'financial']):
-                            relevant_info.append("Northeastern University offers various tuition and financial aid options including scholarships, grants, and payment plans.")
-                    elif any(term in query.lower() for term in ['housing', 'campus', 'residence']):
-                        if any(word in title.lower() for word in ['housing', 'campus', 'residence']):
-                            relevant_info.append("Northeastern University provides on-campus housing options with various residence halls and living communities.")
-                    
-                    # Extract general information from content
-                    if '|' in content:
-                        parts = content.split('|')
-                        for part in parts:
-                            part = part.strip()
-                            if part and any(term in part.lower() for term in query_terms):
-                                relevant_info.append(part)
-                
-                if relevant_info:
-                    # Combine relevant information
-                    unique_info = list(set(relevant_info))  # Remove duplicates
-                    combined_info = '. '.join(unique_info[:3])  # Use up to 3 unique pieces of info
-                    answer = f"Based on the available information: {combined_info}"
-                else:
-                    # Generate a general response based on document titles
-                    titles = [doc.get('metadata', {}).get('title', '') for doc in documents[:3]]
-                    relevant_titles = [title for title in titles if any(term in title.lower() for term in query_terms)]
-                    
-                    if relevant_titles:
-                        answer = f"Based on the available information: I found relevant documents about {', '.join(relevant_titles[:2])}. These documents contain information related to your question about Northeastern University."
-                    else:
-                        answer = "I don't have enough specific information about this topic in my knowledge base."
-            else:
-                answer = "I don't have enough specific information about this topic in my knowledge base."
-        else:
-            # Use LLM for answer generation
-            context = "\n\n".join([doc['content'] for doc in documents[:5]])
-            
-            prompt = f"""
-            Based on the following context, answer the question accurately and concisely.
-            
-            Context:
-            {context}
-            
-            Question: {query}
-            
-            Answer:
-            """
-            
-            answer = self.llm.invoke(prompt)
+        # If answer is generic or off-topic, regenerate
+        if is_generic or not answer_contains_question_terms:
+            print(f"[ENHANCED GPU] Regenerating answer - detected generic response")
+            specific_prompt = f"""Answer this specific question: "{question}"
+Use ONLY information from this context: {context}
+
+CRITICAL: Answer ONLY the specific question. Do NOT give generic information.
+If the context doesn't contain the specific answer, say "I don't have enough specific information about [topic] in my knowledge base"
+Be direct and concise."""
+            return self.llm(specific_prompt)
         
         return answer
     
-    def chat(self, question: str, session_id: Optional[str] = None) -> Dict[str, Any]:
-        """Main chat method with enhanced features"""
-        start_time = time.time()
-        
-        # Generate session ID if not provided
-        if not session_id:
-            session_id = f"session_{int(time.time() * 1000)}_{str(uuid.uuid4())[:8]}"
-        
-        print(f"[ENHANCED GPU] Processing question: {question}...")
-        print(f"[ENHANCED GPU] Session ID: {session_id}")
-        print(f"[ENHANCED GPU] Device: {self.device}")
-        
-        # Perform hybrid search
-        documents = self.hybrid_search(question)
-        
-        # Generate answer
-        answer = self.generate_answer(question, documents)
-        
-        # Calculate confidence
-        confidence = self.calculate_confidence(documents, question)
-        
-        # Prepare sources with relevance scores
-        sources = []
-        for doc in documents:  # All documents (up to 10)
-            # Calculate relevance score (convert distance to similarity)
-            relevance_score = 1.0 - doc.get('score', 0.0) if doc.get('score', 0.0) <= 1.0 else 0.0
-            relevance_percentage = max(0, min(100, relevance_score * 100))
+    def hybrid_search(self, query: str, k: int = 10, university_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Enhanced hybrid search with GPU acceleration"""
+        try:
+            start_time = time.time()
             
-            # Get URL and ensure it's properly formatted
-            url = doc.get('metadata', {}).get('url', '')
-            if url and not url.startswith('http'):
-                url = 'https://' + url.lstrip('/')
+            # Get conversation history for context
+            conversation_history = self.get_conversation_history("current_session", limit=3)
             
-            source = {
-                'title': doc.get('metadata', {}).get('title', 'Document'),
-                'url': url,
-                'content': doc['content'][:200] + "..." if len(doc['content']) > 200 else doc['content'],
-                'relevance': f"{relevance_percentage:.1f}%"
+            # Expand query
+            expanded_queries = self.expand_query(query, conversation_history)
+            print(f"[ENHANCED GPU] Generated {len(expanded_queries)} query variations")
+            
+            # Perform semantic search for each expanded query
+            all_semantic_results = []
+            for expanded_query in expanded_queries:
+                semantic_results = self.semantic_search(expanded_query, k=k, university_id=university_id)
+                all_semantic_results.extend(semantic_results)
+            
+            # Remove duplicates and rerank
+            unique_results = self.remove_duplicates(all_semantic_results)
+            
+            # Rerank based on relevance to original query
+            reranked_results = self.rerank_results(unique_results, query, k=k)
+            
+            search_time = time.time() - start_time
+            print(f"[ENHANCED GPU] Hybrid search completed in {search_time:.2f} seconds")
+            print(f"[ENHANCED GPU] Found {len(reranked_results)} unique documents")
+            
+            return reranked_results
+            
+        except Exception as e:
+            print(f"[ENHANCED GPU] Hybrid search error: {e}")
+            return self.semantic_search(query, k=k, university_id=university_id)
+    
+    def semantic_search(self, query: str, k: int = 10, university_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """GPU-accelerated semantic search"""
+        try:
+            # Get query embedding with GPU acceleration
+            query_embedding = self.embedding_manager.get_query_embedding(query)
+            
+            # Search ChromaDB
+            results = self.chroma_service.search_documents(
+                query="",  # Empty query since we're using embedding
+                embedding=query_embedding,
+                n_results=k * 2  # Get more results for reranking
+            )
+            
+            # Process results
+            processed_results = []
+            for i, (doc_version, distance) in enumerate(results):
+                # Convert distance to similarity
+                similarity = 1 - (distance / 2)
+                
+                processed_results.append({
+                    'id': doc_version.id,
+                    'content': doc_version.content,
+                    'title': doc_version.title,
+                    'source_url': doc_version.source_url,
+                    'similarity': similarity,
+                    'rank': i + 1,
+                    'university_name': doc_version.university_name if hasattr(doc_version, 'university_name') else 'Northeastern University'
+                })
+            
+            return processed_results
+            
+        except Exception as e:
+            print(f"[ENHANCED GPU] Semantic search error: {e}")
+            return []
+    
+    def remove_duplicates(self, results: List[Dict]) -> List[Dict]:
+        """Remove duplicate documents based on content similarity"""
+        unique_results = []
+        seen_content_hashes = set()
+        
+        for result in results:
+            content_hash = self.embedding_manager.get_document_hash(result['content'][:500])
+            if content_hash not in seen_content_hashes:
+                seen_content_hashes.add(content_hash)
+                unique_results.append(result)
+        
+        return unique_results
+    
+    def question_specific_rerank(self, results: List[Dict], question: str) -> List[Dict]:
+        """Rerank based on how well each document answers the specific question"""
+        
+        question_terms = self.extract_key_terms(question)
+        
+        for result in results:
+            # Calculate how well this document answers the specific question
+            content = result['content'].lower()
+            term_matches = sum(1 for term in question_terms if term in content)
+            question_relevance = term_matches / len(question_terms) if question_terms else 0.0
+            
+            # Combine with similarity score
+            result['final_score'] = (result['similarity'] * 0.6) + (question_relevance * 0.4)
+        
+        # Sort by final score
+        results.sort(key=lambda x: x['final_score'], reverse=True)
+        return results
+    
+    def rerank_results(self, results: List[Dict], original_query: str, k: int = 10) -> List[Dict]:
+        """Rerank results based on relevance to original query"""
+        try:
+            # Use question-specific reranking for better results
+            reranked_results = self.question_specific_rerank(results, original_query)
+            return reranked_results[:k]
+            
+        except Exception as e:
+            print(f"[ENHANCED GPU] Reranking error: {e}")
+            return results[:k]
+    
+    def calculate_content_relevance(self, content: str, query: str) -> float:
+        """Calculate content relevance to query"""
+        try:
+            # Simple keyword matching
+            query_words = set(query.lower().split())
+            content_words = set(content.lower().split())
+            
+            # Calculate word overlap
+            overlap = len(query_words.intersection(content_words))
+            total_query_words = len(query_words)
+            
+            if total_query_words == 0:
+                return 0.0
+            
+            return min(overlap / total_query_words, 1.0)
+            
+        except Exception as e:
+            print(f"[ENHANCED GPU] Content relevance calculation error: {e}")
+            return 0.0
+    
+    def calculate_confidence(self, relevant_docs: List[Dict], question: str, answer: str) -> float:
+        """Calculate confidence score based on multiple factors"""
+        try:
+            if not relevant_docs:
+                return 0.0
+            
+            # Factor 1: Average similarity of retrieved documents
+            avg_similarity = sum(doc['similarity'] for doc in relevant_docs) / len(relevant_docs)
+            
+            # Factor 2: Number of relevant documents
+            doc_count_score = min(len(relevant_docs) / 10.0, 1.0)  # Normalize to 0-1
+            
+            # Factor 3: Answer length (longer answers often indicate more comprehensive information)
+            answer_length_score = min(len(answer) / 500.0, 1.0)  # Normalize to 0-1
+            
+            # Factor 4: Content diversity (different sources)
+            unique_sources = len(set(doc.get('source_url', '') for doc in relevant_docs))
+            source_diversity_score = min(unique_sources / 5.0, 1.0)  # Normalize to 0-1
+            
+            # Weighted combination (simplified like the working version)
+            confidence = (
+                avg_similarity * 0.4 +
+                doc_count_score * 0.2 +
+                answer_length_score * 0.2 +
+                source_diversity_score * 0.2
+            )
+            
+            return min(confidence, 1.0)
+            
+        except Exception as e:
+            print(f"[ENHANCED GPU] Confidence calculation error: {e}")
+            return 0.5
+    
+
+    
+    def generate_enhanced_gpu_response(self, question: str, session_id: Optional[str] = None) -> Dict[str, Any]:
+        """Generate enhanced response with GPU acceleration and 10 document analysis"""
+        try:
+            start_time = time.time()
+            
+            # Step 1: Enhanced hybrid search (target: <3 seconds with GPU)
+            search_start = time.time()
+            relevant_docs = self.hybrid_search(question, k=10)  # Analyze 10 documents
+            search_time = time.time() - search_start
+            
+            if not relevant_docs:
+                return {
+                    'answer': "I don't have enough information to answer that question about Northeastern University. Please try asking about specific programs, admissions, or policies.",
+                    'sources': [],
+                    'confidence': 0.0,
+                    'response_time': time.time() - start_time,
+                    'search_time': search_time,
+                    'llm_time': 0.0,
+                    'context_time': 0.0,
+                    'device': self.embedding_manager.device,
+                    'documents_analyzed': 0,
+                    'query_expansions': False
+                }
+            
+            # Step 2: Prepare enhanced context using intelligent processing
+            context_start = time.time()
+            
+            # Use enhanced context preparation
+            context = self.prepare_context(relevant_docs, question)
+            
+            # Prepare sources for response
+            sources = []
+            for doc in relevant_docs:
+                sources.append({
+                    'title': doc['title'],
+                    'url': doc['source_url'],
+                    'similarity': doc['similarity'],
+                    'relevance_score': doc.get('relevance_score', 0.0),
+                    'content_preview': doc['content'][:200] + "..." if len(doc['content']) > 200 else doc['content'],
+                    'rank': doc['rank']
+                })
+            
+            context_time = time.time() - context_start
+            
+            # Step 3: Generate comprehensive answer (target: <8 seconds with GPU)
+            llm_start = time.time()
+            
+            # Get conversation history for context
+            conversation_history = self.get_conversation_history(session_id or "current_session", limit=3)
+            history_text = "\n".join([f"Q: {conv['question']}\nA: {conv['answer']}" 
+                                    for conv in conversation_history])
+            
+            prompt = self.answer_prompt.format(
+                context=context,
+                question=question,
+                conversation_history=history_text
+            )
+            
+            answer = self.llm(prompt)
+            llm_time = time.time() - llm_start
+            
+            # Step 4: Validate and improve answer if needed
+            answer = answer.strip()
+            answer = self.validate_and_improve_answer(question, answer, context)
+            
+            # Step 5: Calculate confidence
+            confidence = self.calculate_confidence(relevant_docs, question, answer)
+            
+            # Step 5: Store conversation
+            if session_id:
+                self.store_conversation(session_id, question, answer, sources)
+            
+            total_time = time.time() - start_time
+            
+            print(f"[ENHANCED GPU] Response generated in {total_time:.2f}s (search: {search_time:.2f}s, context: {context_time:.2f}s, LLM: {llm_time:.2f}s)")
+            print(f"[ENHANCED GPU] Documents analyzed: {len(relevant_docs)}")
+            print(f"[ENHANCED GPU] Confidence: {confidence:.2f}")
+            
+            return {
+                'answer': answer.strip(),
+                'sources': sources,
+                'confidence': confidence,
+                'response_time': total_time,
+                'search_time': search_time,
+                'llm_time': llm_time,
+                'context_time': context_time,
+                'device': self.embedding_manager.device,
+                'documents_analyzed': len(relevant_docs),
+                'query_expansions': len(relevant_docs) > 0
             }
-            sources.append(source)
+            
+        except Exception as e:
+            print(f"[ENHANCED GPU] Error generating response: {e}")
+            return {
+                'answer': "I'm sorry, I encountered an error. Please try again.",
+                'sources': [],
+                'confidence': 0.0,
+                'response_time': time.time() - start_time if 'start_time' in locals() else 0,
+                'search_time': 0.0,
+                'llm_time': 0.0,
+                'context_time': 0.0,
+                'device': self.embedding_manager.device,
+                'documents_analyzed': 0,
+                'query_expansions': False
+            }
+    
+    def store_conversation(self, session_id: str, question: str, answer: str, sources: List[Dict]):
+        """Store conversation for context"""
+        if session_id not in self.conversations:
+            self.conversations[session_id] = []
         
-        # Calculate response time
-        response_time = time.time() - start_time
-        
-        # Log response details
-        print(f"[ENHANCED GPU API] Response generated in {response_time:.2f}s")
-        print(f"[ENHANCED GPU API] Documents analyzed: {len(documents)}")
-        print(f"[ENHANCED GPU API] Confidence: {confidence:.2f}")
-        
-        return {
+        self.conversations[session_id].append({
+            'question': question,
             'answer': answer,
             'sources': sources,
-            'confidence': confidence,
-            'response_time': response_time,
-            'search_time': response_time,
-            'documents_analyzed': len(documents),
-            'session_id': session_id,
-            'device': self.device
-        } 
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        # Keep only last 10 conversations
+        if len(self.conversations[session_id]) > 10:
+            self.conversations[session_id] = self.conversations[session_id][-10:]
+    
+    def get_conversation_history(self, session_id: str, limit: int = 10) -> List[Dict]:
+        """Get conversation history for context"""
+        if session_id not in self.conversations:
+            return []
+        
+        return self.conversations[session_id][-limit:]
+    
+    def save_cache(self):
+        """Save embedding cache"""
+        self.embedding_manager.save_cache()
+
+def create_enhanced_gpu_chatbot(model_type: str = "llama2:7b"):
+    """Create an enhanced GPU-optimized RAG chatbot instance"""
+    return EnhancedGPUUniversityRAGChatbot(model_name=model_type)
+
+if __name__ == "__main__":
+    # Test the enhanced GPU chatbot
+    chatbot = create_enhanced_gpu_chatbot()
+    
+    test_questions = [
+        "What are the admission requirements for Northeastern University?",
+        "Tell me about the computer science program and its curriculum",
+        "What is the tuition cost and available financial aid options?",
+        "How do I apply for financial aid and what scholarships are available?"
+    ]
+    
+    print(f"\n[ENHANCED GPU] Testing with device: {chatbot.embedding_manager.device}")
+    print("=" * 70)
+    
+    for i, question in enumerate(test_questions, 1):
+        print(f"\n[ENHANCED GPU] Test {i}: {question}")
+        response = chatbot.generate_enhanced_gpu_response(question)
+        print(f"[ENHANCED GPU] Answer: {response['answer'][:150]}...")
+        print(f"[ENHANCED GPU] Confidence: {response['confidence']:.2f}")
+        print(f"[ENHANCED GPU] Response time: {response['response_time']:.2f}s")
+        print(f"[ENHANCED GPU] Documents analyzed: {response['documents_analyzed']}")
+        print(f"[ENHANCED GPU] Device used: {response['device']}")
+        print(f"[ENHANCED GPU] Sources found: {len(response['sources'])}")
+    
+    chatbot.save_cache() 

@@ -3,18 +3,21 @@ class UniversityChatbot {
     constructor() {
         console.log('UniversityChatbot constructor called');
         
-        // API base URL
-        // - Local dev: talk to FastAPI on localhost:8001
-        // - Production (e.g., Vercel): use relative "/api" and let Vercel rewrite to Railway
-        this.apiBaseUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:8001'
-            : '/api';
-        
-        // Check if we should use the fixed API
-        this.useFixedAPI = true;
+        // Allow overriding base URL via window.API_BASE_URL (for Railway/static hosting)
+        if (window.API_BASE_URL && window.API_BASE_URL.trim().length > 0) {
+            this.apiBaseUrl = window.API_BASE_URL.trim().replace(/\/$/, '');
+        } else {
+            // Default: localhost in dev, same host:8001 in prod
+            this.apiBaseUrl = window.location.hostname === 'localhost'
+                ? 'http://localhost:8001'
+                : `${window.location.protocol}//${window.location.hostname}:8001`;
+        }
         this.sessionId = this.generateSessionId();
         this.messageCount = 0;
         this.responseTimes = [];
+        
+        // Initialize markdown parser once marked.js is loaded
+        this.initializeMarkdownParser();
         
         // Ensure DOM is ready before initializing
         if (document.readyState === 'loading') {
@@ -32,6 +35,26 @@ class UniversityChatbot {
             this.loadSystemStatus();
             this.startStatusPolling();
         }
+    }
+
+    initializeMarkdownParser() {
+        // Wait for marked.js to load
+        const checkMarked = () => {
+            if (typeof marked !== 'undefined') {
+                console.log('marked.js loaded successfully');
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    headerIds: false,
+                    mangle: false
+                });
+                this.markdownReady = true;
+            } else {
+                console.log('Waiting for marked.js...');
+                setTimeout(checkMarked, 100);
+            }
+        };
+        checkMarked();
     }
 
     initializeElements() {
@@ -177,6 +200,53 @@ class UniversityChatbot {
         return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     }
 
+    parseMarkdown(text) {
+        // Try using marked.js if available
+        if (typeof marked !== 'undefined' && this.markdownReady) {
+            try {
+                console.log('Parsing markdown with marked.js');
+                return marked.parse(text);
+            } catch (error) {
+                console.error('Markdown parsing error:', error);
+            }
+        }
+        
+        // Fallback: Manual markdown parsing
+        console.log('Using fallback markdown parser');
+        let html = text;
+        
+        // Convert headers
+        html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+        
+        // Convert bold (**text** or __text__)
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+        
+        // Convert italic (*text* or _text_)
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        html = html.replace(/_(.+?)_/g, '<em>$1</em>');
+        
+        // Convert bullet lists
+        html = html.replace(/^\s*[-*]\s+(.+)$/gim, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        
+        // Convert numbered lists
+        html = html.replace(/^\s*\d+\.\s+(.+)$/gim, '<li>$1</li>');
+        
+        // Convert line breaks
+        html = html.replace(/\n\n/g, '</p><p>');
+        html = html.replace(/\n/g, '<br>');
+        
+        // Wrap in paragraph if not already wrapped
+        if (!html.startsWith('<h') && !html.startsWith('<ul') && !html.startsWith('<ol')) {
+            html = '<p>' + html + '</p>';
+        }
+        
+        return html;
+    }
+
     async loadSystemStatus() {
         try {
             console.log('Loading system status...');
@@ -196,12 +266,11 @@ class UniversityChatbot {
                 
                 // Update enhanced features status
                 if (this.enhancedFeatures) {
-                    if (healthData.features && healthData.features.active_features !== undefined) {
-                        const activeFeatures = healthData.features.active_features;
-                        const totalFeatures = healthData.features.total_features || 4;
-                        console.log('Active features count:', activeFeatures);
-                        this.enhancedFeatures.textContent = `${activeFeatures}/${totalFeatures} Active`;
-                        this.enhancedFeatures.className = activeFeatures > 0 ? 'status-value online' : 'status-value offline';
+                    if (healthData.features) {
+                        const enabledFeatures = Object.values(healthData.features).filter(status => status === 'enabled').length;
+                        console.log('Enabled features count:', enabledFeatures);
+                        this.enhancedFeatures.textContent = `${enabledFeatures}/4 Active`;
+                        this.enhancedFeatures.className = 'status-value online';
                     } else {
                         // Fallback to default count
                         console.log('No features data, using fallback');
@@ -370,43 +439,16 @@ class UniversityChatbot {
 
         const messageText = document.createElement('div');
         messageText.className = 'message-text';
-        let formattedText = text;
-        // Add paragraph breaks and bullets for bot responses
+        
+        // Parse markdown for bot responses, plain text for user
         if (sender === 'bot') {
-            // Convert newlines to paragraphs
-            formattedText = formattedText
-                .replace(/\n{2,}/g, '</p><p>') // double newlines to paragraph
-                .replace(/\n/g, ' '); // single newlines to space
-            // Add <p> tags around the whole thing
-            formattedText = '<p>' + formattedText + '</p>';
-            // Convert markdown-style bullets to HTML lists
-            if (/\n[-*] /.test(text) || /\n\d+\. /.test(text)) {
-                // Unordered list
-                formattedText = formattedText.replace(/(<p>)([-*] .+?)(<\/p>)/gs, function(_, p1, p2, p3) {
-                    const items = p2.split(/[-*] /).filter(Boolean).map(i => `<li>${i.trim()}</li>`).join('');
-                    return `<ul style="margin: 0.5em 0 1em 2em;">${items}</ul>`;
-                });
-                // Ordered list
-                formattedText = formattedText.replace(/(<p>)(\d+\. .+?)(<\/p>)/gs, function(_, p1, p2, p3) {
-                    const items = p2.split(/\d+\. /).filter(Boolean).map(i => `<li>${i.trim()}</li>`).join('');
-                    return `<ol style="margin: 0.5em 0 1em 2em;">${items}</ol>`;
-                });
-            }
-        }
-        messageText.innerHTML = formattedText;
-        // Beautify bot response content
-        if (sender === 'bot') {
-            messageText.style.background = 'rgba(235, 243, 255, 0.98)';
-            messageText.style.border = '1px solid #d0e3fa';
-            messageText.style.borderLeft = '6px solid #4a90e2';
-            messageText.style.borderRadius = '10px';
-            messageText.style.padding = '1.3em 1.7em';
-            messageText.style.marginBottom = '0.9em';
-            messageText.style.fontSize = '1.13em';
-            messageText.style.lineHeight = '1.85';
-            messageText.style.color = '#1a2633';
-            messageText.style.fontFamily = 'Segoe UI, Arial, sans-serif';
-            messageText.style.boxShadow = '0 2px 12px rgba(74,144,226,0.07)';
+            // Try to parse markdown
+            let htmlContent = this.parseMarkdown(text);
+            messageText.innerHTML = htmlContent;
+            messageText.classList.add('markdown-content');
+        } else {
+            // User messages - plain text
+            messageText.textContent = text;
         }
 
         const messageTime = document.createElement('div');
@@ -448,66 +490,25 @@ class UniversityChatbot {
         if (sources && sources.length > 0) {
             const sourcesDiv = document.createElement('div');
             sourcesDiv.className = 'message-sources';
-            sourcesDiv.innerHTML = `<strong>📚 All Source Documents (${sources.length} total):</strong>`;
+            sourcesDiv.innerHTML = `<strong>📚 Source Documents Consulted:</strong>`;
 
             const sourcesList = document.createElement('ol');
             sourcesList.className = 'sources-list';
 
-            sources.forEach((source, index) => {
+            sources.forEach((source) => {
                 const item = document.createElement('li');
                 const title = source.title || source.file_name || 'Untitled Document';
                 const fileName = source.file_name ? ` <span class="file-name">(${source.file_name})</span>` : '';
-                
-                // Handle relevance score - backend sends it as a string with "%" or as a number
-                let relevanceDisplay = 'N/A';
-                if (source.relevance) {
-                    // If it's already a string with %, use it directly
-                    if (typeof source.relevance === 'string' && source.relevance.includes('%')) {
-                        relevanceDisplay = source.relevance;
-                    } else if (typeof source.relevance === 'number') {
-                        relevanceDisplay = `${source.relevance.toFixed(1)}%`;
-                    } else if (typeof source.relevance === 'string') {
-                        // Try to parse as number
-                        const num = parseFloat(source.relevance);
-                        if (!isNaN(num)) {
-                            relevanceDisplay = `${num.toFixed(1)}%`;
-                        } else {
-                            relevanceDisplay = source.relevance;
-                        }
-                    }
-                } else if (source.similarity) {
-                    // Fallback to similarity if relevance not available
-                    const similarity = (source.similarity * 100).toFixed(1);
-                    relevanceDisplay = `${similarity}%`;
-                }
-                
-                // Handle URL display and validation
-                let urlDisplay = '';
-                if (source.url && source.url.trim()) {
-                    // Ensure URL is properly formatted
-                    let url = source.url.trim();
-                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                        url = 'https://' + url;
-                    }
-                    
-                    // Create clickable link with proper styling
-                    urlDisplay = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="source-link" style="color: #4a90e2; text-decoration: none; font-weight: 500; padding: 4px 8px; border: 1px solid #4a90e2; border-radius: 4px; background: rgba(74, 144, 226, 0.1); transition: all 0.2s ease;">🌐 Visit Website</a>`;
-                } else {
-                    urlDisplay = '<span style="color: #999; font-style: italic;">No URL available</span>';
-                }
-                
+                const similarity = (source.similarity * 100).toFixed(1);
+                const url = source.url ? `<a href="${source.url}" target="_blank" rel="noopener noreferrer" class="source-link">View Document</a>` : '';
                 item.innerHTML = `
-                    <div style="margin-bottom: 0.5em; padding: 8px; border-left: 3px solid #4a90e2; background: rgba(74, 144, 226, 0.05); border-radius: 4px;">
-                        <div style="margin-bottom: 0.3em; font-weight: 600; color: #2c3e50;">
-                            ${index + 1}. ${title}${fileName}
-                        </div>
-                        <div style="font-size: 0.9em; margin-bottom: 0.3em; color: #7f8c8d;">
-                            <span class="similarity-score"><strong>Relevance:</strong> <span style="color: #e74c3c; font-weight: 600;">${relevanceDisplay}</span></span>
-                        </div>
-                        <div style="font-size: 0.9em;">
-                            ${urlDisplay}
-                        </div>
+                    <div style="margin-bottom: 0.2em;">
+                        <strong>${title}</strong>${fileName}
                     </div>
+                    <div style="font-size: 0.95em; margin-bottom: 0.2em;">
+                        <span class="similarity-score"><strong>Relevance:</strong> ${similarity}%</span>
+                    </div>
+                    <div style="font-size: 0.95em;">${url}</div>
                 `;
                 sourcesList.appendChild(item);
             });
