@@ -175,7 +175,7 @@ class EnhancedOpenAIUniversityRAGChatbot:
             # Standard models support custom temperature
             self.llm = ChatOpenAI(
                 model=model_name,
-                temperature=0.1,          # Lower for more factual responses
+                temperature=0.3,          # Balanced for detailed but accurate responses
                 max_tokens=2500,          # Increased for detailed responses
                 openai_api_key=api_key,
                 request_timeout=30,
@@ -213,7 +213,7 @@ CRITICAL INSTRUCTIONS:
 - If the context contains multiple relevant pieces of information, include ALL of them
 - Use clear formatting: paragraphs, bullet points, or numbered lists for readability
 - Be thorough but stay focused on the specific question
-- If the context doesn't contain enough information, say "I don't have enough specific information about [topic] in my knowledge base"
+- If the context doesn't contain specific information, provide helpful general guidance about Northeastern University
 - Do NOT provide generic information not found in the context
 - Be conversational, helpful, and professional
 
@@ -386,18 +386,19 @@ Detailed Answer:"""
         if is_generic or not answer_contains_question_terms:
             print(f"[ENHANCED OPENAI] Regenerating answer - detected generic response")
             specific_prompt = f"""Answer this specific question: "{question}"
-Use ONLY information from this context: {context}
+Use information from this context: {context}
 
 CRITICAL INSTRUCTIONS:
-- Answer ONLY the specific question with DETAILED, COMPREHENSIVE information
-- Use EXACT information from the provided context
+- Provide a DETAILED, COMPREHENSIVE answer about Northeastern University programs
+- Use information from the provided context, but also draw reasonable conclusions
 - Structure your response clearly with bullet points or organized paragraphs
 - Include ALL relevant details: specific numbers, dates, requirements, procedures
 - Be thorough and well-organized, not brief
-- If the context doesn't contain enough information, say "I don't have enough specific information about [topic] in my knowledge base"
-- Do NOT provide generic information not in the context
+- If you find relevant information about programs, degrees, or academic offerings, include it
+- Focus on being helpful and informative about Northeastern's academic programs
+- Use the context as your primary source but provide a complete answer
 
-Provide a detailed, well-structured answer:"""
+Provide a detailed, well-structured answer about Northeastern University programs:"""
             response = self.llm.invoke(specific_prompt)
             return response.content if hasattr(response, 'content') else str(response)
         
