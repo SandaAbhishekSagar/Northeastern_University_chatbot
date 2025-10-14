@@ -1,0 +1,11 @@
+# Ignore development files
+server.py
+test_*.html
+README.md
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
