@@ -40,6 +40,11 @@ except ImportError as e:
 # Global ChromaDB client
 chroma_client = None
 
+def get_database_type():
+    """Get the current database type (for backward compatibility)"""
+    use_cloud = os.getenv('USE_CLOUD_CHROMA', 'false').lower() == 'true'
+    return 'cloud' if use_cloud else 'local'
+
 def get_chroma_client():
     """Get or create ChromaDB client (cloud for production, local for development)"""
     global chroma_client
