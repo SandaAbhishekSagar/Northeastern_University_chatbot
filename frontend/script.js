@@ -16,9 +16,6 @@ class UniversityChatbot {
         this.messageCount = 0;
         this.responseTimes = [];
         
-        // Initialize Vercel Analytics
-        this.initializeAnalytics();
-        
         // Initialize markdown parser once marked.js is loaded
         this.initializeMarkdownParser();
         
@@ -58,34 +55,6 @@ class UniversityChatbot {
             }
         };
         checkMarked();
-    }
-
-    initializeAnalytics() {
-        // Initialize Vercel Analytics if available
-        if (typeof window !== 'undefined' && window.va) {
-            try {
-                console.log('Initializing Vercel Analytics');
-                window.va('init', {
-                    // Custom configuration if needed
-                    debug: window.location.hostname === 'localhost'
-                });
-                
-                // Track page view
-                window.va('track', {
-                    name: 'page_view',
-                    data: {
-                        page: window.location.pathname,
-                        title: document.title
-                    }
-                });
-                
-                console.log('Vercel Analytics initialized successfully');
-            } catch (error) {
-                console.error('Error initializing Vercel Analytics:', error);
-            }
-        } else {
-            console.log('Vercel Analytics not available (window.va not found)');
-        }
     }
 
     initializeElements() {
@@ -438,14 +407,6 @@ class UniversityChatbot {
                 }
                 this.addMessage(data.answer, 'bot', data.sources, data.confidence, data);
                 this.messageCount++;
-                
-                // Track successful message interaction
-                this.trackEvent('message_sent', {
-                    message_length: message.length,
-                    response_time: responseTime,
-                    has_sources: data.sources ? data.sources.length > 0 : false,
-                    confidence: data.confidence || 0
-                });
             } else {
                 const errorData = await response.json();
                 this.addMessage(`Sorry, I encountered an error: ${errorData.detail || 'Unknown error'}`, 'bot');
@@ -611,12 +572,6 @@ class UniversityChatbot {
         }
         this.messageCount = 0;
         this.responseTimes = [];
-        
-        // Track chat clear event
-        this.trackEvent('chat_cleared', {
-            messages_before_clear: this.messageCount
-        });
-        
         console.log('Chat cleared successfully');
     }
 
@@ -668,13 +623,6 @@ class UniversityChatbot {
 
             console.log('Showing stats modal');
             this.statsModal.classList.remove('hidden');
-            
-            // Track stats view event
-            this.trackEvent('stats_viewed', {
-                total_messages: this.messageCount,
-                avg_response_time: this.responseTimes.length > 0 ? 
-                    Math.round(this.responseTimes.reduce((a, b) => a + b, 0) / this.responseTimes.length) : 0
-            });
         } catch (error) {
             console.error('Error loading stats:', error);
             alert('Error loading statistics. Please try again.');
@@ -691,25 +639,6 @@ class UniversityChatbot {
     handleApiError(error, context) {
         console.error(`API Error in ${context}:`, error);
         this.addMessage(`Sorry, I encountered an error while ${context}. Please try again later.`, 'bot');
-    }
-
-    // Analytics tracking utility
-    trackEvent(eventName, eventData = {}) {
-        if (typeof window !== 'undefined' && window.va) {
-            try {
-                window.va('track', {
-                    name: eventName,
-                    data: {
-                        ...eventData,
-                        timestamp: new Date().toISOString(),
-                        session_id: this.sessionId
-                    }
-                });
-                console.log(`Analytics event tracked: ${eventName}`, eventData);
-            } catch (error) {
-                console.error('Error tracking analytics event:', error);
-            }
-        }
     }
 }
 
