@@ -477,16 +477,21 @@ Provide a detailed, well-structured answer:"""
             return []
     
     def remove_duplicates(self, results: List[Dict]) -> List[Dict]:
-        """Remove duplicate documents based on content similarity"""
+        """Remove duplicate documents based on document ID"""
         unique_results = []
-        seen_content_hashes = set()
+        seen_ids = set()
         
         for result in results:
-            content_hash = self.embedding_manager.get_document_hash(result['content'][:500])
-            if content_hash not in seen_content_hashes:
-                seen_content_hashes.add(content_hash)
+            # Use document ID for deduplication (more reliable than content hashing)
+            doc_id = result.get('id', '')
+            if doc_id and doc_id not in seen_ids:
+                seen_ids.add(doc_id)
+                unique_results.append(result)
+            elif not doc_id:
+                # If no ID, keep it anyway (shouldn't happen but be safe)
                 unique_results.append(result)
         
+        print(f"[ENHANCED OPENAI] Deduplicated {len(results)} results to {len(unique_results)} unique documents")
         return unique_results
     
     def question_specific_rerank(self, results: List[Dict], question: str) -> List[Dict]:
