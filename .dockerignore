@@ -33,7 +33,6 @@ chroma/
 *.ipynb
 celerybeat-schedule.*
 *.bat
-*.sh
 test_*
 *.md
 
