@@ -141,15 +141,24 @@ class OpenAIUniversityRAGChatbot:
         # Initialize OpenAI embedding manager
         self.embedding_manager = OpenAIEmbeddingManager()
         
-        # Initialize OpenAI LLM
-        print(f"[OpenAI] Loading OpenAI LLM: {model_name}")
+        # Initialize OpenAI LLM with optimized settings for faster responses
+        model_name = os.getenv('OPENAI_MODEL', model_name)
+        temperature = float(os.getenv('OPENAI_TEMPERATURE', '0.2'))
+        max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '300'))
+        streaming = os.getenv('OPENAI_STREAMING', 'false').lower() == 'true'
+        
+        print(f"[OpenAI] Loading optimized OpenAI LLM: {model_name}")
+        print(f"[OpenAI] Configuration: temp={temperature}, tokens={max_tokens}, streaming={streaming}")
+        
         self.llm = ChatOpenAI(
             model=model_name,
-            temperature=0.1,          # Lower for more factual responses
-            max_tokens=1500,          # Reduced for faster responses
-            frequency_penalty=0.05,   # Reduced for faster processing
-            presence_penalty=0.05,    # Reduced for faster processing
-            request_timeout=30        # Add timeout for faster failure
+            temperature=temperature,     # Optimized for faster responses
+            max_tokens=max_tokens,       # Reduced for faster generation
+            frequency_penalty=0.05,      # Reduced for faster processing
+            presence_penalty=0.05,       # Reduced for faster processing
+            request_timeout=15,          # Faster timeout for quick responses
+            streaming=streaming,         # Enable streaming for faster first token
+            max_retries=1               # Reduced retries for speed
         )
         
         # Test LLM

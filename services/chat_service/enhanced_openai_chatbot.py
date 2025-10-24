@@ -160,26 +160,40 @@ class EnhancedOpenAIUniversityRAGChatbot:
         # Initialize OpenAI LLM with timeout and retry settings
         print(f"[ENHANCED OPENAI] Loading OpenAI {model_name}...")
         
+        # Optimized configuration for faster responses
+        model_name = os.getenv('OPENAI_MODEL', model_name)
+        temperature = float(os.getenv('OPENAI_TEMPERATURE', '0.2'))
+        max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '300'))
+        streaming = os.getenv('OPENAI_STREAMING', 'false').lower() == 'true'
+        
+        print(f"[ENHANCED OPENAI] Using optimized configuration:")
+        print(f"    Model: {model_name}")
+        print(f"    Temperature: {temperature}")
+        print(f"    Max Tokens: {max_tokens}")
+        print(f"    Streaming: {streaming}")
+        
         # Handle o4-mini model restrictions (requires temperature=1)
         if "o4-mini" in model_name.lower() or "o1" in model_name.lower():
             print(f"[ENHANCED OPENAI] Using o4-mini/o1 model - temperature fixed at 1.0")
             self.llm = ChatOpenAI(
                 model=model_name,
                 temperature=1.0,          # Required for o4-mini models
-                max_tokens=2500,          # Increased for detailed responses
+                max_tokens=max_tokens,   # Use optimized token count
                 openai_api_key=api_key,
-                request_timeout=60,       # Longer timeout for reasoning models
-                max_retries=2
+                request_timeout=15,      # Faster timeout for quick responses
+                streaming=streaming,     # Enable streaming for faster first token
+                max_retries=1           # Reduced retries for speed
             )
         else:
-            # Standard models support custom temperature
+            # Standard models with optimized settings
             self.llm = ChatOpenAI(
                 model=model_name,
-                temperature=0.3,          # Balanced for detailed but accurate responses
-                max_tokens=2500,          # Increased for detailed responses
+                temperature=temperature,  # Optimized for faster responses
+                max_tokens=max_tokens,    # Reduced for faster generation
                 openai_api_key=api_key,
-                request_timeout=30,
-                max_retries=2
+                request_timeout=15,       # Faster timeout
+                streaming=streaming,      # Enable streaming for faster first token
+                max_retries=1            # Reduced retries for speed
             )
         
         self.model_name = model_name

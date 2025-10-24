@@ -55,10 +55,21 @@ def initialize_chatbot():
     try:
         print("🤖 Initializing Northeastern University Chatbot...")
         
-        # Try to import the enhanced OpenAI chatbot (optimized for cloud)
+        # Try to import the enhanced OpenAI chatbot (optimized for cloud and speed)
         from services.chat_service.enhanced_openai_chatbot import EnhancedOpenAIUniversityRAGChatbot
+        
+        # Set optimized defaults if not already set
+        if not os.getenv('OPENAI_MODEL'):
+            os.environ['OPENAI_MODEL'] = 'gpt-4o-mini'
+        if not os.getenv('OPENAI_TEMPERATURE'):
+            os.environ['OPENAI_TEMPERATURE'] = '0.2'
+        if not os.getenv('OPENAI_MAX_TOKENS'):
+            os.environ['OPENAI_MAX_TOKENS'] = '300'
+        if not os.getenv('OPENAI_STREAMING'):
+            os.environ['OPENAI_STREAMING'] = 'true'
+        
         chatbot = EnhancedOpenAIUniversityRAGChatbot()
-        print("✅ Enhanced OpenAI chatbot initialized successfully!")
+        print("✅ Enhanced OpenAI chatbot initialized with optimized settings!")
         return True
         
     except ImportError as e:
