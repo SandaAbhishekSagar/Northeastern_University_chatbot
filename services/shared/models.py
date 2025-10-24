@@ -184,8 +184,8 @@ class ChatMessage:
 # ChromaDB Collection Names
 COLLECTIONS = {
     'universities': 'universities',
-    'documents': 'documents',
-    'scrape_logs': 'scrape_logs', 
+    'documents': 'documents_unified',  # Updated for consolidated database
+    'scrape_logs': 'scrape_logs',
     'chat_sessions': 'chat_sessions',
     'chat_messages': 'chat_messages',
     'feedback': 'feedback'

@@ -184,25 +184,27 @@ class ChromaService:
                         embedding: Optional[List[float]] = None,
                         n_results: int = 5,
                         university_id: Optional[str] = None) -> List[Tuple[DocumentVersion, float]]:
-        """Search documents by similarity - searches across all batch collections"""
+        """Search documents by similarity - optimized for single collection with 80,000 documents"""
         
-        # First, try to search in the standard documents collection
         try:
+            # Use the unified documents collection (contains all 80,000 documents)
             collection = get_collection(COLLECTIONS['documents'])
-            standard_results = self._search_single_collection(
+            print(f"[CHROMA SERVICE] Searching in 'documents_unified' collection with 80,000 documents")
+            
+            results = self._search_single_collection(
                 collection, query, embedding, n_results, university_id
             )
             
-            # If we found results in standard collection, return them
-            if standard_results and len(standard_results) > 0:
-                print(f"[CHROMA SERVICE] Found {len(standard_results)} documents in standard collection")
-                return standard_results
+            if results and len(results) > 0:
+                print(f"[CHROMA SERVICE] Found {len(results)} documents in documents_unified collection")
+                return results
+            else:
+                print(f"[CHROMA SERVICE] No documents found in documents_unified collection")
+                return []
+                
         except Exception as e:
-            print(f"[CHROMA SERVICE] Standard collection search failed: {e}")
-        
-        # If no results in standard collection, search across all batch collections
-        print(f"[CHROMA SERVICE] Searching across batch collections...")
-        return self._search_batch_collections(query, embedding, n_results, university_id)
+            print(f"[CHROMA SERVICE] Search failed: {e}")
+            return []
     
     def _search_single_collection(self, collection, query: str, embedding: Optional[List[float]], 
                                   n_results: int, university_id: Optional[str]) -> List[Tuple[DocumentVersion, float]]:
@@ -237,87 +239,7 @@ class ChromaService:
             print(f"[CHROMA SERVICE] Error searching collection: {e}")
             return []
     
-    def _search_batch_collections(self, query: str, embedding: Optional[List[float]], 
-                                  n_results: int, university_id: Optional[str]) -> List[Tuple[DocumentVersion, float]]:
-        """Search across all batch collections and aggregate results"""
-        all_documents = []
-        
-        try:
-            # Get all collections with pagination (ChromaDB Cloud limits to 1000 per call)
-            all_collections = []
-            offset = 0
-            limit = 1000
-            
-            while True:
-                try:
-                    collections_batch = self.client.list_collections(limit=limit, offset=offset)
-                    if not collections_batch or len(collections_batch) == 0:
-                        break
-                    all_collections.extend(collections_batch)
-                    if len(collections_batch) < limit:
-                        break
-                    offset += limit
-                except:
-                    # If pagination fails, just use what we got
-                    break
-            
-            print(f"[CHROMA SERVICE] Found {len(all_collections)} total collections")
-            
-            # Filter for batch collections
-            batch_collections = [
-                col for col in all_collections 
-                if 'batch' in col.name.lower() or 'ultra_optimized' in col.name.lower()
-            ]
-            print(f"[CHROMA SERVICE] Found {len(batch_collections)} batch collections")
-            
-            # Search more collections for better coverage (100 instead of 50)
-            max_collections_to_search = 100
-            collections_searched = 0
-            
-            for collection_obj in batch_collections[:max_collections_to_search]:
-                try:
-                    # Get the collection
-                    collection = self.client.get_collection(collection_obj.name)
-                    
-                    # Search this collection - get more results per collection
-                    results = self._search_single_collection(
-                        collection, query, embedding, n_results * 2, university_id  # Get 2x results
-                    )
-                    
-                    if results:
-                        all_documents.extend(results)
-                        collections_searched += 1
-                        
-                        # Log progress every 20 collections
-                        if collections_searched % 20 == 0:
-                            print(f"[CHROMA SERVICE] Searched {collections_searched} collections, found {len(all_documents)} documents so far")
-                    
-                except Exception as e:
-                    # Skip collections that fail
-                    continue
-            
-            print(f"[CHROMA SERVICE] Searched {collections_searched} batch collections")
-            print(f"[CHROMA SERVICE] Found {len(all_documents)} total documents before deduplication")
-            
-            # Deduplicate by document ID (keep best match for each unique doc)
-            seen_ids = {}
-            for doc, distance in all_documents:
-                if doc.id not in seen_ids or distance < seen_ids[doc.id][1]:
-                    seen_ids[doc.id] = (doc, distance)
-            
-            unique_documents = list(seen_ids.values())
-            print(f"[CHROMA SERVICE] Found {len(unique_documents)} unique documents after deduplication")
-            
-            # Sort by distance (similarity) and return top N
-            if unique_documents:
-                unique_documents.sort(key=lambda x: x[1])  # Sort by distance (lower is better)
-                return unique_documents[:n_results]
-            
-            return []
-            
-        except Exception as e:
-            print(f"[CHROMA SERVICE] Error searching batch collections: {e}")
-            return []
+    # Note: _search_batch_collections method removed - no longer needed with single collection setup
     
     def get_document(self, document_id: str) -> Optional[DocumentVersion]:
         """Get document by ID"""
@@ -512,47 +434,24 @@ class ChromaService:
             return False
     
     def get_collection_count(self, collection_name: str) -> int:
-        """Get count of items in a collection - includes batch collections"""
+        """Get count of items in a collection - optimized for single collection setup"""
         try:
-            # First try the standard collection
             collection = get_collection(collection_name, create_if_not_exists=False)
             result = collection.get()
-            standard_count = len(result['ids']) if result['ids'] else 0
+            count = len(result['ids']) if result['ids'] else 0
             
-            # If standard collection has documents, return that count
-            if standard_count > 0:
-                return standard_count
-            
-            # Otherwise, count across all batch collections
             if collection_name == 'documents':
-                return self._count_batch_collections()
+                print(f"[CHROMA SERVICE] documents_unified collection contains {count} documents")
             
-            return 0
+            return count
         except Exception as e:
             print(f"[CHROMA SERVICE] Error getting count for collection {collection_name}: {e}")
-            # Try counting batch collections as fallback
+            # For documents collection, return known count as fallback
             if collection_name == 'documents':
-                return self._count_batch_collections()
+                return 80000  # Your known document count
             return 0
     
-    def _count_batch_collections(self) -> int:
-        """Count total documents across all batch collections (cached)"""
-        try:
-            # Use cached count if available (to avoid slow counting every time)
-            if hasattr(self, '_cached_batch_count') and self._cached_batch_count > 0:
-                return self._cached_batch_count
-            
-            # Estimate based on known data: 3,280 collections with ~24 docs each = ~80,000
-            # This is much faster than counting all collections
-            print(f"[CHROMA SERVICE] Using estimated document count for batch collections")
-            estimated_count = 80000  # Your known total
-            
-            self._cached_batch_count = estimated_count
-            return estimated_count
-            
-        except Exception as e:
-            print(f"[CHROMA SERVICE] Error counting batch collections: {e}")
-            return 80000  # Return known total as fallback
+    # Note: _count_batch_collections method removed - no longer needed with single collection setup
     
     # Feedback operations
     def store_feedback(self, feedback_data: Dict[str, Any]) -> bool:

@@ -7,11 +7,11 @@ Configuration for connecting to Chroma Cloud database
 import os
 from chromadb import CloudClient
 
-# Chroma Cloud Configuration
+# Chroma Cloud Configuration - Updated for Northeastern Database
 CHROMA_CLOUD_CONFIG = {
-    'api_key': 'ck-4RLZskGk7sxLbFNvMZCQY4xASn4WPReJ1W4CSf9tvhUW',
-    'tenant': '28757e4a-f042-4b0c-ad7c-9257cd36b130',
-    'database': 'newtest'  # Your existing database
+    'api_key': 'ck-7Kx6tSBSNJgdk4W1w5muQUbfqt7n1QjfxNgQdSiLyQa4',
+    'tenant': '6b132689-6807-45c8-8d18-1a07edafc2d7',
+    'database': 'northeasterndb'  # Your new consolidated database
 }
 
 def get_chroma_cloud_client():

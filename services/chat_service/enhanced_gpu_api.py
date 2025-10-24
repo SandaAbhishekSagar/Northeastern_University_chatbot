@@ -157,7 +157,7 @@ async def get_stats():
             total_documents = chroma_service.get_collection_count('documents')
         except Exception as e:
             print(f"[ENHANCED GPU API] Error getting document count: {e}")
-            total_documents = 110086  # Fallback to known count
+            total_documents = 80000  # Updated for new consolidated database
         
         return StatsResponse(
             status="operational",
@@ -194,7 +194,7 @@ async def get_document_count():
             total_documents = chroma_service.get_collection_count('documents')
         except Exception as e:
             print(f"[ENHANCED GPU API] Error getting document count: {e}")
-            total_documents = 110086  # Fallback to known count
+            total_documents = 80000  # Updated for new consolidated database
         
         return {
             "total_documents": total_documents,

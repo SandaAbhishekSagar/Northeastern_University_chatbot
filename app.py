@@ -55,10 +55,10 @@ def initialize_chatbot():
     try:
         print("🤖 Initializing Northeastern University Chatbot...")
         
-        # Try to import the full chatbot
-        from services.chat_service.fixed_chatbot import chatbot as full_chatbot
-        chatbot = full_chatbot
-        print("✅ Full chatbot initialized successfully!")
+        # Try to import the enhanced OpenAI chatbot (optimized for cloud)
+        from services.chat_service.enhanced_openai_chatbot import EnhancedOpenAIUniversityRAGChatbot
+        chatbot = EnhancedOpenAIUniversityRAGChatbot()
+        print("✅ Enhanced OpenAI chatbot initialized successfully!")
         return True
         
     except ImportError as e:
