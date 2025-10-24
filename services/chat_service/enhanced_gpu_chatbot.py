@@ -348,7 +348,7 @@ Be direct and concise."""
         
         return answer
     
-    def hybrid_search(self, query: str, k: int = 10, university_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    def hybrid_search(self, query: str, k: int = 6, university_id: Optional[str] = None) -> List[Dict[str, Any]]:
         """Enhanced hybrid search with GPU acceleration"""
         try:
             start_time = time.time()
@@ -382,7 +382,7 @@ Be direct and concise."""
             print(f"[ENHANCED GPU] Hybrid search error: {e}")
             return self.semantic_search(query, k=k, university_id=university_id)
     
-    def semantic_search(self, query: str, k: int = 10, university_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    def semantic_search(self, query: str, k: int = 6, university_id: Optional[str] = None) -> List[Dict[str, Any]]:
         """GPU-accelerated semantic search"""
         try:
             # Get query embedding with GPU acceleration
@@ -521,7 +521,7 @@ Be direct and concise."""
             
             # Step 1: Enhanced hybrid search (target: <3 seconds with GPU)
             search_start = time.time()
-            relevant_docs = self.hybrid_search(question, k=10)  # Analyze 10 documents
+            relevant_docs = self.hybrid_search(question, k=6)   # Analyze 6 documents for speed
             search_time = time.time() - search_start
             
             if not relevant_docs:

@@ -192,20 +192,20 @@ async def get_stats():
             chatbot_type="enhanced_openai",
             model=enhanced_openai_chatbot.model_name,
             target_response_time="3-10 seconds (with GPT-4)",
-            documents_analyzed=10,
+            documents_analyzed=6,
             total_documents=total_documents,
             device=enhanced_openai_chatbot.embedding_manager.device,
             features=[
                 f"OpenAI {enhanced_openai_chatbot.model_name}",
                 "GPU-accelerated embeddings (automatic detection)",
-                "10 document analysis",
+                "6 document analysis",
                 "Query expansion (3 variations)",
                 "Hybrid search (semantic + keyword)",
                 "Reranking and deduplication",
                 "Conversation history integration",
                 "Multi-factor confidence scoring",
                 "1,200 characters per document",
-                "~12,000 total context characters"
+                "~7,200 total context characters"
             ]
         )
     except Exception as e:
@@ -229,8 +229,8 @@ async def get_document_count():
         return {
             "total_documents": total_documents,
             "total_universities": 1,  # Northeastern only
-            "documents_analyzed_per_query": 10,
-            "context_size": "~12,000 characters",
+            "documents_analyzed_per_query": 6,
+            "context_size": "~7,200 characters",
             "status": "loaded"
         }
     except Exception as e:
