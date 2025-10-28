@@ -600,7 +600,7 @@ Provide a detailed, well-structured answer about Northeastern University program
             
             # Step 1: Enhanced hybrid search (target: <3 seconds with GPU)
             search_start = time.time()
-            relevant_docs = self.hybrid_search(question, k=10)   # Analyze 10 documents for comprehensive coverage
+            relevant_docs = self.hybrid_search(question, k=6)   # Analyze 10 documents for comprehensive coverage
             search_time = time.time() - search_start
             
             if not relevant_docs:
