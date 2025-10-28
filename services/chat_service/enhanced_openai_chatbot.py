@@ -163,7 +163,7 @@ class EnhancedOpenAIUniversityRAGChatbot:
         # Optimized configuration for faster responses
         model_name = os.getenv('OPENAI_MODEL', model_name)
         temperature = float(os.getenv('OPENAI_TEMPERATURE', '0.2'))
-        max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '300'))
+        max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '1200'))
         streaming = os.getenv('OPENAI_STREAMING', 'false').lower() == 'true'
         
         print(f"[ENHANCED OPENAI] Using optimized configuration:")
@@ -180,7 +180,7 @@ class EnhancedOpenAIUniversityRAGChatbot:
                 temperature=1.0,          # Required for o4-mini models
                 max_tokens=max_tokens,   # Use optimized token count
                 openai_api_key=api_key,
-                request_timeout=15,      # Faster timeout for quick responses
+                request_timeout=30,      # Longer timeout for comprehensive responses
                 streaming=streaming,     # Enable streaming for faster first token
                 max_retries=1           # Reduced retries for speed
             )
@@ -191,7 +191,7 @@ class EnhancedOpenAIUniversityRAGChatbot:
                 temperature=temperature,  # Optimized for faster responses
                 max_tokens=max_tokens,    # Reduced for faster generation
                 openai_api_key=api_key,
-                request_timeout=15,       # Faster timeout
+                request_timeout=30,       # Longer timeout for comprehensive responses
                 streaming=streaming,      # Enable streaming for faster first token
                 max_retries=1            # Reduced retries for speed
             )
@@ -217,19 +217,21 @@ Generate 3 alternative questions that ask about the SAME specific topic (one per
 CRITICAL INSTRUCTIONS:
 - Answer ONLY the specific question asked
 - Use EXACT information from the provided context
-- Provide DETAILED and COMPREHENSIVE answers - don't be brief
+- Provide DETAILED and COMPREHENSIVE answers - AIM FOR 500-1000 WORDS when appropriate
 - Structure your response clearly with:
   * An overview/introduction
   * Main points organized with bullet points or numbered lists when appropriate
   * Specific details, numbers, dates, requirements, or procedures
   * Additional relevant information that helps fully answer the question
+  * Examples and specific cases when available
 - Quote specific details from the context (costs, dates, requirements, procedures, etc.)
 - If the context contains multiple relevant pieces of information, include ALL of them
 - Use clear formatting: paragraphs, bullet points, or numbered lists for readability
-- Be thorough but stay focused on the specific question
+- Be thorough and comprehensive - don't leave out important details
 - If the context doesn't contain specific information, provide helpful general guidance about Northeastern University
 - Do NOT provide generic information not found in the context
 - Be conversational, helpful, and professional
+- IMPORTANT: Do not cut off your response - provide complete, detailed answers
 
 Previous conversation:
 {conversation_history}
@@ -598,7 +600,7 @@ Provide a detailed, well-structured answer about Northeastern University program
             
             # Step 1: Enhanced hybrid search (target: <3 seconds with GPU)
             search_start = time.time()
-            relevant_docs = self.hybrid_search(question, k=6)   # Analyze 6 documents for speed
+            relevant_docs = self.hybrid_search(question, k=10)   # Analyze 10 documents for comprehensive coverage
             search_time = time.time() - search_start
             
             if not relevant_docs:
