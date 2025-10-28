@@ -163,7 +163,7 @@ class EnhancedOpenAIUniversityRAGChatbot:
         # Optimized configuration for faster responses
         model_name = os.getenv('OPENAI_MODEL', model_name)
         temperature = float(os.getenv('OPENAI_TEMPERATURE', '0.2'))
-        max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '300'))
+        max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '1500'))
         streaming = os.getenv('OPENAI_STREAMING', 'false').lower() == 'true'
         
         print(f"[ENHANCED OPENAI] Using optimized configuration:")
@@ -736,6 +736,10 @@ Provide a detailed, well-structured answer about Northeastern University program
     def save_cache(self):
         """Save embedding cache"""
         self.embedding_manager.save_cache()
+    
+    def chat(self, question: str, session_id: Optional[str] = None) -> Dict[str, Any]:
+        """Main chat method that wraps generate_enhanced_openai_response for compatibility with app.py"""
+        return self.generate_enhanced_openai_response(question, session_id)
 
 def create_enhanced_openai_chatbot(model_type: str = "gpt-4o-mini", openai_api_key: Optional[str] = None):
     """Create an enhanced OpenAI-optimized RAG chatbot instance"""
