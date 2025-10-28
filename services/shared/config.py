@@ -38,7 +38,7 @@ class Config:
     
     # OpenAI settings (for OpenAI-powered chatbot)
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")  # Options: gpt-4o-mini (recommended), gpt-4o, gpt-4, o4-mini-2025-04-16
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")  # Options: gpt-4.1-mini (recommended), gpt-4o-mini, gpt-4o, gpt-4, o4-mini-2025-04-16
     
     # Scraping settings
     SCRAPING_DELAY = int(os.getenv("SCRAPING_DELAY", 3))

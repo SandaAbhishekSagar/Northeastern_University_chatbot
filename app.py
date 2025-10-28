@@ -64,7 +64,7 @@ def initialize_chatbot():
         if not os.getenv('OPENAI_TEMPERATURE'):
             os.environ['OPENAI_TEMPERATURE'] = '0.2'
         if not os.getenv('OPENAI_MAX_TOKENS'):
-            os.environ['OPENAI_MAX_TOKENS'] = '1500'
+            os.environ['OPENAI_MAX_TOKENS'] = '300'
         if not os.getenv('OPENAI_STREAMING'):
             os.environ['OPENAI_STREAMING'] = 'true'
         
