@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Dashboard - Northeastern University Chatbot</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #D32F2F;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .controls {
+            padding: 1.5rem 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .controls button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .reviews-container {
+            padding: 2rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .review-card {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .review-card:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .review-rating {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .review-rating .star {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+
+        .review-rating .star.empty {
+            color: #ddd;
+        }
+
+        .review-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .review-type.improvement {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .review-type.bug {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .review-type.feature {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .review-type.praise {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .review-text {
+            color: #333;
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+
+        .review-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .review-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            color: #D32F2F;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-star"></i> Review Dashboard</h1>
+            <p>Northeastern University Chatbot - User Feedback</p>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalReviews">-</div>
+                <div class="stat-label">Total Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgRating">-</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="fiveStars">-</div>
+                <div class="stat-label">5 Star Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="oneStars">-</div>
+                <div class="stat-label">1 Star Reviews</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-primary" onclick="loadReviews()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <button class="btn-secondary" onclick="loadStats()">
+                <i class="fas fa-chart-bar"></i> Update Stats
+            </button>
+            <span style="margin-left: auto; color: #666;">
+                API: <span id="apiUrl">http://localhost:8001</span>
+            </span>
+        </div>
+
+        <div class="reviews-container" id="reviewsContainer">
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <p>Loading reviews...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get API base URL
+        const API_BASE_URL = window.location.hostname === 'localhost'
+            ? 'http://localhost:8001'
+            : `${window.location.protocol}//${window.location.hostname}:8001`;
+
+        document.getElementById('apiUrl').textContent = API_BASE_URL;
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/reviews/stats`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    document.getElementById('totalReviews').textContent = data.total_reviews;
+                    document.getElementById('avgRating').textContent = data.average_rating.toFixed(1);
+                    document.getElementById('fiveStars').textContent = data.rating_distribution[5] || 0;
+                    document.getElementById('oneStars').textContent = data.rating_distribution[1] || 0;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading reviews...</p></div>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/reviews?limit=100`);
+                const data = await response.json();
+
+                if (data.status === 'success' && data.reviews.length > 0) {
+                    container.innerHTML = data.reviews.map(review => `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div>
+                                    <div class="review-rating">
+                                        ${Array.from({length: 5}, (_, i) => 
+                                            `<i class="fas fa-star star ${i < review.rating ? '' : 'empty'}"></i>`
+                                        ).join('')}
+                                    </div>
+                                </div>
+                                <span class="review-type ${review.feedback_type}">${review.feedback_type}</span>
+                            </div>
+                            ${review.feedback_text ? `<div class="review-text">${escapeHtml(review.feedback_text)}</div>` : ''}
+                            <div class="review-meta">
+                                <span><i class="fas fa-calendar"></i> ${formatDate(review.created_at || review.timestamp)}</span>
+                                ${review.email ? `<span><i class="fas fa-envelope"></i> ${escapeHtml(review.email)}</span>` : ''}
+                                <span><i class="fas fa-id-badge"></i> ${review.session_id.substring(0, 8)}...</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No reviews yet</h3>
+                            <p>Reviews will appear here once users submit feedback.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error loading reviews</h3>
+                        <p>${error.message}</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem;">Make sure the API is running at ${API_BASE_URL}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown date';
+            const date = new Date(dateString);
+            return date.toLocaleString();
+        }
+
+        // Load on page load
+        window.addEventListener('load', () => {
+            loadStats();
+            loadReviews();
+        });
+    </script>
+</body>
+</html>
+

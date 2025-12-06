@@ -194,6 +194,230 @@ class UniversityChatbot {
                 if (e.target === this.statsModal) this.hideStatsModal();
             });
         }
+
+        // Review/Feedback events
+        this.initializeReviewComponent();
+    }
+
+    initializeReviewComponent() {
+        // Get review elements
+        this.reviewFloatingBtn = document.getElementById('reviewFloatingBtn');
+        this.reviewModal = document.getElementById('reviewModal');
+        this.closeReviewModal = document.getElementById('closeReviewModal');
+        this.submitReviewBtn = document.getElementById('submitReview');
+        this.cancelReviewBtn = document.getElementById('cancelReview');
+        this.closeReviewSuccess = document.getElementById('closeReviewSuccess');
+        this.reviewMessage = document.getElementById('reviewMessage');
+        this.reviewEmail = document.getElementById('reviewEmail');
+        this.reviewType = document.getElementById('reviewType');
+        this.charCount = document.getElementById('charCount');
+        this.ratingText = document.getElementById('ratingText');
+        this.reviewSuccess = document.getElementById('reviewSuccess');
+        this.reviewForm = document.querySelector('.review-form');
+
+        // Star rating elements
+        this.starInputs = document.querySelectorAll('#starRating input[type="radio"]');
+        this.starLabels = document.querySelectorAll('#starRating label.star');
+
+        // Floating button click
+        if (this.reviewFloatingBtn) {
+            this.reviewFloatingBtn.addEventListener('click', () => this.showReviewModal());
+        }
+
+        // Close modal buttons
+        if (this.closeReviewModal) {
+            this.closeReviewModal.addEventListener('click', () => this.hideReviewModal());
+        }
+        if (this.cancelReviewBtn) {
+            this.cancelReviewBtn.addEventListener('click', () => this.hideReviewModal());
+        }
+        if (this.closeReviewSuccess) {
+            this.closeReviewSuccess.addEventListener('click', () => {
+                this.hideReviewModal();
+                this.resetReviewForm();
+            });
+        }
+
+        // Close modal when clicking outside
+        if (this.reviewModal) {
+            this.reviewModal.addEventListener('click', (e) => {
+                if (e.target === this.reviewModal) this.hideReviewModal();
+            });
+        }
+
+        // Submit review
+        if (this.submitReviewBtn) {
+            this.submitReviewBtn.addEventListener('click', () => this.submitReview());
+        }
+
+        // Character count for textarea
+        if (this.reviewMessage) {
+            this.reviewMessage.addEventListener('input', () => this.updateCharCount());
+            this.reviewMessage.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    this.submitReview();
+                }
+            });
+        }
+
+        // Star rating interactions
+        this.starLabels.forEach((label, index) => {
+            label.addEventListener('click', () => {
+                const rating = parseInt(label.getAttribute('data-rating'));
+                this.updateRatingText(rating);
+            });
+        });
+
+        // Rating text updates
+        this.starInputs.forEach((input) => {
+            input.addEventListener('change', () => {
+                const rating = parseInt(input.value);
+                this.updateRatingText(rating);
+            });
+        });
+    }
+
+    showReviewModal() {
+        if (this.reviewModal) {
+            this.reviewModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            // Reset form
+            this.resetReviewForm();
+        }
+    }
+
+    hideReviewModal() {
+        if (this.reviewModal) {
+            this.reviewModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+
+    resetReviewForm() {
+        // Reset star rating
+        this.starInputs.forEach(input => input.checked = false);
+        
+        // Reset form fields
+        if (this.reviewMessage) this.reviewMessage.value = '';
+        if (this.reviewEmail) this.reviewEmail.value = '';
+        if (this.reviewType) this.reviewType.value = 'general';
+        
+        // Reset UI
+        this.updateCharCount();
+        this.updateRatingText(0);
+        
+        // Show form, hide success
+        if (this.reviewForm) this.reviewForm.style.display = 'flex';
+        if (this.reviewSuccess) this.reviewSuccess.classList.add('hidden');
+        
+        // Enable submit button
+        if (this.submitReviewBtn) {
+            this.submitReviewBtn.disabled = false;
+            this.submitReviewBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Feedback';
+        }
+    }
+
+    updateCharCount() {
+        if (this.reviewMessage && this.charCount) {
+            const count = this.reviewMessage.value.length;
+            this.charCount.textContent = count;
+            
+            const charCountEl = this.charCount.parentElement;
+            charCountEl.classList.remove('warning', 'error');
+            
+            if (count > 800) {
+                charCountEl.classList.add('error');
+            } else if (count > 600) {
+                charCountEl.classList.add('warning');
+            }
+        }
+    }
+
+    updateRatingText(rating) {
+        if (!this.ratingText) return;
+        
+        const ratingTexts = {
+            0: 'Tap to rate',
+            1: 'Poor - Needs significant improvement',
+            2: 'Fair - Could be better',
+            3: 'Good - Satisfactory experience',
+            4: 'Very Good - Great experience',
+            5: 'Excellent - Outstanding experience!'
+        };
+        
+        this.ratingText.textContent = ratingTexts[rating] || 'Tap to rate';
+        this.ratingText.classList.toggle('active', rating > 0);
+    }
+
+    async submitReview() {
+        // Get selected rating
+        const selectedRating = document.querySelector('#starRating input[type="radio"]:checked');
+        if (!selectedRating) {
+            alert('Please select a rating before submitting.');
+            return;
+        }
+
+        const rating = parseInt(selectedRating.value);
+        const message = this.reviewMessage ? this.reviewMessage.value.trim() : '';
+        const email = this.reviewEmail ? this.reviewEmail.value.trim() : '';
+        const type = this.reviewType ? this.reviewType.value : 'general';
+
+        // Disable submit button
+        if (this.submitReviewBtn) {
+            this.submitReviewBtn.disabled = true;
+            this.submitReviewBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        }
+
+        try {
+            // Prepare review data
+            const reviewData = {
+                session_id: this.sessionId,
+                rating: rating,
+                feedback_type: type,
+                feedback_text: message,
+                email: email || null,
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent,
+                page_url: window.location.href
+            };
+
+            // Submit to API
+            const response = await fetch(`${this.apiBaseUrl}/review`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reviewData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            // Show success message
+            if (this.reviewForm) this.reviewForm.style.display = 'none';
+            if (this.reviewSuccess) this.reviewSuccess.classList.remove('hidden');
+            
+            // Scroll to top of modal
+            if (this.reviewModal) {
+                const modalContent = this.reviewModal.querySelector('.review-modal-content');
+                if (modalContent) modalContent.scrollTop = 0;
+            }
+
+            console.log('Review submitted successfully:', result);
+            
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            alert('Sorry, there was an error submitting your feedback. Please try again later.');
+            
+            // Re-enable submit button
+            if (this.submitReviewBtn) {
+                this.submitReviewBtn.disabled = false;
+                this.submitReviewBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Feedback';
+            }
+        }
     }
 
     generateSessionId() {

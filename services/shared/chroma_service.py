@@ -461,7 +461,7 @@ class ChromaService:
     
     # Feedback operations
     def store_feedback(self, feedback_data: Dict[str, Any]) -> bool:
-        """Store user feedback in ChromaDB"""
+        """Store user feedback/review in ChromaDB"""
         try:
             collection = get_collection(COLLECTIONS['feedback'])
             
@@ -469,31 +469,42 @@ class ChromaService:
             feedback_id = str(uuid.uuid4())
             
             # Prepare metadata (flatten nested structures)
+            # Support both old format (question/answer) and new format (review)
             metadata = {
                 'session_id': feedback_data.get('session_id', ''),
-                'question': feedback_data.get('question', ''),
-                'answer': feedback_data.get('answer', ''),
                 'rating': feedback_data.get('rating', 0),
                 'feedback_text': feedback_data.get('feedback_text', ''),
-                'confidence': feedback_data.get('confidence', 0.0),
+                'feedback_type': feedback_data.get('feedback_type', 'general'),
+                'email': feedback_data.get('email', ''),
+                'user_agent': feedback_data.get('user_agent', ''),
+                'page_url': feedback_data.get('page_url', ''),
                 'timestamp': feedback_data.get('timestamp', datetime.now().isoformat()),
+                'created_at': feedback_data.get('created_at', datetime.now().isoformat()),
+                # Legacy fields (for backward compatibility)
+                'question': feedback_data.get('question', ''),
+                'answer': feedback_data.get('answer', ''),
+                'confidence': feedback_data.get('confidence', 0.0),
                 'sources_count': len(feedback_data.get('sources', []))
             }
+            
+            # Use feedback text or question as document text
+            document_text = feedback_data.get('feedback_text', '') or feedback_data.get('question', '') or 'Review'
             
             # Add to collection
             collection.add(
                 ids=[feedback_id],
-                documents=[feedback_data.get('question', '')],  # Use question as document text
+                documents=[document_text],
                 metadatas=[metadata]
             )
             
+            print(f"[CHROMA SERVICE] Stored review: Rating {metadata['rating']}/5, Type: {metadata['feedback_type']}")
             return True
         except Exception as e:
             print(f"Error storing feedback: {e}")
             return False
     
     def get_all_feedback(self) -> List[Dict[str, Any]]:
-        """Get all feedback entries"""
+        """Get all feedback/review entries"""
         try:
             collection = get_collection(COLLECTIONS['feedback'])
             result = collection.get()
@@ -504,15 +515,24 @@ class ChromaService:
                     feedback_entry = {
                         'id': result['ids'][i],
                         'session_id': metadata.get('session_id', ''),
-                        'question': metadata.get('question', ''),
-                        'answer': metadata.get('answer', ''),
                         'rating': metadata.get('rating', 0),
                         'feedback_text': metadata.get('feedback_text', ''),
-                        'confidence': metadata.get('confidence', 0.0),
+                        'feedback_type': metadata.get('feedback_type', 'general'),
+                        'email': metadata.get('email', ''),
+                        'user_agent': metadata.get('user_agent', ''),
+                        'page_url': metadata.get('page_url', ''),
                         'timestamp': metadata.get('timestamp', ''),
+                        'created_at': metadata.get('created_at', metadata.get('timestamp', '')),
+                        # Legacy fields
+                        'question': metadata.get('question', ''),
+                        'answer': metadata.get('answer', ''),
+                        'confidence': metadata.get('confidence', 0.0),
                         'sources_count': metadata.get('sources_count', 0)
                     }
                     feedback_list.append(feedback_entry)
+            
+            # Sort by timestamp (newest first)
+            feedback_list.sort(key=lambda x: x.get('created_at', x.get('timestamp', '')), reverse=True)
             
             return feedback_list
         except Exception as e:
