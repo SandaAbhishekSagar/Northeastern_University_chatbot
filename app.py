@@ -23,13 +23,28 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# Add CORS middleware
+# Add CORS middleware with security restrictions
+# Get allowed origins from environment variable (comma-separated)
+# IMPORTANT: Add your Vercel frontend URL to ALLOWED_ORIGINS in Railway environment variables
+# Example: https://your-project.vercel.app,https://northeasternuniversitychatbot-production.up.railway.app
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS", 
+    "https://northeastern-university-chatbot.vercel.app,http://localhost:3000,http://localhost:8080,https://northeasternuniversitychatbot-production.up.railway.app"
+).split(",")
+
+# Clean and validate origins
+ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS if origin.strip()]
+
+# Log allowed origins for debugging (without exposing full URLs)
+print(f"[CORS] Configured {len(ALLOWED_ORIGINS)} allowed origin(s)")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,  # Restricted to specific domains
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],  # Only allow necessary methods
+    allow_headers=["Content-Type", "Authorization"],  # Only allow necessary headers
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Request/Response models

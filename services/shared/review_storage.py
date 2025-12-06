@@ -62,7 +62,7 @@ class ReviewStorage:
     
     def store_review(self, review_data: Dict[str, Any]) -> str:
         """
-        Store a review
+        Store a review with privacy considerations
         
         Args:
             review_data: Dictionary containing review information
@@ -73,19 +73,27 @@ class ReviewStorage:
         # Generate unique ID
         review_id = str(uuid.uuid4())
         
-        # Prepare review entry
+        # Prepare review entry (only store necessary data)
         review_entry = {
             'id': review_id,
-            'session_id': review_data.get('session_id', ''),
+            'session_id': review_data.get('session_id', '')[:50],  # Limit length
             'rating': review_data.get('rating', 0),
             'feedback_type': review_data.get('feedback_type', 'general'),
-            'feedback_text': review_data.get('feedback_text', ''),
-            'email': review_data.get('email', ''),
-            'user_agent': review_data.get('user_agent', ''),
-            'page_url': review_data.get('page_url', ''),
+            'feedback_text': review_data.get('feedback_text', '')[:1000],  # Limit length
             'timestamp': review_data.get('timestamp', datetime.now().isoformat()),
             'created_at': review_data.get('created_at', datetime.now().isoformat())
         }
+        
+        # Only store email if provided and valid (privacy: optional)
+        email = review_data.get('email', '')
+        if email:
+            review_entry['email'] = email[:254]  # RFC 5321 limit
+        
+        # Only store user_agent and page_url if explicitly enabled (privacy: optional)
+        # These are disabled by default for privacy
+        if os.getenv("STORE_USER_TRACKING", "false").lower() == "true":
+            review_entry['user_agent'] = review_data.get('user_agent', '')[:200]
+            review_entry['page_url'] = review_data.get('page_url', '')[:500]
         
         # Read existing reviews
         reviews = self._read_reviews()

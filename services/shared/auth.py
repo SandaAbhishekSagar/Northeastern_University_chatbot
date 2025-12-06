@@ -8,7 +8,12 @@ from fastapi import HTTPException, Header
 from typing import Optional
 
 # Admin API key - set via environment variable
+# IMPORTANT: Change this default key in production!
 ADMIN_API_KEY = os.getenv("REVIEW_ADMIN_KEY", "change-this-to-secure-key-12345")
+
+# Security: Warn if using default key in production
+if ADMIN_API_KEY == "change-this-to-secure-key-12345" and os.getenv("ENVIRONMENT") == "production":
+    print("[SECURITY WARNING] Using default API key! Set REVIEW_ADMIN_KEY environment variable.")
 
 def verify_admin_key(authorization: Optional[str] = Header(None)) -> bool:
     """

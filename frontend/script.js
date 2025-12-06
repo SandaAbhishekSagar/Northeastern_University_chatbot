@@ -369,16 +369,17 @@ class UniversityChatbot {
         }
 
         try {
-            // Prepare review data
+            // Prepare review data (privacy-conscious - no tracking by default)
             const reviewData = {
                 session_id: this.sessionId,
                 rating: rating,
                 feedback_type: type,
                 feedback_text: message,
-                email: email || null,
+                email: email || null,  // Optional
                 timestamp: new Date().toISOString(),
-                user_agent: navigator.userAgent,
-                page_url: window.location.href
+                // Privacy: User tracking disabled by default
+                user_agent: null,  // Not collected for privacy
+                page_url: null     // Not collected for privacy
             };
 
             // Submit to API

@@ -30,13 +30,28 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# Add CORS middleware
+# Add CORS middleware with security restrictions
+# Get allowed origins from environment variable (comma-separated)
+# IMPORTANT: Add your Vercel frontend URL to ALLOWED_ORIGINS in Railway environment variables
+# Example: https://your-project.vercel.app,https://northeasternuniversitychatbot-production.up.railway.app
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS", 
+    "https://northeastern-university-chatbot.vercel.app,http://localhost:3000,http://localhost:8080,https://northeasternuniversitychatbot-production.up.railway.app"
+).split(",")
+
+# Clean and validate origins
+ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS if origin.strip()]
+
+# Log allowed origins for debugging (without exposing full URLs)
+print(f"[CORS] Configured {len(ALLOWED_ORIGINS)} allowed origin(s)")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,  # Restricted to specific domains
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],  # Only allow necessary methods
+    allow_headers=["Content-Type", "Authorization"],  # Only allow necessary headers
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Initialize enhanced OpenAI chatbot
@@ -149,19 +164,36 @@ async def chat(request: ChatRequest):
     """Enhanced OpenAI chat endpoint with maximum accuracy"""
     try:
         if not enhanced_openai_chatbot:
-            raise HTTPException(status_code=500, detail="Chatbot not initialized. Check OpenAI API key configuration.")
+            raise HTTPException(
+                status_code=500, 
+                detail="Service temporarily unavailable. Please try again later."
+            )
         
-        # Generate session ID if not provided
-        session_id = request.session_id or str(uuid.uuid4())
+        # Validate and sanitize input
+        sanitized_question = sanitize_question(request.question)
+        if not sanitized_question or len(sanitized_question) < 3:
+            raise HTTPException(
+                status_code=400, 
+                detail="Please provide a valid question (at least 3 characters)."
+            )
         
-        print(f"[ENHANCED OPENAI API] Processing question: {request.question[:50]}...")
-        print(f"[ENHANCED OPENAI API] Session ID: {session_id}")
+        # Validate session ID format
+        import re
+        if request.session_id:
+            session_id = re.sub(r'[^a-zA-Z0-9\-_]', '', request.session_id)[:100]
+            if not session_id:
+                session_id = str(uuid.uuid4())
+        else:
+            session_id = str(uuid.uuid4())
+        
+        print(f"[ENHANCED OPENAI API] Processing question: {sanitized_question[:50]}...")
+        print(f"[ENHANCED OPENAI API] Session ID: {session_id[:20]}...")
         print(f"[ENHANCED OPENAI API] Model: {enhanced_openai_chatbot.model_name}")
         print(f"[ENHANCED OPENAI API] Embedding Device: {enhanced_openai_chatbot.embedding_manager.device}")
         
-        # Generate enhanced OpenAI response
+        # Generate enhanced OpenAI response (with sanitized input)
         response = enhanced_openai_chatbot.generate_enhanced_openai_response(
-            question=request.question,
+            question=sanitized_question,
             session_id=session_id
         )
         
@@ -174,11 +206,18 @@ async def chat(request: ChatRequest):
         
         return ChatResponse(**response)
         
+    except HTTPException:
+        raise
     except Exception as e:
+        # Log full error for debugging (server-side only)
         print(f"[ENHANCED OPENAI API] Error in chat endpoint: {e}")
         import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+        # Return generic error message to client (don't leak system details)
+        raise HTTPException(
+            status_code=500, 
+            detail="An error occurred while processing your request. Please try again later."
+        )
 
 @app.get("/stats", response_model=StatsResponse)
 async def get_stats():
@@ -292,28 +331,100 @@ async def search_documents(request: ChatRequest):
         print(f"[ENHANCED OPENAI API] Error in search endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+def sanitize_question(question: str, max_length: int = 2000) -> str:
+    """Sanitize user question input to prevent injection attacks"""
+    if not question:
+        return ""
+    
+    # Remove control characters except newlines and tabs
+    import re
+    question = ''.join(char for char in question if ord(char) >= 32 or char in '\n\r\t')
+    
+    # Limit length to prevent DoS
+    question = question[:max_length].strip()
+    
+    # Remove excessive whitespace
+    question = re.sub(r'\s+', ' ', question)
+    
+    return question
+
+def sanitize_input(text: str, max_length: int = 1000) -> str:
+    """Sanitize user input to prevent injection attacks"""
+    if not text:
+        return ""
+    
+    # Remove potentially dangerous characters
+    import html
+    text = html.escape(text)  # Escape HTML entities
+    
+    # Limit length
+    text = text[:max_length]
+    
+    # Remove control characters
+    text = ''.join(char for char in text if ord(char) >= 32 or char in '\n\r\t')
+    
+    return text.strip()
+
+def validate_email(email: Optional[str]) -> Optional[str]:
+    """Validate and sanitize email address"""
+    if not email:
+        return None
+    
+    import re
+    email = email.strip().lower()
+    
+    # Basic email validation
+    email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if not re.match(email_pattern, email):
+        return None
+    
+    # Limit length
+    if len(email) > 254:  # RFC 5321 limit
+        return None
+    
+    return email
+
 @app.post("/review")
 async def submit_review(request: ReviewRequest):
-    """Submit user review/feedback"""
+    """Submit user review/feedback with input validation"""
     try:
         # Validate rating
         if not 1 <= request.rating <= 5:
             raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
         
+        # Validate feedback type
+        valid_feedback_types = ["general", "improvement", "bug", "feature", "praise"]
+        if request.feedback_type not in valid_feedback_types:
+            request.feedback_type = "general"
+        
+        # Sanitize inputs
+        sanitized_feedback = sanitize_input(request.feedback_text or '', max_length=1000)
+        validated_email = validate_email(request.email)
+        
+        # Sanitize session ID (prevent injection)
+        import re
+        session_id = re.sub(r'[^a-zA-Z0-9\-_]', '', request.session_id or '')[:100]
+        if not session_id:
+            session_id = str(uuid.uuid4())
+        
+        # Sanitize user agent and page URL (limit length, remove sensitive data)
+        user_agent = sanitize_input(request.user_agent or '', max_length=200)
+        page_url = sanitize_input(request.page_url or '', max_length=500)
+        
         # Import review storage (JSON-based, not ChromaDB)
         from services.shared.review_storage import review_storage
         from datetime import datetime
         
-        # Prepare review data for storage
+        # Prepare review data for storage (with sanitized inputs)
         review_data = {
-            'session_id': request.session_id,
+            'session_id': session_id,
             'rating': request.rating,
             'feedback_type': request.feedback_type,
-            'feedback_text': request.feedback_text or '',
-            'email': request.email or '',
+            'feedback_text': sanitized_feedback,
+            'email': validated_email,  # Only store if valid
             'timestamp': request.timestamp,
-            'user_agent': request.user_agent or '',
-            'page_url': request.page_url or '',
+            'user_agent': user_agent[:200] if user_agent else '',  # Limit length
+            'page_url': page_url[:500] if page_url else '',  # Limit length
             'created_at': datetime.now().isoformat()
         }
         
@@ -329,13 +440,17 @@ async def submit_review(request: ReviewRequest):
     except HTTPException:
         raise
     except Exception as e:
+        # Log error but don't expose details to client
         print(f"[ENHANCED OPENAI API] Error submitting review: {e}")
-        raise HTTPException(status_code=500, detail=f"Error submitting review: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail="An error occurred while submitting your feedback. Please try again later."
+        )
 
 @app.get("/reviews")
 async def get_all_reviews(
-    limit: int = 100, 
-    offset: int = 0,
+    limit: int = Query(100, ge=1, le=1000, description="Number of reviews to return (1-1000)"), 
+    offset: int = Query(0, ge=0, description="Number of reviews to skip"),
     api_key: Optional[str] = Query(None, description="Admin API key required")
 ):
     """Get all reviews (for admin viewing only - requires API key)"""
@@ -361,8 +476,12 @@ async def get_all_reviews(
     except HTTPException:
         raise
     except Exception as e:
+        # Log error but don't expose details
         print(f"[ENHANCED OPENAI API] Error getting reviews: {e}")
-        raise HTTPException(status_code=500, detail=f"Error getting reviews: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail="An error occurred while retrieving reviews. Please try again later."
+        )
 
 @app.get("/reviews/stats")
 async def get_review_stats(
@@ -389,8 +508,12 @@ async def get_review_stats(
     except HTTPException:
         raise
     except Exception as e:
+        # Log error but don't expose details
         print(f"[ENHANCED OPENAI API] Error getting review stats: {e}")
-        raise HTTPException(status_code=500, detail=f"Error getting review stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail="An error occurred while retrieving statistics. Please try again later."
+        )
 
 @app.get("/")
 async def root():
