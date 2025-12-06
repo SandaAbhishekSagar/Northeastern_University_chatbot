@@ -68,7 +68,7 @@ class DocumentVersion:
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'DocumentVersion':
-        """Create from dictionary"""
+        """Create from dictionary with enhanced source_url extraction"""
         # Filter out fields that don't belong to the class
         valid_fields = {
             'id', 'document_id', 'version_number', 'source_url', 'title', 
@@ -78,6 +78,21 @@ class DocumentVersion:
         
         # Extract valid fields
         valid_data = {k: v for k, v in data.items() if k in valid_fields}
+        
+        # Enhanced source_url extraction - check multiple possible locations
+        if not valid_data.get('source_url'):
+            # Try to extract from extra_data if it exists
+            extra_data = valid_data.get('extra_data', {})
+            if isinstance(extra_data, dict):
+                source_url = extra_data.get('source_url') or extra_data.get('url') or extra_data.get('source')
+                if source_url:
+                    valid_data['source_url'] = source_url
+            
+            # Also check top-level data for url variants
+            if not valid_data.get('source_url'):
+                source_url = data.get('url') or data.get('source') or data.get('page_url')
+                if source_url:
+                    valid_data['source_url'] = source_url
         
         # Put remaining fields into extra_data
         extra_fields = {k: v for k, v in data.items() if k not in valid_fields}

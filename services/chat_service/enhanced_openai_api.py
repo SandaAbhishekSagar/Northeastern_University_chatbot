@@ -247,15 +247,27 @@ async def search_documents(request: ChatRequest):
         # Use the enhanced OpenAI chatbot's search functionality
         documents = enhanced_openai_chatbot.hybrid_search(request.question, k=10)
         
-        # Format for frontend
+        # Format for frontend with validated URLs
         formatted_docs = []
         for doc in documents:
+            # Extract URL from multiple possible locations
+            source_url = doc.get('source_url', '') or doc.get('url', '')
+            if not source_url and isinstance(doc.get('extra_data'), dict):
+                source_url = doc.get('extra_data', {}).get('source_url') or doc.get('extra_data', {}).get('url', '')
+            
+            # Validate URL (basic validation - ensure it starts with http/https)
+            if source_url and not source_url.startswith(('http://', 'https://')):
+                if source_url.startswith('/'):
+                    source_url = 'https://www.northeastern.edu' + source_url
+                elif '.' in source_url:
+                    source_url = 'https://' + source_url
+            
             formatted_docs.append({
-                "title": doc['title'],
-                "content": doc['content'][:300] + "..." if len(doc['content']) > 300 else doc['content'],
-                "url": doc['source_url'],
-                "similarity": doc['similarity'],
-                "rank": doc['rank']
+                "title": doc.get('title', 'Document'),
+                "content": doc.get('content', '')[:300] + "..." if len(doc.get('content', '')) > 300 else doc.get('content', ''),
+                "url": source_url,
+                "similarity": doc.get('similarity', 0.0),
+                "rank": doc.get('rank', 0)
             })
         
         return {

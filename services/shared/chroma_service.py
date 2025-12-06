@@ -218,19 +218,25 @@ class ChromaService:
                 result = collection.query(
                     query_embeddings=[embedding],
                     n_results=n_results,
-                    where=where_filter if where_filter else None
+                    where=where_filter if where_filter else None,
+                    include=['documents', 'metadatas', 'distances']
                 )
             else:
                 result = collection.query(
                     query_texts=[query],
                     n_results=n_results,
-                    where=where_filter if where_filter else None
+                    where=where_filter if where_filter else None,
+                    include=['documents', 'metadatas', 'distances']
                 )
             
             documents = []
             if result['ids'] and result['metadatas']:
+                doc_contents = result.get('documents', [[]])[0] if result.get('documents') else []
                 for i, metadata in enumerate(result['metadatas'][0]):
                     doc = DocumentVersion.from_dict(metadata)
+                    # Set document content if available
+                    if i < len(doc_contents) and doc_contents[i]:
+                        doc.content = doc_contents[i]
                     distance = result['distances'][0][i] if result['distances'] else 0.0
                     documents.append((doc, distance))
             

@@ -37,6 +37,40 @@ from langchain.retrievers.ensemble import EnsembleRetriever
 from services.shared.config import config
 from services.shared.chroma_service import ChromaService
 
+def validate_and_format_url(url: str) -> str:
+    """Validate and format URL to ensure it's a proper HTTP/HTTPS URL"""
+    if not url or not isinstance(url, str):
+        return ""
+    
+    url = url.strip()
+    if not url:
+        return ""
+    
+    # If already a valid URL, return as is
+    if url.startswith('http://') or url.startswith('https://'):
+        return url
+    
+    # Try to construct a valid URL
+    # If it starts with //, add https:
+    if url.startswith('//'):
+        return 'https:' + url
+    
+    # If it's a relative path, try to construct absolute URL
+    if url.startswith('/'):
+        # Assume northeastern.edu domain
+        return 'https://www.northeastern.edu' + url
+    
+    # If it doesn't start with http, add https://
+    if not url.startswith('http'):
+        # Check if it looks like a domain
+        if '.' in url and not url.startswith('.'):
+            return 'https://' + url
+        else:
+            # Assume northeastern.edu domain for relative paths
+            return 'https://www.northeastern.edu/' + url.lstrip('/')
+    
+    return url
+
 class EnhancedGPUEmbeddingManager:
     """Enhanced GPU-optimized embedding manager with automatic device detection"""
     
@@ -401,11 +435,19 @@ Be direct and concise."""
                 # Convert distance to similarity
                 similarity = 1 - (distance / 2)
                 
+                # Extract source_url with fallback to extra_data
+                source_url = doc_version.source_url
+                if not source_url and doc_version.extra_data:
+                    if isinstance(doc_version.extra_data, dict):
+                        source_url = doc_version.extra_data.get('source_url') or doc_version.extra_data.get('url', '')
+                
                 processed_results.append({
                     'id': doc_version.id,
                     'content': doc_version.content,
-                    'title': doc_version.title,
-                    'source_url': doc_version.source_url,
+                    'title': doc_version.title or 'Document',
+                    'source_url': source_url,
+                    'file_name': doc_version.extra_data.get('file_name', '') if isinstance(doc_version.extra_data, dict) else '',
+                    'extra_data': doc_version.extra_data,
                     'similarity': similarity,
                     'rank': i + 1,
                     'university_name': doc_version.university_name if hasattr(doc_version, 'university_name') else 'Northeastern University'
@@ -544,16 +586,25 @@ Be direct and concise."""
             # Use enhanced context preparation
             context = self.prepare_context(relevant_docs, question)
             
-            # Prepare sources for response
+            # Prepare sources for response with validated URLs
             sources = []
             for doc in relevant_docs:
+                # Extract URL from multiple possible locations
+                source_url = doc.get('source_url', '') or doc.get('url', '')
+                if not source_url and isinstance(doc.get('extra_data'), dict):
+                    source_url = doc.get('extra_data', {}).get('source_url') or doc.get('extra_data', {}).get('url', '')
+                
+                # Validate and format URL
+                validated_url = validate_and_format_url(source_url)
+                
                 sources.append({
-                    'title': doc['title'],
-                    'url': doc['source_url'],
-                    'similarity': doc['similarity'],
+                    'title': doc.get('title', 'Document'),
+                    'url': validated_url,
+                    'file_name': doc.get('file_name', ''),
+                    'similarity': doc.get('similarity', 0.0),
                     'relevance_score': doc.get('relevance_score', 0.0),
-                    'content_preview': doc['content'][:200] + "..." if len(doc['content']) > 200 else doc['content'],
-                    'rank': doc['rank']
+                    'content_preview': doc.get('content', '')[:200] + "..." if len(doc.get('content', '')) > 200 else doc.get('content', ''),
+                    'rank': doc.get('rank', 0)
                 })
             
             context_time = time.time() - context_start
