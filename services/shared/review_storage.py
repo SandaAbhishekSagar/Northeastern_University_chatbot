@@ -15,11 +15,19 @@ from threading import Lock
 _file_lock = Lock()
 
 # Storage file path
-STORAGE_DIR = Path(__file__).parent.parent.parent / "data"
+# Use absolute path to ensure it works in production (Railway, etc.)
+BASE_DIR = Path(__file__).parent.parent.parent
+STORAGE_DIR = BASE_DIR / "data"
 STORAGE_FILE = STORAGE_DIR / "reviews.json"
 
 # Ensure storage directory exists
-STORAGE_DIR.mkdir(exist_ok=True)
+try:
+    STORAGE_DIR.mkdir(exist_ok=True, parents=True)
+except Exception as e:
+    print(f"[REVIEW STORAGE] Warning: Could not create data directory: {e}")
+    # Fallback to current directory if data/ doesn't work
+    STORAGE_DIR = BASE_DIR
+    STORAGE_FILE = STORAGE_DIR / "reviews.json"
 
 
 class ReviewStorage:
