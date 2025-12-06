@@ -468,6 +468,42 @@ Be direct and concise."""
             print(f"[OpenAI] Semantic search error: {e}")
             return []
     
+    def is_event_or_workshop_page(self, doc: Dict[str, Any]) -> bool:
+        """Detect if a document is an event, workshop, or session page rather than official content"""
+        title = (doc.get('title', '') or '').lower()
+        url = (doc.get('source_url', '') or doc.get('url', '') or '').lower()
+        content = (doc.get('content', '') or '')[:500].lower()  # Check first 500 chars
+        
+        # Keywords that indicate event/workshop pages
+        event_keywords = [
+            'workshop', 'session', 'event', 'q&a', 'qa with', 'tour', 'webinar',
+            'virtual', 'admissions advice week', 'application workshop',
+            'graduate application workshop', 'information session', 'open house',
+            'admissions event', 'graduate school tour', 'world grad school tour'
+        ]
+        
+        # Check title for event keywords
+        for keyword in event_keywords:
+            if keyword in title:
+                return True
+        
+        # Check URL for event patterns
+        event_url_patterns = ['/event', '/workshop', '/session', '/tour', '/webinar', '/q-a']
+        for pattern in event_url_patterns:
+            if pattern in url:
+                return True
+        
+        # Check content for event indicators
+        event_content_phrases = [
+            'register for', 'join us for', 'attend our', 'upcoming event',
+            'save the date', 'rsvp', 'event registration', 'workshop registration'
+        ]
+        for phrase in event_content_phrases:
+            if phrase in content:
+                return True
+        
+        return False
+    
     def remove_duplicates(self, results: List[Dict]) -> List[Dict]:
         """Remove duplicate documents based on content similarity"""
         unique_results = []
@@ -485,22 +521,62 @@ Be direct and concise."""
         """Rerank based on how well each document answers the specific question"""
         question_terms = self.extract_key_terms(question)
         
+        # Separate official content from events/workshops
+        official_content = []
+        event_pages = []
+        
         for result in results:
+            if self.is_event_or_workshop_page(result):
+                event_pages.append(result)
+            else:
+                official_content.append(result)
+        
+        # Rerank official content pages
+        for result in official_content:
             # Calculate how well this document answers the specific question
             content = result['content'].lower()
             term_matches = sum(1 for term in question_terms if term in content)
             question_relevance = term_matches / len(question_terms) if question_terms else 0.0
             
-            # Combine with similarity score
-            result['final_score'] = (result['similarity'] * 0.6) + (question_relevance * 0.4)
+            # Boost official content pages
+            content_boost = 1.5  # 50% boost for official content
+            result['final_score'] = ((result['similarity'] * 0.6) + (question_relevance * 0.4)) * content_boost
         
-        # Sort by final score
-        results.sort(key=lambda x: x['final_score'], reverse=True)
-        return results
+        # Rerank event pages (with penalty)
+        for result in event_pages:
+            content = result['content'].lower()
+            term_matches = sum(1 for term in question_terms if term in content)
+            question_relevance = term_matches / len(question_terms) if question_terms else 0.0
+            
+            # Penalize event/workshop pages
+            event_penalty = 0.3  # Reduce score by 70%
+            result['final_score'] = ((result['similarity'] * 0.6) + (question_relevance * 0.4)) * event_penalty
+        
+        # Combine and sort: official content first, then events (only if no official content available)
+        all_results = official_content + event_pages
+        all_results.sort(key=lambda x: x['final_score'], reverse=True)
+        
+        # If we have enough official content, filter out events completely
+        if len(official_content) >= 6:
+            return official_content[:10]
+        
+        # Otherwise, include some events but prioritize official content
+        return all_results[:10]
     
     def rerank_results(self, results: List[Dict], original_query: str, k: int = 10) -> List[Dict]:
-        """Rerank results based on relevance to original query"""
+        """Rerank results based on relevance to original query, prioritizing official content"""
         try:
+            # Filter out event/workshop pages first
+            filtered_results = []
+            for result in results:
+                if not self.is_event_or_workshop_page(result):
+                    filtered_results.append(result)
+            
+            # If we have enough official content, use only that
+            if len(filtered_results) >= k:
+                results = filtered_results
+                print(f"[OpenAI] Filtered out event pages, using {len(filtered_results)} official content pages")
+            
             # Use question-specific reranking for better results
             reranked_results = self.question_specific_rerank(results, original_query)
             return reranked_results[:k]
