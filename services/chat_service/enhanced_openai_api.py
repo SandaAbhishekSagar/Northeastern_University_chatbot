@@ -9,7 +9,7 @@ Features:
 - Response time target: 3-10 seconds with GPT-4
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
@@ -333,9 +333,17 @@ async def submit_review(request: ReviewRequest):
         raise HTTPException(status_code=500, detail=f"Error submitting review: {str(e)}")
 
 @app.get("/reviews")
-async def get_all_reviews(limit: int = 100, offset: int = 0):
-    """Get all reviews (for admin viewing)"""
+async def get_all_reviews(
+    limit: int = 100, 
+    offset: int = 0,
+    api_key: Optional[str] = Query(None, description="Admin API key required")
+):
+    """Get all reviews (for admin viewing only - requires API key)"""
     try:
+        # Verify API key
+        from services.shared.auth import verify_admin_key_query
+        verify_admin_key_query(api_key)
+        
         from services.shared.review_storage import review_storage
         
         # Get reviews from JSON storage
@@ -350,14 +358,22 @@ async def get_all_reviews(limit: int = 100, offset: int = 0):
             "offset": offset,
             "reviews": reviews
         }
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"[ENHANCED OPENAI API] Error getting reviews: {e}")
         raise HTTPException(status_code=500, detail=f"Error getting reviews: {str(e)}")
 
 @app.get("/reviews/stats")
-async def get_review_stats():
-    """Get review statistics"""
+async def get_review_stats(
+    api_key: Optional[str] = Query(None, description="Admin API key required")
+):
+    """Get review statistics (admin only - requires API key)"""
     try:
+        # Verify API key
+        from services.shared.auth import verify_admin_key_query
+        verify_admin_key_query(api_key)
+        
         from services.shared.review_storage import review_storage
         
         # Get stats from JSON storage
@@ -370,6 +386,8 @@ async def get_review_stats():
             "rating_distribution": stats['rating_distribution'],
             "feedback_types": stats['feedback_types']
         }
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"[ENHANCED OPENAI API] Error getting review stats: {e}")
         raise HTTPException(status_code=500, detail=f"Error getting review stats: {str(e)}")

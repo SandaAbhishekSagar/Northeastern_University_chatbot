@@ -258,6 +258,16 @@
         </div>
 
         <div class="controls">
+            <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                <label style="color: #666; font-weight: 600;">Admin Key:</label>
+                <input 
+                    type="password" 
+                    id="adminKey" 
+                    placeholder="Enter admin API key" 
+                    style="padding: 0.5rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 0.9rem; flex: 1; max-width: 300px;"
+                    onkeypress="if(event.key === 'Enter') { loadReviews(); loadStats(); }"
+                >
+            </div>
             <button class="btn-primary" onclick="loadReviews()">
                 <i class="fas fa-sync-alt"></i> Refresh
             </button>
@@ -279,15 +289,44 @@
 
     <script>
         // Get API base URL
-        const API_BASE_URL = window.location.hostname === 'localhost'
-            ? 'http://localhost:8001'
-            : `${window.location.protocol}//${window.location.hostname}:8001`;
+        // Check if API_BASE_URL is set in config (for production)
+        let API_BASE_URL;
+        if (typeof window !== 'undefined' && window.API_BASE_URL) {
+            API_BASE_URL = window.API_BASE_URL;
+        } else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            API_BASE_URL = 'http://localhost:8001';
+        } else {
+            // Default to Railway production URL
+            API_BASE_URL = 'https://northeasternuniversitychatbot-production.up.railway.app';
+        }
 
         document.getElementById('apiUrl').textContent = API_BASE_URL;
 
+        function getApiKey() {
+            const keyInput = document.getElementById('adminKey');
+            return keyInput ? keyInput.value.trim() : '';
+        }
+
         async function loadStats() {
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                alert('Please enter your admin API key first');
+                return;
+            }
+
             try {
-                const response = await fetch(`${API_BASE_URL}/reviews/stats`);
+                const response = await fetch(`${API_BASE_URL}/reviews/stats?api_key=${encodeURIComponent(apiKey)}`);
+                
+                if (response.status === 401 || response.status === 403) {
+                    const error = await response.json();
+                    alert(`Access Denied: ${error.detail || 'Invalid API key'}`);
+                    return;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
 
                 if (data.status === 'success') {
@@ -302,11 +341,41 @@
         }
 
         async function loadReviews() {
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                const container = document.getElementById('reviewsContainer');
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-lock"></i>
+                        <h3>Authentication Required</h3>
+                        <p>Please enter your admin API key above to view reviews.</p>
+                    </div>
+                `;
+                return;
+            }
+
             const container = document.getElementById('reviewsContainer');
             container.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading reviews...</p></div>';
 
             try {
-                const response = await fetch(`${API_BASE_URL}/reviews?limit=100`);
+                const response = await fetch(`${API_BASE_URL}/reviews?limit=100&api_key=${encodeURIComponent(apiKey)}`);
+                
+                if (response.status === 401 || response.status === 403) {
+                    const error = await response.json();
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Access Denied</h3>
+                            <p>${error.detail || 'Invalid API key. Please check your admin key.'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
 
                 if (data.status === 'success' && data.reviews.length > 0) {
