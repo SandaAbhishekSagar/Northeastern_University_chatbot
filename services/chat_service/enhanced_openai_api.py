@@ -86,6 +86,16 @@ class StatsResponse(BaseModel):
     device: str
     features: List[str]
 
+class ReviewRequest(BaseModel):
+    session_id: str
+    rating: int
+    feedback_type: str = "general"
+    feedback_text: Optional[str] = ""
+    email: Optional[str] = None
+    timestamp: str
+    user_agent: Optional[str] = None
+    page_url: Optional[str] = None
+
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint"""
@@ -282,6 +292,88 @@ async def search_documents(request: ChatRequest):
         print(f"[ENHANCED OPENAI API] Error in search endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@app.post("/review")
+async def submit_review(request: ReviewRequest):
+    """Submit user review/feedback"""
+    try:
+        # Validate rating
+        if not 1 <= request.rating <= 5:
+            raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+        
+        # Import review storage (JSON-based, not ChromaDB)
+        from services.shared.review_storage import review_storage
+        from datetime import datetime
+        
+        # Prepare review data for storage
+        review_data = {
+            'session_id': request.session_id,
+            'rating': request.rating,
+            'feedback_type': request.feedback_type,
+            'feedback_text': request.feedback_text or '',
+            'email': request.email or '',
+            'timestamp': request.timestamp,
+            'user_agent': request.user_agent or '',
+            'page_url': request.page_url or '',
+            'created_at': datetime.now().isoformat()
+        }
+        
+        # Store in JSON file (appropriate for structured review data)
+        review_id = review_storage.store_review(review_data)
+        
+        return {
+            "status": "success",
+            "message": "Thank you for your feedback!",
+            "review_id": review_id
+        }
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[ENHANCED OPENAI API] Error submitting review: {e}")
+        raise HTTPException(status_code=500, detail=f"Error submitting review: {str(e)}")
+
+@app.get("/reviews")
+async def get_all_reviews(limit: int = 100, offset: int = 0):
+    """Get all reviews (for admin viewing)"""
+    try:
+        from services.shared.review_storage import review_storage
+        
+        # Get reviews from JSON storage
+        reviews = review_storage.get_all_reviews(limit=limit, offset=offset)
+        all_reviews = review_storage.get_all_reviews()  # Get all for total count
+        total = len(all_reviews)
+        
+        return {
+            "status": "success",
+            "total": total,
+            "limit": limit,
+            "offset": offset,
+            "reviews": reviews
+        }
+    except Exception as e:
+        print(f"[ENHANCED OPENAI API] Error getting reviews: {e}")
+        raise HTTPException(status_code=500, detail=f"Error getting reviews: {str(e)}")
+
+@app.get("/reviews/stats")
+async def get_review_stats():
+    """Get review statistics"""
+    try:
+        from services.shared.review_storage import review_storage
+        
+        # Get stats from JSON storage
+        stats = review_storage.get_review_stats()
+        
+        return {
+            "status": "success",
+            "total_reviews": stats['total_reviews'],
+            "average_rating": stats['average_rating'],
+            "rating_distribution": stats['rating_distribution'],
+            "feedback_types": stats['feedback_types']
+        }
+    except Exception as e:
+        print(f"[ENHANCED OPENAI API] Error getting review stats: {e}")
+        raise HTTPException(status_code=500, detail=f"Error getting review stats: {str(e)}")
+
 @app.get("/")
 async def root():
     """Root endpoint with API information"""
@@ -301,7 +393,10 @@ async def root():
             "health": "/health",
             "stats": "/stats",
             "documents": "/documents",
-            "search": "/search"
+            "search": "/search",
+            "review": "/review",
+            "reviews": "/reviews",
+            "reviews/stats": "/reviews/stats"
         },
         "model": enhanced_openai_chatbot.model_name,
         "device": enhanced_openai_chatbot.embedding_manager.device,
