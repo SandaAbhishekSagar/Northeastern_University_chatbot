@@ -1,5 +1,5 @@
 env_py3.9
-
+.env
 # Data directory (reviews stored here)
 data/reviews.json
 data/reviews_export.csv
